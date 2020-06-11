@@ -18,31 +18,37 @@
 ;#Warn                          ; Enable warnings to assist with detecting common errors.
 SendMode Input                  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%     ; Ensures a consistent starting directory.
-#SingleInstance Force
-#MaxThreadsPerHotkey 3
-SetTitleMatchMode 3
+#SingleInstance Force           ; Only one instance
+#MaxThreadsPerHotkey 1          ; Only one thread
+SetTitleMatchMode 3             ; Exact title match
 
 ;;; Metadata
+ScriptVersion := "v1.0.0"
 ScriptTitle := "UnlimitedMultiBattles"
 ScriptDescription := "For official 'Raid: Shadow Legend' on Windows"
+ScriptAuthor := "Rafael Acosta Alvarez"
 ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
-ScriptAuthor := "Rafael Acosta"
-ScriptVersion := "v1.0.0"
 
-;;; Texts and Constants
+;;; Texts
 HomeMessage := "This script allows to replay Raid on background while doing other things on foreground. It quickly swap to Raid game window, press the replay hotkey 'R' and go back to your previous window."
 DelayHeader := "1. Time between battles:"
-DelayMessage := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
 RepetitionHeader := "2. Number of battles:"
-RepetitionMessage := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
 StartHeader := "3. Start farming:"
-StartMessage := "Just press 'Start' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
 StartButton := "Start Multi-Battle"
 StopButton := "Stop"
-HelpMessage := HomeMessage . "`n`n" . DelayHeader . "`n" . DelayMessage . "`n`n" . RepetitionHeader . "`n" . RepetitionMessage . "`n`n" . StartHeader . "`n" . StartMessage
 InfiniteMessage := "`nInfinite mode, we will keep replaying till you press stop."
 ManualMessage := "`nManually select the number of times you want to multi-play."
 NoGameError := "Raid Shadow Legends is not running, please start it."
+DelayHelp := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
+RepetitionHelp := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
+StartBattleHelp := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
+ScriptHelp := "This script is license under Apache 2.0 and it's source code is hosted at GitHub. Find out more info at his repository."
+
+;;; Constants
+RaidWinTitle := "Raid: Shadow Legends"
+SettingsFile := ScriptTitle . ".ini"
+SettingsSection := "SettingsSection"
+DefaultSettings := { delay: 25, repetitions: 10, tab: 1, stage: 1, boost: 3, star: 1 }
 TabOptions = Manual|Calculated|Infinite
 StageOptions = Brutal 12-3|Brutal 12-6
 BoostOptions := "None 0%|Raid Boost +20%|XP Boost +100%|Both +120%"
@@ -50,12 +56,6 @@ StarOptions = 1 Star|2 Star|3 Star|4 Star|5 Star|6 Star
 Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 24, 52, 112, 233], [3, 8, 20, 44, 93, 194]]
 Brutal12_6 := [ [6, 19, 46, 103, 220, 457], [5, 16, 39, 86, 183, 381], [3, 10, 23, 52, 110, 229], [3, 8, 20, 43, 92, 191]]
 CalculatorData := [ Brutal12_3, Brutal12_6 ]
-
-;;; Settings
-SettingsFile := ScriptTitle . ".ini"
-SettingsSection := "SettingsSection"
-DefaultSettings := { delay: 25, repetitions: 10, tab: 1, stage: 1, boost: 3, star: 1 }
-RaidWinTitle := "Raid: Shadow Legends"
 
 ;;; StartUp
 if !WinExist(RaidWinTitle)
@@ -88,13 +88,13 @@ else
     CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
     
     
-    ;;; Load UI
+    ;;; Load UIs
+    ;; 1st UI: Home
     Gui, font, s10 bold
 	Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
 	Gui, font, s8 norm
-    Gui, Add, Text, w280 y+2 Center, %ScriptDescription%`nby %ScriptAuthor%
-    Gui, Add, Button, w50 ys y15 Center gHelp, Help
-    Gui, Add, Button, w50 Center gGoToSite, Site
+    Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
+    Gui, Add, Button, w50 ys y15 Center gHelp, Info
     Gui, add, text, xs w350 0x10
    
     Gui, font, s10 bold
@@ -154,11 +154,11 @@ else
     
     Gui, Add, Text,
     Gui, font, s10 bold
-	;Gui, Add, Text,, 3. Start:
 	Gui, Add, Button, w350 h30 Center gStart, %StartButton%
     Gui, font, s8 norm
     Gui, Add, Text,,
 
+    ;; 2nd UI: Progress
 	Gui, 2:font,bold
 	Gui, 2:Add, Text, w250 Center vWorkingTitle,
 	Gui, 2:font
@@ -168,15 +168,55 @@ else
     Gui, 2:font, s10 bold
 	Gui, 2:Add, Button, w250 h30 gStop, %StopButton%
     Gui, 2:font, s8 norm
+    
+    ;; 3rd UI: Help
+    Gui, 3:font, s10 bold
+	Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+	Gui, 3:font, s8 norm
+    Gui, 3:Add, Text, w280 y+2 Center, %ScriptDescription%
+    Gui, 3:Add, Button, w50 ys y15 Center gBackFromHelp, Back
+    Gui, 3:add, text, xs w350 0x10    
+    Gui, 3:font, s10 bold
+	Gui, 3:Add, Text, w350 Center xs, Help
+    Gui, 3:font, s8 norm
+    Gui, 3:Add, Text, w350 xs Section, %HomeMessage%
+    Gui, 3:font, s10 bold
+	Gui, 3:Add, Text, xs, %DelayHeader%
+    Gui, 3:font, s8 norm
+    Gui, 3:Add, Text, w350 xs Section, %DelayHelp%
+    Gui, 3:font, s10 bold
+    Gui, 3:Add, Text, xs, %RepetitionHeader%
+    Gui, 3:font, s8 norm
+    Gui, 3:Add, Text, w350 xs Section, %RepetitionHelp%
+    Gui, 3:Add, Text, w350 xs Section, %StartBattleHelp%
+    Gui, 3:add, text, xs w350 0x10
+    Gui, 3:font, s10 bold
+    Gui, 3:Add, Text, w350 Center xs, About
+    Gui, 3:font, s8 norm
+    Gui, 3:Add, Text, w280 xs Section, %ScriptHelp%
+    Gui, 3:Add, Button, w50 ys Center gGoToSite, Site
+    Gui, 3:Add, Text, xs
 
+    ;; Show 1st UI
 	Gui, 1:Show, x200 y200 AutoSize, %ScriptTitle%
     return
 }
 
 Help:
-    MsgBox, 32, %ScriptTitle%, %HelpMessage%
+    Gui,+LastFound
+    WinGetPos,x,y
+    Gui, 3:Show, x%x% y%y%, %ScriptTitle%
+    Gui, 1:Hide
+	Return
     return
-    
+   
+BackFromHelp:
+    Gui,+LastFound
+    WinGetPos,x,y
+    Gui, 1:Show, x%x% y%y%, %ScriptTitle%
+    Gui, 3:Hide
+	Return
+
 GoToSite:
 	Run %ScriptSite%
 	return
