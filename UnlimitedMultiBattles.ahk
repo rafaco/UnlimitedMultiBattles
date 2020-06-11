@@ -37,7 +37,7 @@ RepetitionHeader := "2. Number of battles:"
 RepetitionMessage := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
 StartHeader := "3. Start farming:"
 StartMessage := "Just press 'Start' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
-StartButton := "Multi-Battle"
+StartButton := "Start Multi-Battle"
 StopButton := "Stop"
 HelpMessage := HomeMessage . "`n`n" . DelayHeader . "`n" . DelayMessage . "`n`n" . RepetitionHeader . "`n" . RepetitionMessage . "`n`n" . StartHeader . "`n" . StartMessage
 InfiniteMessage := "`nInfinite mode, we will keep replaying till you press stop."
@@ -127,7 +127,7 @@ else
     Gui, Add, Edit, ys w50 right vRepetitionsEdit, % Settings.repetitions
     Gui, Add, Button, ys w30 h40 Center gRepetitionsPlus, +
     Gui, font, s12
-    Gui, Add, Text, w100 ys+20, times
+    Gui, Add, Text, w100 ys+20, battles
     Gui, font, s8
     Gui, Tab, 2
     Gui, Add, text, w100 Section, Stage:
@@ -140,7 +140,7 @@ else
     Gui, font, s20 
     Gui, Add, Text, w60 right ys vCalculatedRepetitions, %CalculatedRepetitions%
     Gui, font, s12
-    Gui, Add, Text, w100 ys+8, times
+    Gui, Add, Text, w100 ys+8, battles
     Gui, font, s8
     Gui, Tab, 3
     Gui, Add, text, w350 Section, %InfiniteMessage%
@@ -148,13 +148,13 @@ else
     Gui, font, s20 
     Gui, Add, Text, w40 ys right, INFINITE
     Gui, font, s12
-    Gui, Add, Text, w100 ys+8, times
+    Gui, Add, Text, w100 ys+8, battles
     Gui, font, s8
     Gui, Tab 
     
     Gui, Add, Text,
     Gui, font, s10 bold
-	Gui, Add, Text,, 3. Start:
+	;Gui, Add, Text,, 3. Start:
 	Gui, Add, Button, w350 h30 Center gStart, %StartButton%
     Gui, font, s8 norm
     Gui, Add, Text,,
