@@ -206,7 +206,7 @@ else
     Gui, 3:Add, Text, xs
 
     ;; Show 1st UI
-	Gui, 1:Show, x200 y200 AutoSize, %ScriptTitle%
+	Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
     return
 }
 
