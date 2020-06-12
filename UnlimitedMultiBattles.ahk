@@ -30,7 +30,7 @@ ScriptAuthor := "Rafael Acosta Alvarez"
 ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
 
 ;;; Texts
-HomeMessage := "This script allows to replay Raid on background while doing other things on foreground. It quickly swap to Raid game window, press the replay hotkey 'R' and go back to your previous window."
+
 DelayHeader := "1. Time between battles:"
 RepetitionHeader := "2. Number of battles:"
 StartHeader := "3. Start farming:"
@@ -39,10 +39,14 @@ StopButton := "Stop"
 InfiniteMessage := "`nInfinite mode, we will keep replaying till you press stop."
 ManualMessage := "`nManually select the number of times you want to multi-play."
 NoGameError := "Raid Shadow Legends is not running, please start it."
+
+IntroHelp := "This script allows to replay Raid on background while doing other things on foreground. It quickly swap to Raid game window, press the replay hotkey 'R' and go back to your previous window."
+UsageHelp := "1. Open 'Raid: Shadow Legends' on your PC, select the stage and prepare your farming team but don't press 'Play' already.`n2. Then on this application, select your farming options and press 'Start Multi-Battle'."
 DelayHelp := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
 RepetitionHelp := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
 StartBattleHelp := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
 ScriptHelp := "This script is license under Apache 2.0 and it's source code is hosted at GitHub. Find out more info at his repository."
+
 
 ;;; Constants
 RaidWinTitle := "Raid: Shadow Legends"
@@ -179,12 +183,16 @@ else
     Gui, 3:font, s10 bold
 	Gui, 3:Add, Text, w350 Center xs, Help
     Gui, 3:font, s8 norm
-    Gui, 3:Add, Text, w350 xs Section, %HomeMessage%
-    Gui, 3:font, s10 bold
+    Gui, 3:Add, Text, w350 xs Section, %IntroHelp%
+    Gui, 3:font, s9 bold
+	Gui, 3:Add, Text, xs, Usage
+    Gui, 3:font, s8 norm
+    Gui, 3:Add, Text, w350 xs Section, %UsageHelp%
+    Gui, 3:font, s9 bold
 	Gui, 3:Add, Text, xs, %DelayHeader%
     Gui, 3:font, s8 norm
     Gui, 3:Add, Text, w350 xs Section, %DelayHelp%
-    Gui, 3:font, s10 bold
+    Gui, 3:font, s9 bold
     Gui, 3:Add, Text, xs, %RepetitionHeader%
     Gui, 3:font, s8 norm
     Gui, 3:Add, Text, w350 xs Section, %RepetitionHelp%
