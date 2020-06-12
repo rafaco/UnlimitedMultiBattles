@@ -18,7 +18,7 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 ### Disclaimer:
 This is not an autoclicker but it solve the same problem by auto pressing standard hotkeys. Periodically, it quickly swap to the game window, press the in-game replay hotkey and restore the window you were in. You could get the same results by manually pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
 
-I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if you think I'm wrong.
+I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
 
 
 # Usage
