@@ -33,8 +33,8 @@ Disclaimer: I believe this is not against the T&C of the game, as it just automa
 
 Using executable files (.exe) from internet is highly discourage, so it's recommended that you generate your own executable from the sources. It's a very easy task and it doesn't require technical knowledge: 
 1. Install [AutoHotKey](https://www.autohotkey.com/) for Windows in your PC.
-2. Get a copy of our script from our repository (UnlimitedMultiBattles.ahk) and save it in your disk.
-3. Right click on the downloaded file and press "Compile". Your own exe will be generated in the same folder.
+2. Download a copy of our script [UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk).
+3. Right click on the downloaded file and press "Compile", your own exe will be generated in the same folder.
 
 
 ## License
