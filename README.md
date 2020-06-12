@@ -1,14 +1,14 @@
 # UnlimitedMultiBattles
 
-[![Game](https://img.shields.io/badge/game-raid_shadow_legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay)
-[![OperativeSystem](https://img.shields.io/badge/OperativeSystem-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows)
+[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay)
+[![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows)
 [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/)
 
 This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has an easy to use interface and it allows to farm on background while doing other things with your PC. 
 
 How it works: This is not an autoclicker but it solve the same problem by auto pressing standard hotkeys. Periodically, it quickly swap to the game window, press the in-game replay hotkey and restore the window you were in. You could get the same results by manually pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
 
-Disclaimer: I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if you think I'm wrong.
+Disclaimer: I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if you think I'm wrong.
 
 ### Features:
 - Graphic interface to easily configure how you want to farm and to see the farming progress
