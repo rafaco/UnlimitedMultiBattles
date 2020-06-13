@@ -21,23 +21,19 @@ This is not an autoclicker but it solve the same problem by auto pressing standa
 I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
 
 
-# Setup
+# Usage
 
-Easier and quicker way is just downloading a ready to use exe from latest release (using executable files from internet is highly discourage):
+1. Download [UnlimitedMultiBattles.exe](https://github.com/rafaco/UnlimitedMultiBattles/releases/download/v1.0.0/UnlimitedMultiBattles.exe) or compile your exe.
+2. Open "Raid: Shadow Legends" on your PC, select a stage and prepare your farming team but don't press "Play" already.
+2. Run downloaded "UnlimitedMultiBattles.exe", select your options and press "Start Multi-Battle".
 
-- Download [UnlimitedMultiBattles.exe](https://github.com/rafaco/UnlimitedMultiBattles/releases/download/v1.0.0/UnlimitedMultiBattles.exe)
+# Compile your exe
 
-It's recommended that you generate your own executable from the sources instead. This is a very straightforward task and it doesn't require technical knowledges: 
+You can easily generate your own exe from the sources to avoid using an executable files downloaded from internet.
 
 1. Install [AutoHotKey](https://www.autohotkey.com/) for Windows in your PC.
 2. Download a copy of our script [UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk).
 3. Right click on the downloaded file and press "Compile", your own exe will be generated in the same folder.
-
-# Usage
-
-1. Open "Raid: Shadow Legends" on your PC, select a stage and prepare your farming team but don't press "Play" already.
-2. Open "UnlimitedMultiBattles", select your farming options and press "Start Multi-Battle".
-
 
 # License
 ```
