@@ -5,15 +5,16 @@
 This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has an easy to use interface and can be used on background while doing other things with your PC. 
 
 ### Features:
-- Graphic interface to easily configure, control and see progresses
+- Graphic interface to easily configure, see progresses
 - Can be use on background
 - Adjustable time between battles to minimise the total time
 - Adjustable number of battles to avoid wasting your energy. Three modes available:
   - Manual: enter any number of battles
   - Calculated: Use our mini-calculator to run the exact battle to maximise your champions considering their stars, stage and xp boosts
   - Infinite: Run battles indefinitely, till you stop it or till your energy run outs
-- Remember your previous configuration for the next time you open our app
 - Detect if the game is not open or the game is closed while working
+- Remember previous options on app restart
+- Help screen included
 
 
 # Usage
