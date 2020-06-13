@@ -99,7 +99,7 @@ else
     Gui, Add, text, xs w350 0x10
 
     Gui, Font, s10 bold
-	Gui, Add, Text, xs, %DelayHeader%
+    Gui, Add, Text, xs, %DelayHeader%
     Gui, Font, s8 norm
     Gui, Add, Text, w85 xs Section,
     Gui, Font, s20 
