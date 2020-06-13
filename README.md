@@ -13,19 +13,18 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
   - Calculated: Use our mini-calculator to run the exact battle to maximise your champions considering their stars, stage and xp boosts
   - Infinite: Run battles indefinitely, till you stop it or till your energy run outs
 - Remember your previous configuration for the next time you open our app
-- Detection and message shown when the game is not open or the game is closed while working.
-
-### Disclaimer:
-This is not an autoclicker but it solve the same problem by auto pressing standard hotkeys. Periodically, it quickly swap to the game window, press the in-game replay hotkey and restore the window you were in. You could get the same results by manually pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
-
-I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
+- Detect if the game is not open or the game is closed while working.
 
 
 # Usage
 
-1. Download [UnlimitedMultiBattles.exe](https://github.com/rafaco/UnlimitedMultiBattles/releases/download/v1.0.0/UnlimitedMultiBattles.exe) or compile your exe.
-2. Open "Raid: Shadow Legends" on your PC, select a stage and prepare your farming team but don't press "Play" already.
-2. Run downloaded "UnlimitedMultiBattles.exe", select your options and press "Start Multi-Battle".
+1. Download [UnlimitedMultiBattles.exe](https://github.com/rafaco/UnlimitedMultiBattles/releases/download/v1.0.0/UnlimitedMultiBattles.exe) or [compile your exe](#compile-your-exe).
+2. Open "Raid: Shadow Legends" on your PC, select a stage and prepare your team but don't press "Play" already.
+3. Open "UnlimitedMultiBattles.exe" on your PC, select your options and press "Start Multi-Battle".
+
+**Time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next one replay will carry on with the followings ones.
+
+**Number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions.
 
 # Compile your exe
 
@@ -34,6 +33,11 @@ You can easily generate your own exe from the sources to avoid using an executab
 1. Install [AutoHotKey](https://www.autohotkey.com/) for Windows in your PC.
 2. Download a copy of our script [UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk).
 3. Right click on the downloaded file and press "Compile", your own exe will be generated in the same folder.
+
+# Disclaimer:
+This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
+
+I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
 
 # License
 ```
