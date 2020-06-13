@@ -320,11 +320,11 @@ Start:
         }
         
 		WinGetActiveTitle, PreviouslyActive
-		WinActivate, RaidWinTitle
+		WinActivate, %RaidWinTitle%
 		;sleep 100
-		ControlSend, , {Enter}, RaidWinTitle
+		ControlSend, , {Enter}, %RaidWinTitle%
 		;sleep 100
-		ControlSend, , r, RaidWinTitle
+		ControlSend, , r, %RaidWinTitle%
 		sleep 100
 		WinActivate, %PreviouslyActive%
         
