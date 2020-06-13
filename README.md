@@ -2,18 +2,18 @@
 
 <img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/media/social.jpg">
 
-This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has an easy to use interface and it allows to farm on background while doing other things with your PC. 
+This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has an easy to use interface and can be used on background while doing other things with your PC. 
 
 ### Features:
-- Graphic interface to easily configure how you want to farm and to see the farming progress
-- Allow farming on background while doing other things on your PC
-- Adjustable delay between battles to minimise the total time
+- Graphic interface to easily configure, control and see progresses
+- Can be use on background
+- Adjustable time between battles to minimise the total time
 - Adjustable number of battles to avoid wasting your energy. Three modes available:
   - Manual: enter any number of battles
   - Calculated: Use our mini-calculator to run the exact battle to maximise your champions considering their stars, stage and xp boosts
   - Infinite: Run battles indefinitely, till you stop it or till your energy run outs
 - Remember your previous configuration for the next time you open our app
-- Detect if the game is not open or the game is closed while working.
+- Detect if the game is not open or the game is closed while working
 
 
 # Usage
@@ -24,7 +24,7 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 
 **Time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next one replay will carry on with the followings ones.
 
-**Number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions.
+**Number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs you need to max out your level 1 champions.
 
 # Compile your exe
 
