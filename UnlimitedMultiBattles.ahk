@@ -26,11 +26,10 @@ SetTitleMatchMode 3             ; Exact title match
 ScriptVersion := "v1.0.0"
 ScriptTitle := "UnlimitedMultiBattles"
 ScriptDescription := "For official 'Raid: Shadow Legend' on Windows"
-ScriptAuthor := "Rafael Acosta Alvarez"
 ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
+ScriptAuthor := "Rafael Acosta Alvarez"
 
 ;;; Texts
-
 DelayHeader := "1. Time between battles:"
 RepetitionHeader := "2. Number of battles:"
 StartHeader := "3. Start farming:"
@@ -39,14 +38,12 @@ StopButton := "Stop"
 InfiniteMessage := "`nInfinite mode, we will keep replaying till you press stop."
 ManualMessage := "`nManually select the number of times you want to multi-play."
 NoGameError := "Raid Shadow Legends is not running, please start it."
-
 IntroHelp := "This script allows to replay Raid on background while doing other things on foreground. It quickly swap to Raid game window, press the replay hotkey 'R' and go back to your previous window."
 UsageHelp := "1. Open 'Raid: Shadow Legends' on your PC, select the stage and prepare your farming team but don't press 'Play' already.`n2. Then on this application, select your farming options and press 'Start Multi-Battle'."
 DelayHelp := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
 RepetitionHelp := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
 StartBattleHelp := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
 ScriptHelp := "This script is license under Apache 2.0 and it's source code is hosted at GitHub. Find out more info at his repository."
-
 
 ;;; Constants
 RaidWinTitle := "Raid: Shadow Legends"
@@ -64,13 +61,13 @@ CalculatorData := [ Brutal12_3, Brutal12_6 ]
 ;;; StartUp
 if !WinExist(RaidWinTitle)
 {
-    ;;; Show error, game start required
+    ; Show error, game start required
     MsgBox, 48, %ScriptTitle%, %NoGameError%
     ExitApp
 }
 else
 {
-    ;;; Init previous settings or default values
+    ; Init previous settings or default values
     If (!FileExist(SettingsFile)){
         Settings := DefaultSettings
         for key, value in Settings{
@@ -83,56 +80,56 @@ else
             Settings[key] := temp
         }
     }
-    
-    ;;; Prepare selections
+
+    ; Prepare selections
     selectedTab := Settings.tab
     selectedStage := Settings.stage
     selectedBoost := Settings.boost
     selectedStar := Settings.star
     CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
-    
-    
+
+
     ;;; Load UIs
     ;; 1st UI: Home
-    Gui, font, s10 bold
-	Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
-	Gui, font, s8 norm
+    Gui, Font, s10 bold
+    Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+    Gui, Font, s8 norm
     Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
     Gui, Add, Button, w50 ys y15 Center gHelp, Info
-    Gui, add, text, xs w350 0x10
-   
-    Gui, font, s10 bold
+    Gui, Add, text, xs w350 0x10
+
+    Gui, Font, s10 bold
 	Gui, Add, Text, xs, %DelayHeader%
-    Gui, font, s8 norm
+    Gui, Font, s8 norm
     Gui, Add, Text, w85 xs Section,
-    Gui, font, s20 
+    Gui, Font, s20 
     Gui, Add, Button, ys w30 h40 Center gDelayMinus, -
     Gui, Add, Edit, ys w50 right vDelayEdit, % Settings.delay
     Gui, Add, Button, ys w30 h40 Center gDelayPlus, +
-    Gui, font, s12
+    Gui, Font, s12
     Gui, Add, Text, w100 ys+8, seconds
-    Gui, font, s8
+    Gui, Font, s8
 
     Gui, Add, Text,
-    Gui, font, s10 bold
-	Gui, Add, Text, xs Section, %RepetitionHeader%
-    Gui, font, s8 norm
+    Gui, Font, s10 bold
+    Gui, Add, Text, xs Section, %RepetitionHeader%
+    Gui, Font, s8 norm
     TCS_FIXEDWIDTH := 0x0400
     TCM_SETITEMSIZE := 0x1329
     CtrlWidth := 350
     TabWidth := (CtrlWidth) / 3
     Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
     SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
-    
+
     Gui, Add, text, w350 Section, %ManualMessage%
     Gui, Add, Text, xs w73 Section,
-    Gui, font, s20 
+    Gui, Font, s20 
     Gui, Add, Button, ys w30 h40 Center gRepetitionsMinus, -
     Gui, Add, Edit, ys w50 right vRepetitionsEdit, % Settings.repetitions
     Gui, Add, Button, ys w30 h40 Center gRepetitionsPlus, +
-    Gui, font, s12
+    Gui, Font, s12
     Gui, Add, Text, w100 ys+20, battles
-    Gui, font, s8
+    Gui, Font, s8
     Gui, Tab, 2
     Gui, Add, text, w100 Section, Stage:
     Gui, Add, DropDownList, w100 vStageSelector gStageChanged Choose%selectedStage% AltSubmit, %StageOptions%
@@ -141,72 +138,72 @@ else
     Gui, Add, text, w100 ys, Champion (lvl 1):
     Gui, Add, DropDownList, w100 vStarSelector gStarChanged Choose%selectedStar% AltSubmit, %StarOptions%
     Gui, Add, Text, w85 xs Section,
-    Gui, font, s20 
+    Gui, Font, s20 
     Gui, Add, Text, w60 right ys vCalculatedRepetitions, %CalculatedRepetitions%
-    Gui, font, s12
+    Gui, Font, s12
     Gui, Add, Text, w100 ys+8, battles
-    Gui, font, s8
+    Gui, Font, s8
     Gui, Tab, 3
     Gui, Add, text, w350 Section, %InfiniteMessage%
     Gui, Add, Text, w85 Section,
-    Gui, font, s20 
+    Gui, Font, s20 
     Gui, Add, Text, w40 ys right, INFINITE
-    Gui, font, s12
+    Gui, Font, s12
     Gui, Add, Text, w100 ys+8, battles
-    Gui, font, s8
+    Gui, Font, s8
     Gui, Tab 
-    
+
     Gui, Add, Text,
-    Gui, font, s10 bold
-	Gui, Add, Button, w350 h30 Center gStart, %StartButton%
-    Gui, font, s8 norm
+    Gui, Font, s10 bold
+    Gui, Add, Button, w350 h30 Center gStart, %StartButton%
+    Gui, Font, s8 norm
     Gui, Add, Text,,
 
     ;; 2nd UI: Progress
-	Gui, 2:font,bold
-	Gui, 2:Add, Text, w250 Center vWorkingTitle,
-	Gui, 2:font
+    Gui, 2:Font,bold
+    Gui, 2:Add, Text, w250 Center vWorkingTitle,
+    Gui, 2:Font
     Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress1, 0
-	Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress2, 0
-	Gui, 2:Add, Text, w250 Center vWorkingStatus
-    Gui, 2:font, s10 bold
-	Gui, 2:Add, Button, w250 h30 gStop, %StopButton%
-    Gui, 2:font, s8 norm
-    
+    Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress2, 0
+    Gui, 2:Add, Text, w250 Center vWorkingStatus
+    Gui, 2:Font, s10 bold
+    Gui, 2:Add, Button, w250 h30 gStop, %StopButton%
+    Gui, 2:Font, s8 norm
+
     ;; 3rd UI: Help
-    Gui, 3:font, s10 bold
-	Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
-	Gui, 3:font, s8 norm
+    Gui, 3:Font, s10 bold
+    Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+    Gui, 3:Font, s8 norm
     Gui, 3:Add, Text, w280 y+2 Center, %ScriptDescription%
     Gui, 3:Add, Button, w50 ys y15 Center gBackFromHelp, Back
-    Gui, 3:add, text, xs w350 0x10    
-    Gui, 3:font, s10 bold
-	Gui, 3:Add, Text, w350 Center xs, Help
-    Gui, 3:font, s8 norm
+    Gui, 3:Add, text, xs w350 0x10    
+    Gui, 3:Font, s10 bold
+    Gui, 3:Add, Text, w350 Center xs, Help
+    Gui, 3:Font, s8 norm
     Gui, 3:Add, Text, w350 xs Section, %IntroHelp%
-    Gui, 3:font, s9 bold
-	Gui, 3:Add, Text, xs, Usage
-    Gui, 3:font, s8 norm
+    Gui, 3:Font, s9 bold
+    Gui, 3:Add, Text, xs, Usage
+    Gui, 3:Font, s8 norm
     Gui, 3:Add, Text, w350 xs Section, %UsageHelp%
-    Gui, 3:font, s9 bold
-	Gui, 3:Add, Text, xs, %DelayHeader%
-    Gui, 3:font, s8 norm
+    Gui, 3:Font, s9 bold
+    Gui, 3:Add, Text, xs, %DelayHeader%
+    Gui, 3:Font, s8 norm
     Gui, 3:Add, Text, w350 xs Section, %DelayHelp%
-    Gui, 3:font, s9 bold
+    Gui, 3:Font, s9 bold
     Gui, 3:Add, Text, xs, %RepetitionHeader%
-    Gui, 3:font, s8 norm
+    Gui, 3:Font, s8 norm
     Gui, 3:Add, Text, w350 xs Section, %RepetitionHelp%
     Gui, 3:Add, Text, w350 xs Section, %StartBattleHelp%
-    Gui, 3:add, text, xs w350 0x10
-    Gui, 3:font, s10 bold
+    Gui, 3:Add, text, xs w350 0x10
+    Gui, 3:Font, s10 bold
     Gui, 3:Add, Text, w350 Center xs, About
-    Gui, 3:font, s8 norm
+    Gui, 3:Font, s8 norm
     Gui, 3:Add, Text, w280 xs Section, %ScriptHelp%
     Gui, 3:Add, Button, w50 ys Center gGoToSite, Site
     Gui, 3:Add, Text, xs
 
-    ;; Show 1st UI
-	Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
+    ; Show 1st UI
+    Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
     return
 }
 
@@ -215,7 +212,7 @@ Help:
     WinGetPos,x,y
     Gui, 3:Show, x%x% y%y%, %ScriptTitle%
     Gui, 1:Hide
-	Return
+    Return
     return
    
 BackFromHelp:
@@ -223,11 +220,11 @@ BackFromHelp:
     WinGetPos,x,y
     Gui, 1:Show, x%x% y%y%, %ScriptTitle%
     Gui, 3:Hide
-	Return
+    Return
 
 GoToSite:
-	Run %ScriptSite%
-	return
+    Run %ScriptSite%
+    return
     
 DelayMinus:
 DelayPlus:
@@ -269,19 +266,19 @@ StarChanged:
 
 Start:
     StartTime := A_TickCount
-	Gui, Submit
+    Gui, Submit
     Gui,+LastFound
     WinGetPos,x,y
-	Gui, 2:Show, x%x% y%y%, %ScriptTitle%
+    Gui, 2:Show, x%x% y%y%, %ScriptTitle%
     Gui, 1:Hide
-	
-	isRunning := true
+
+    isRunning := true
     repetitions := (TabSelector = 1) ? RepetitionsEdit : (TabSelector = 2) ? CalculatedRepetitions : -1
     isInfinite := (repetitions = -1)
-    
-	waitSeconds := DelayEdit
+
+    waitSeconds := DelayEdit
     waitMillis := (waitSeconds * 1000)
-    
+
     if (isInfinite){
         title := "Farming infinitely, " waitSeconds " seconds each."
         notification := "Starting infinited runs"
@@ -293,23 +290,23 @@ Start:
     }
     GuiControl, 2:, WorkingTitle, %title%
     TrayTip, %ScriptTitle%, %notification%, 20, 17
-    
+
     ; TODO: Hide WorkingProgress2 not working
     GuiControl, 2:, % (isInfinite) ? "Hide" : "Show", WorkingProgress2
     GuiControl, 2:, % (isInfinite) ? "Hide" : "Show", WorkingStatus
-    
-	stepProgress1 := floor(100 / waitSeconds)
+
+    stepProgress1 := floor(100 / waitSeconds)
     stepProgress2 := floor(100 / repetitions)   
-    
+
     currentRepetition := 0
-	loop{
+    loop{
         currentRepetition++
-		If not isRunning 
+        If not isRunning 
             break
             
         If (!isInfinite && currentRepetition > repetitions)
             break
-		
+        
         If (!isInfinite){
             currentProgress2 := (currentRepetition * stepProgress2)
             GuiControl, 2:, WorkingProgress2, %currentProgress2%
@@ -319,14 +316,14 @@ Start:
             GuiControl, 2:, WorkingStatus, %currentRepetition% runs
         }
         
-		WinGetActiveTitle, PreviouslyActive
-		WinActivate, %RaidWinTitle%
-		;sleep 100
-		ControlSend, , {Enter}, %RaidWinTitle%
-		;sleep 100
-		ControlSend, , r, %RaidWinTitle%
-		sleep 100
-		WinActivate, %PreviouslyActive%
+        WinGetActiveTitle, PreviouslyActive
+        WinActivate, %RaidWinTitle%
+        ;sleep 100
+        ControlSend, , {Enter}, %RaidWinTitle%
+        ;sleep 100
+        ControlSend, , r, %RaidWinTitle%
+        sleep 100
+        WinActivate, %PreviouslyActive%
         
         GuiControl, 2:, WorkingProgress1, 0
         currentSecond := 0
@@ -355,26 +352,26 @@ Start:
         }
 	}
     
-	If isRunning{
-		isRunning := false
+    If isRunning{
+        isRunning := false
         ElapsedTime := (A_TickCount - StartTime) / 1000
         MsgBox,  %ElapsedTime% seconds have elapsed.
-		TrayTip, %ScriptTitle%, Farmed %repetitions% times!, 20, 17
+        TrayTip, %ScriptTitle%, Farmed %repetitions% times!, 20, 17
         Gui,+LastFound
         WinGetPos,x,y
-		Gui, 1:Show, x%x% y%y%, %ScriptTitle%
-		Gui, 2:Hide
-	}
-	return
+        Gui, 1:Show, x%x% y%y%, %ScriptTitle%
+        Gui, 2:Hide
+    }
+    return
 
 Stop:
-	isRunning := false
-	TrayTip, %ScriptTitle%, Canceled by user, 20, 17
-	Gui,+LastFound
+    isRunning := false
+    TrayTip, %ScriptTitle%, Canceled by user, 20, 17
+    Gui,+LastFound
     WinGetPos,x,y
     Gui, 1:Show, x%x% y%y%, %ScriptTitle%
     Gui, 2:Hide
-	Return
+    Return
 
 GuiClose:
     Gui, Submit
@@ -382,6 +379,6 @@ GuiClose:
     IniWrite, %DelayEdit%, %SettingsFile%, %SettingsSection%, delay
     IniWrite, %RepetitionsEdit%, %SettingsFile%, %SettingsSection%, repetitions
     
-	Gui, 1:Destroy
-	Gui, 2:Destroy
-	ExitApp
+    Gui, 1:Destroy
+    Gui, 2:Destroy
+    ExitApp
