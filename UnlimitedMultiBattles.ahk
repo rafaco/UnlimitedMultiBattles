@@ -25,19 +25,23 @@ SetTitleMatchMode 3             ; Exact title match
 ;;; Metadata
 ScriptVersion := "v1.0.0"
 ScriptTitle := "UnlimitedMultiBattles"
-ScriptDescription := "For official 'Raid: Shadow Legend' on Windows"
+ScriptDescription := "For official 'Raid: Shadow Legends' on Windows"
 ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
 ScriptAuthor := "Rafael Acosta Alvarez"
 
 ;;; Texts
-DelayHeader := "1. Time between battles:"
-RepetitionHeader := "2. Number of battles:"
-StartHeader := "3. Start farming:"
+TeamHeader := "1. Prepare your team:"
+TeamDescription := "Open the game, select a stage and prepare your farming team but don't press 'Play' already.`n"
+DelayHeader := "2. Time between battles:"
+RepetitionHeader := "3. Number of battles:"
+StartHeader := "4. Start farming:"
 StartButton := "Start Multi-Battle"
 StopButton := "Stop"
 InfiniteMessage := "`nInfinite mode, we will keep replaying till you press stop."
 ManualMessage := "`nManually select the number of times you want to multi-play."
-NoGameError := "Raid Shadow Legends is not running, please start it."
+NoRunningGameError := "You have to open the game and select your team before start."
+ClosedGameError := "Canceled, the game has been closed."
+UnableToOpenGame := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
 IntroHelp := "This script allows to replay Raid on background while doing other things on foreground. It quickly swap to Raid game window, press the replay hotkey 'R' and go back to your previous window."
 UsageHelp := "1. Open 'Raid: Shadow Legends' on your PC, select the stage and prepare your farming team but don't press 'Play' already.`n2. Then on this application, select your farming options and press 'Start Multi-Battle'."
 DelayHelp := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
@@ -47,7 +51,8 @@ ScriptHelp := "This script is license under Apache 2.0 and it's source code is h
 
 ;;; Constants
 RaidWinTitle := "Raid: Shadow Legends"
-SettingsFile := ScriptTitle . ".ini"
+SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
+RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
 SettingsSection := "SettingsSection"
 DefaultSettings := { delay: 25, repetitions: 10, tab: 1, stage: 1, boost: 3, star: 1 }
 TabOptions = Manual|Calculated|Infinite
@@ -58,154 +63,169 @@ Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 2
 Brutal12_6 := [ [6, 19, 46, 103, 220, 457], [5, 16, 39, 86, 183, 381], [3, 10, 23, 52, 110, 229], [3, 8, 20, 43, 92, 191]]
 CalculatorData := [ Brutal12_3, Brutal12_6 ]
 
-;;; StartUp
-if !WinExist(RaidWinTitle)
-{
-    ; Show error, game start required
-    MsgBox, 48, %ScriptTitle%, %NoGameError%
-    ExitApp
-}
-else
-{
-    ; Init previous settings or default values
-    If (!FileExist(SettingsFile)){
-        Settings := DefaultSettings
-        for key, value in Settings{
-            IniWrite, %value%, %SettingsFile%, %SettingsSection%, %key%
-        }
-    }else{
-        Settings := {}
-        for key, value in DefaultSettings{
-            IniRead, temp, %SettingsFile%, %SettingsSection%, %key%
-            Settings[key] := temp
-        }
+;;; Check game started
+;if !WinExist(RaidWinTitle)
+;{
+    ;If (!FileExist(RaidFilePath)){
+        ;Show error and close
+        ;MsgBox, 48, %ScriptTitle%, %NoRunningGameError%
+        ;ExitApp
+    ;}
+    ;else{
+        ;Show error with posibility to auto start game
+        ;MsgBox, 49, %ScriptTitle%, %NoRunningGameError%
+        ;IfMsgbox cancel
+            ;ExitApp
+        ;Run, %RaidFilePath% --args -gameid=101
+    ;}
+;}
+
+
+; Init previous settings or default values
+If (!FileExist(SettingsFilePath)){
+    Settings := DefaultSettings
+    for key, value in Settings{
+        IniWrite, %value%, %SettingsFilePath%, %SettingsSection%, %key%
     }
-
-    ; Prepare selections
-    selectedTab := Settings.tab
-    selectedStage := Settings.stage
-    selectedBoost := Settings.boost
-    selectedStar := Settings.star
-    CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
-
-
-    ;;; Load UIs
-    ;; 1st UI: Home
-    Gui, Font, s10 bold
-    Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
-    Gui, Font, s8 norm
-    Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
-    Gui, Add, Button, w50 ys y15 Center gHelp, Info
-    Gui, Add, text, xs w350 0x10
-
-    Gui, Font, s10 bold
-    Gui, Add, Text, xs, %DelayHeader%
-    Gui, Font, s8 norm
-    Gui, Add, Text, w85 xs Section,
-    Gui, Font, s20 
-    Gui, Add, Button, ys w30 h40 Center gDelayMinus, -
-    Gui, Add, Edit, ys w50 right vDelayEdit, % Settings.delay
-    Gui, Add, Button, ys w30 h40 Center gDelayPlus, +
-    Gui, Font, s12
-    Gui, Add, Text, w100 ys+8, seconds
-    Gui, Font, s8
-
-    Gui, Add, Text,
-    Gui, Font, s10 bold
-    Gui, Add, Text, xs Section, %RepetitionHeader%
-    Gui, Font, s8 norm
-    TCS_FIXEDWIDTH := 0x0400
-    TCM_SETITEMSIZE := 0x1329
-    CtrlWidth := 350
-    TabWidth := (CtrlWidth) / 3
-    Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
-    SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
-
-    Gui, Add, text, w350 Section, %ManualMessage%
-    Gui, Add, Text, xs w73 Section,
-    Gui, Font, s20 
-    Gui, Add, Button, ys w30 h40 Center gRepetitionsMinus, -
-    Gui, Add, Edit, ys w50 right vRepetitionsEdit, % Settings.repetitions
-    Gui, Add, Button, ys w30 h40 Center gRepetitionsPlus, +
-    Gui, Font, s12
-    Gui, Add, Text, w100 ys+20, battles
-    Gui, Font, s8
-    Gui, Tab, 2
-    Gui, Add, text, w100 Section, Stage:
-    Gui, Add, DropDownList, w100 vStageSelector gStageChanged Choose%selectedStage% AltSubmit, %StageOptions%
-    Gui, Add, text, w100 ys, Boost:
-    Gui, Add, DropDownList, w100 vBoostSelector gBoostChanged Choose%selectedBoost% AltSubmit, %BoostOptions%
-    Gui, Add, text, w100 ys, Champion (lvl 1):
-    Gui, Add, DropDownList, w100 vStarSelector gStarChanged Choose%selectedStar% AltSubmit, %StarOptions%
-    Gui, Add, Text, w85 xs Section,
-    Gui, Font, s20 
-    Gui, Add, Text, w60 right ys vCalculatedRepetitions, %CalculatedRepetitions%
-    Gui, Font, s12
-    Gui, Add, Text, w100 ys+8, battles
-    Gui, Font, s8
-    Gui, Tab, 3
-    Gui, Add, text, w350 Section, %InfiniteMessage%
-    Gui, Add, Text, w85 Section,
-    Gui, Font, s20 
-    Gui, Add, Text, w40 ys right, INFINITE
-    Gui, Font, s12
-    Gui, Add, Text, w100 ys+8, battles
-    Gui, Font, s8
-    Gui, Tab 
-
-    Gui, Add, Text,
-    Gui, Font, s10 bold
-    Gui, Add, Button, w350 h30 Center gStart, %StartButton%
-    Gui, Font, s8 norm
-    Gui, Add, Text,,
-
-    ;; 2nd UI: Progress
-    Gui, 2:Font,bold
-    Gui, 2:Add, Text, w250 Center vWorkingTitle,
-    Gui, 2:Font
-    Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress1, 0
-    Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress2, 0
-    Gui, 2:Add, Text, w250 Center vWorkingStatus
-    Gui, 2:Font, s10 bold
-    Gui, 2:Add, Button, w250 h30 gStop, %StopButton%
-    Gui, 2:Font, s8 norm
-
-    ;; 3rd UI: Help
-    Gui, 3:Font, s10 bold
-    Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
-    Gui, 3:Font, s8 norm
-    Gui, 3:Add, Text, w280 y+2 Center, %ScriptDescription%
-    Gui, 3:Add, Button, w50 ys y15 Center gBackFromHelp, Back
-    Gui, 3:Add, text, xs w350 0x10    
-    Gui, 3:Font, s10 bold
-    Gui, 3:Add, Text, w350 Center xs, Help
-    Gui, 3:Font, s8 norm
-    Gui, 3:Add, Text, w350 xs Section, %IntroHelp%
-    Gui, 3:Font, s9 bold
-    Gui, 3:Add, Text, xs, Usage
-    Gui, 3:Font, s8 norm
-    Gui, 3:Add, Text, w350 xs Section, %UsageHelp%
-    Gui, 3:Font, s9 bold
-    Gui, 3:Add, Text, xs, %DelayHeader%
-    Gui, 3:Font, s8 norm
-    Gui, 3:Add, Text, w350 xs Section, %DelayHelp%
-    Gui, 3:Font, s9 bold
-    Gui, 3:Add, Text, xs, %RepetitionHeader%
-    Gui, 3:Font, s8 norm
-    Gui, 3:Add, Text, w350 xs Section, %RepetitionHelp%
-    Gui, 3:Add, Text, w350 xs Section, %StartBattleHelp%
-    Gui, 3:Add, text, xs w350 0x10
-    Gui, 3:Font, s10 bold
-    Gui, 3:Add, Text, w350 Center xs, About
-    Gui, 3:Font, s8 norm
-    Gui, 3:Add, Text, w280 xs Section, %ScriptHelp%
-    Gui, 3:Add, Button, w50 ys Center gGoToSite, Site
-    Gui, 3:Add, Text, xs
-
-    ; Show 1st UI
-    Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
-    return
+}else{
+    Settings := {}
+    for key, value in DefaultSettings{
+        IniRead, temp, %SettingsFilePath%, %SettingsSection%, %key%
+        Settings[key] := temp
+    }
 }
+
+; Prepare selections
+selectedTab := Settings.tab
+selectedStage := Settings.stage
+selectedBoost := Settings.boost
+selectedStar := Settings.star
+CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
+
+
+;;; Load UIs
+;; 1st UI: Home
+Gui, Font, s10 bold
+Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+Gui, Font, s8 norm
+Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
+Gui, Add, Button, w50 ys y15 Center gHelp, Info
+Gui, Add, text, xs w350 0x10
+
+Gui, Font, s10 bold
+Gui, Add, Text, xs, %TeamHeader%
+Gui, Font, s10 norm
+Gui, Add, Text, w280 xs Section, %TeamDescription%
+Gui, Add, Button, w50 ys Center gGoToGame, Go
+
+Gui, Font, s10 bold
+Gui, Add, Text, xs, %DelayHeader%
+Gui, Font, s8 norm
+Gui, Add, Text, w85 xs Section,
+Gui, Font, s20 
+Gui, Add, Button, ys w30 h40 Center gDelayMinus, -
+Gui, Add, Edit, ys w50 right vDelayEdit, % Settings.delay
+Gui, Add, Button, ys w30 h40 Center gDelayPlus, +
+Gui, Font, s12
+Gui, Add, Text, w100 ys+8, seconds
+Gui, Font, s8
+
+Gui, Add, Text,
+Gui, Font, s10 bold
+Gui, Add, Text, xs Section, %RepetitionHeader%
+Gui, Font, s8 norm
+TCS_FIXEDWIDTH := 0x0400
+TCM_SETITEMSIZE := 0x1329
+CtrlWidth := 350
+TabWidth := (CtrlWidth) / 3
+Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
+SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
+
+Gui, Add, text, w350 Section, %ManualMessage%
+Gui, Add, Text, xs w73 Section,
+Gui, Font, s20 
+Gui, Add, Button, ys w30 h40 Center gRepetitionsMinus, -
+Gui, Add, Edit, ys w50 right vRepetitionsEdit, % Settings.repetitions
+Gui, Add, Button, ys w30 h40 Center gRepetitionsPlus, +
+Gui, Font, s12
+Gui, Add, Text, w100 ys+20, battles
+Gui, Font, s8
+Gui, Tab, 2
+Gui, Add, text, w100 Section, Stage:
+Gui, Add, DropDownList, w100 vStageSelector gStageChanged Choose%selectedStage% AltSubmit, %StageOptions%
+Gui, Add, text, w100 ys, Boost:
+Gui, Add, DropDownList, w100 vBoostSelector gBoostChanged Choose%selectedBoost% AltSubmit, %BoostOptions%
+Gui, Add, text, w100 ys, Champion (lvl 1):
+Gui, Add, DropDownList, w100 vStarSelector gStarChanged Choose%selectedStar% AltSubmit, %StarOptions%
+Gui, Add, Text, w85 xs Section,
+Gui, Font, s20 
+Gui, Add, Text, w60 right ys vCalculatedRepetitions, %CalculatedRepetitions%
+Gui, Font, s12
+Gui, Add, Text, w100 ys+8, battles
+Gui, Font, s8
+Gui, Tab, 3
+Gui, Add, text, w350 Section, %InfiniteMessage%
+Gui, Add, Text, w85 Section,
+Gui, Font, s20 
+Gui, Add, Text, w40 ys right, INFINITE
+Gui, Font, s12
+Gui, Add, Text, w100 ys+8, battles
+Gui, Font, s8
+Gui, Tab 
+
+Gui, Add, Text,
+Gui, Font, s10 bold
+Gui, Add, Button, w350 h30 Center gStart, %StartButton%
+Gui, Font, s8 norm
+Gui, Add, Text,,
+
+;; 2nd UI: Progress
+Gui, 2:Font,bold
+Gui, 2:Add, Text, w250 Center vWorkingTitle,
+Gui, 2:Font
+Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress1, 0
+Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress2, 0
+Gui, 2:Add, Text, w250 Center vWorkingStatus
+Gui, 2:Font, s10 bold
+Gui, 2:Add, Button, w250 h30 gStop, %StopButton%
+Gui, 2:Font, s8 norm
+
+;; 3rd UI: Help
+Gui, 3:Font, s10 bold
+Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+Gui, 3:Font, s8 norm
+Gui, 3:Add, Text, w280 y+2 Center, %ScriptDescription%
+Gui, 3:Add, Button, w50 ys y15 Center gBackFromHelp, Back
+Gui, 3:Add, text, xs w350 0x10    
+Gui, 3:Font, s10 bold
+Gui, 3:Add, Text, w350 Center xs, Help
+Gui, 3:Font, s8 norm
+Gui, 3:Add, Text, w350 xs Section, %IntroHelp%
+Gui, 3:Font, s9 bold
+Gui, 3:Add, Text, xs, Usage
+Gui, 3:Font, s8 norm
+Gui, 3:Add, Text, w350 xs Section, %UsageHelp%
+Gui, 3:Font, s9 bold
+Gui, 3:Add, Text, xs, %DelayHeader%
+Gui, 3:Font, s8 norm
+Gui, 3:Add, Text, w350 xs Section, %DelayHelp%
+Gui, 3:Font, s9 bold
+Gui, 3:Add, Text, xs, %RepetitionHeader%
+Gui, 3:Font, s8 norm
+Gui, 3:Add, Text, w350 xs Section, %RepetitionHelp%
+Gui, 3:Add, Text, w350 xs Section, %StartBattleHelp%
+Gui, 3:Add, text, xs w350 0x10
+Gui, 3:Font, s10 bold
+Gui, 3:Add, Text, w350 Center xs, About
+Gui, 3:Font, s8 norm
+Gui, 3:Add, Text, w280 xs Section, %ScriptHelp%
+Gui, 3:Add, Button, w50 ys Center gGoToSite, Site
+Gui, 3:Add, Text, xs
+
+; Show 1st UI
+Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
+return
+
 
 Help:
     Gui,+LastFound
@@ -226,6 +246,24 @@ GoToSite:
     Run %ScriptSite%
     return
     
+GoToGame:
+    if WinExist(RaidWinTitle){
+        ; Game already open, activate window
+        WinActivate, %RaidWinTitle%
+    }
+    else{
+        If (FileExist(RaidFilePath)){
+            ; Open game
+            Run, %RaidFilePath% --args -gameid=101
+        }
+        else{
+            ; Show unable to open game dialog
+            MsgBox, 48, %ScriptTitle%, %UnableToOpenGame%
+            return
+        }
+    }
+    return
+    
 DelayMinus:
 DelayPlus:
     Gui, Submit, NoHide
@@ -233,7 +271,7 @@ DelayPlus:
         DelayEdit++
     else 
         DelayEdit--
-    IniWrite, %DelayEdit%, %SettingsFile%, %SettingsSection%, delay
+    IniWrite, %DelayEdit%, %SettingsFilePath%, %SettingsSection%, delay
     GuiControl,, DelayEdit, %DelayEdit%
     return
     
@@ -244,13 +282,13 @@ RepetitionsPlus:
         RepetitionsEdit++
     else 
         RepetitionsEdit--
-    IniWrite, %RepetitionsEdit%, %SettingsFile%, %SettingsSection%, repetitions
+    IniWrite, %RepetitionsEdit%, %SettingsFilePath%, %SettingsSection%, repetitions
     GuiControl,, RepetitionsEdit, %RepetitionsEdit%
     return
 
 TabChanged:
     Gui, Submit, NoHide
-    IniWrite, %TabSelector%, %SettingsFile%, %SettingsSection%, tab
+    IniWrite, %TabSelector%, %SettingsFilePath%, %SettingsSection%, tab
     return
 
 StageChanged:
@@ -259,12 +297,17 @@ StarChanged:
     Gui, Submit, NoHide
     CalculatedRepetitions := CalculatorData[StageSelector][BoostSelector][StarSelector]
     GuiControl,, CalculatedRepetitions, %CalculatedRepetitions%
-    IniWrite, %StageSelector%, %SettingsFile%, %SettingsSection%, stage
-    IniWrite, %BoostSelector%, %SettingsFile%, %SettingsSection%, boost
-    IniWrite, %StarSelector%, %SettingsFile%, %SettingsSection%, star
+    IniWrite, %StageSelector%, %SettingsFilePath%, %SettingsSection%, stage
+    IniWrite, %BoostSelector%, %SettingsFilePath%, %SettingsSection%, boost
+    IniWrite, %StarSelector%, %SettingsFilePath%, %SettingsSection%, star
     return
 
 Start:
+    if !WinExist(RaidWinTitle){
+        MsgBox, 48, %ScriptTitle%, %NoRunningGameError%
+        return
+    }
+    
     StartTime := A_TickCount
     Gui, Submit
     Gui,+LastFound
@@ -333,10 +376,10 @@ Start:
                 
             If !WinExist(RaidWinTitle) {
                 isRunning := false
-                TrayTip, %ScriptTitle%, Canceled, game closed, 20, 17
+                TrayTip, %ScriptTitle%, %ClosedGameError%, 20, 17
                 Gui,+LastFound
                 WinGetPos,x,y
-                MsgBox, 48, %ScriptTitle%, %NoGameError%
+                MsgBox, 48, %ScriptTitle%, %ClosedGameError%
                 Gui, 1:Show, x%x% y%y%, %ScriptTitle%
                 Gui, 2:Hide
                 break
@@ -376,8 +419,8 @@ Stop:
 GuiClose:
     Gui, Submit
     ; Following values need to be manually stored, as can be changed manually
-    IniWrite, %DelayEdit%, %SettingsFile%, %SettingsSection%, delay
-    IniWrite, %RepetitionsEdit%, %SettingsFile%, %SettingsSection%, repetitions
+    IniWrite, %DelayEdit%, %SettingsFilePath%, %SettingsSection%, delay
+    IniWrite, %RepetitionsEdit%, %SettingsFilePath%, %SettingsSection%, repetitions
     
     Gui, 1:Destroy
     Gui, 2:Destroy
