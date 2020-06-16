@@ -30,11 +30,11 @@ ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
 ScriptAuthor := "Rafael Acosta Alvarez"
 
 ;;; Texts
-TeamHeader := "1. Prepare your team:"
-TeamDescription := "Open the game, select a stage and prepare your farming team but don't press 'Play' already.`n"
-DelayHeader := "2. Time between battles:"
-RepetitionHeader := "3. Number of battles:"
-StartHeader := "4. Start farming:"
+TeamHeader := "1. Prepare your team"
+TeamDescription := "Open the game, select a stage and prepare your team."
+DelayHeader := "3. Select time between battles"
+RepetitionHeader := "2. Select number of battles"
+StartHeader := "4. Start farming"
 StartButton := "Start Multi-Battle"
 StopButton := "Stop"
 InfiniteMessage := "`nWe will keep playing mult-battles till you press stop."
@@ -91,33 +91,14 @@ CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedSt
 ;;; Load UIs
 ;; 1st UI: Home
 Gui, Font, s10 bold
-Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+Gui, Add, Text, w280 Section Center,
+Gui, Add, Button, w50 ys Center gShowInfo, Info
+Gui, Add, Text, w280 xs Section, %TeamHeader%
 Gui, Font, s10 norm
-Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
-Gui, Add, Button, w50 ys y15 Center gShowInfo, Info
-Gui, Add, text, xs w350 0x10
-Gui, Font, s10 bold
-Gui, Add, Text, xs, %TeamHeader%
-Gui, Font, s10 norm
-Gui, Add, Text, w2 xs Section, 
-Gui, Add, Text, w258 ys, %TeamDescription%
-Gui, Add, Button, w50 ys+5 Center gGoToGame, Go
-Gui, Font, s10 bold
-Gui, Add, Text, xs, %DelayHeader%
-Gui, Font, s8 norm
-Gui, Add, Text, w45 xs Section,
-Gui, Font, s20 
-Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
-Gui, Add, UpDown, ys Range0-60 vUpDownMinute gSettingChangedByUpDown, % Settings.minute
-Gui, Font, s12
-Gui, Add, Text, ys+8, minutes
-Gui, Font, s20 
-Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditSecond +Limit3 +Number, % Settings.second
-Gui, Add, UpDown, ys Range0-59 vUpDownSecond gSettingChangedByUpDown, % Settings.second
-Gui, Font, s12
-Gui, Add, Text, ys+8, seconds
-Gui, Font, s8
-Gui, Add, Text,
+Gui, Add, Text, w280 xs, %TeamDescription%
+Gui, Add, Button, w50 ys+15 Center gGoToGame, Open`nGame
+Gui, Font, s2
+Gui, Add, Text, xs,
 Gui, Font, s10 bold
 Gui, Add, Text, xs Section, %RepetitionHeader%
 Gui, Font, s10 norm
@@ -126,7 +107,7 @@ TCM_SETITEMSIZE := 0x1329
 CtrlWidth := 350
 TabWidth := (CtrlWidth) / 3
 Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
-SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
+SendMessage, TCM_SETITEMSIZE, 0, TabWidth+28, , ahk_id %HTAB%
 Gui, Add, text, w350 Section, %ManualMessage%
 Gui, Add, Text, xs w80 Section,
 Gui, Font, s20 
@@ -153,13 +134,32 @@ Gui, Font, s45
 Gui, Add, Text, xs+120 ys+12 w70 Right h30 w40 0x200, % InfiniteSymbol
 Gui, Font, s12
 Gui, Add, Text, xs+174 ys+16, battles
-Gui, Font, s10
-Gui, Tab 
-Gui, Add, Text,
+Gui, Tab
+Gui, Font, s2
+Gui, Add, Text, Section,
 Gui, Font, s10 bold
-Gui, Add, Button, w350 h30 Center gStart, %StartButton%
-Gui, Font, s8 norm
-Gui, Add, Text,,
+Gui, Add, Text, xs, %DelayHeader%
+Gui, Font, s10 norm
+
+Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH%, Manual
+SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
+Gui, Add, Text, Section w45,
+Gui, Font, s20 
+Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
+Gui, Add, UpDown, ys Range0-60 vUpDownMinute gSettingChangedByUpDown, % Settings.minute
+Gui, Font, s12
+Gui, Add, Text, ys+8, minutes
+Gui, Font, s20 
+Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditSecond +Limit3 +Number, % Settings.second
+Gui, Add, UpDown, ys Range0-59 vUpDownSecond gSettingChangedByUpDown, % Settings.second
+Gui, Font, s12
+Gui, Add, Text, ys+8, seconds
+Gui, Tab
+
+Gui, Font, s2
+Gui, Add, Text, Section,
+Gui, Font, s10 bold
+Gui, Add, Button, Section w350 h30 Center gStart, %StartButton%
 
 ;; 2nd UI: Progress
 Gui, 2:Font,bold
