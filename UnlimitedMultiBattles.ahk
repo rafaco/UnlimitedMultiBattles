@@ -1,4 +1,4 @@
-﻿;
+;
 ;   Copyright 2020 Rafael Acosta Alvarez
 ;    
 ;   Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,8 +37,9 @@ RepetitionHeader := "3. Number of battles:"
 StartHeader := "4. Start farming:"
 StartButton := "Start Multi-Battle"
 StopButton := "Stop"
-InfiniteMessage := "`nInfinite mode, we will keep replaying till you press stop."
-ManualMessage := "`nManually select the number of times you want to multi-play."
+InfiniteMessage := "`nWe will keep replaying till you press stop."
+ManualMessage := "`nEnter the number of times you want to multi-play."
+CalculatedMessage := "Exact battles to max out your level 1 champions:"
 NoRunningGameError := "You have to open the game and select your team before start."
 ClosedGameError := "Canceled, the game has been closed."
 UnableToOpenGame := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
@@ -54,34 +55,18 @@ RaidWinTitle := "Raid: Shadow Legends"
 SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
 RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
 SettingsSection := "SettingsSection"
-DefaultSettings := { minute: 0, second: 25, repetitions: 10, tab: 1, stage: 1, boost: 3, star: 1 }
+DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, stage: 1, boost: 3, star: 1 }
+InfiniteSymbol := Chr(0x221E)
 TabOptions = Manual|Calculated|Infinite
 StageOptions = Brutal 12-3|Brutal 12-6
-BoostOptions := "None 0%|Raid Boost +20%|XP Boost +100%|Both +120%"
+BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
 StarOptions = 1 Star|2 Star|3 Star|4 Star|5 Star|6 Star
 Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 24, 52, 112, 233], [3, 8, 20, 44, 93, 194]]
 Brutal12_6 := [ [6, 19, 46, 103, 220, 457], [5, 16, 39, 86, 183, 381], [3, 10, 23, 52, 110, 229], [3, 8, 20, 43, 92, 191]]
 CalculatorData := [ Brutal12_3, Brutal12_6 ]
 
-;;; Check game started
-;if !WinExist(RaidWinTitle)
-;{
-    ;If (!FileExist(RaidFilePath)){
-        ;Show error and close
-        ;MsgBox, 48, %ScriptTitle%, %NoRunningGameError%
-        ;ExitApp
-    ;}
-    ;else{
-        ;Show error with posibility to auto start game
-        ;MsgBox, 49, %ScriptTitle%, %NoRunningGameError%
-        ;IfMsgbox cancel
-            ;ExitApp
-        ;Run, %RaidFilePath% --args -gameid=101
-    ;}
-;}
 
-
-; Init previous settings or default values
+; Init settings (previous values or default ones)
 If (!FileExist(SettingsFilePath)){
     Settings := DefaultSettings
     for key, value in Settings{
@@ -109,74 +94,66 @@ Gui, Font, s10 bold
 Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
 Gui, Font, s8 norm
 Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
-Gui, Add, Button, w50 ys y15 Center gHelp, Info
+Gui, Add, Button, w50 ys y15 Center gShowInfo, Info
 Gui, Add, text, xs w350 0x10
-
 Gui, Font, s10 bold
 Gui, Add, Text, xs, %TeamHeader%
 Gui, Font, s10 norm
 Gui, Add, Text, w280 xs Section, %TeamDescription%
 Gui, Add, Button, w50 ys Center gGoToGame, Go
-
 Gui, Font, s10 bold
 Gui, Add, Text, xs, %DelayHeader%
 Gui, Font, s8 norm
 Gui, Add, Text, w45 xs Section,
 Gui, Font, s20 
-Gui, Add, Edit, ys w55 Right gTimeEdit vEditMinute +Limit3 +Number, % Settings.minute
-Gui, Add, UpDown, ys Range0-60 vUpDownMinute gTimeUpDown, % Settings.minute
+Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
+Gui, Add, UpDown, ys Range0-60 vUpDownMinute gSettingChangedByUpDown, % Settings.minute
 Gui, Font, s12
 Gui, Add, Text, ys+8, minutes
 Gui, Font, s20 
-Gui, Add, Edit, ys w55 Right gTimeEdit vEditSecond +Limit3 +Number, % Settings.second
-Gui, Add, UpDown, ys Range0-59 vUpDownSecond gTimeUpDown, % Settings.second
+Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditSecond +Limit3 +Number, % Settings.second
+Gui, Add, UpDown, ys Range0-59 vUpDownSecond gSettingChangedByUpDown, % Settings.second
 Gui, Font, s12
 Gui, Add, Text, ys+8, seconds
 Gui, Font, s8
-
 Gui, Add, Text,
 Gui, Font, s10 bold
 Gui, Add, Text, xs Section, %RepetitionHeader%
-Gui, Font, s8 norm
+Gui, Font, s10 norm
 TCS_FIXEDWIDTH := 0x0400
 TCM_SETITEMSIZE := 0x1329
 CtrlWidth := 350
 TabWidth := (CtrlWidth) / 3
-Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
+Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
 SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
-
 Gui, Add, text, w350 Section, %ManualMessage%
-Gui, Add, Text, xs w73 Section,
+Gui, Add, Text, xs w80 Section,
 Gui, Font, s20 
-Gui, Add, Button, ys w30 h40 Center gRepetitionsMinus, -
-Gui, Add, Edit, ys w50 right vRepetitionsEdit, % Settings.repetitions
-Gui, Add, Button, ys w30 h40 Center gRepetitionsPlus, +
+Gui, Add, Edit, ys+8 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
+Gui, Add, UpDown, ys Range0-999 vUpDownBattles gSettingChangedByUpDown, % Settings.battles
 Gui, Font, s12
-Gui, Add, Text, w100 ys+20, battles
-Gui, Font, s8
+Gui, Add, Text, xs+174 ys+16, battles
+Gui, Font, s10
 Gui, Tab, 2
-Gui, Add, text, w100 Section, Stage:
-Gui, Add, DropDownList, w100 vStageSelector gStageChanged Choose%selectedStage% AltSubmit, %StageOptions%
-Gui, Add, text, w100 ys, Boost:
-Gui, Add, DropDownList, w100 vBoostSelector gBoostChanged Choose%selectedBoost% AltSubmit, %BoostOptions%
-Gui, Add, text, w100 ys, Champion (lvl 1):
-Gui, Add, DropDownList, w100 vStarSelector gStarChanged Choose%selectedStar% AltSubmit, %StarOptions%
-Gui, Add, Text, w85 xs Section,
+Gui, Add, text, w350 Section, %CalculatedMessage%
+Gui, Add, DropDownList, xs Section w100 vStageSelector gSettingChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
+Gui, Add, DropDownList, ys w100 vBoostSelector gSettingChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
+Gui, Add, DropDownList, ys w100 vStarSelector gSettingChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
+Gui, Add, Text, w70 xs Section,
 Gui, Font, s20 
-Gui, Add, Text, w60 right ys vCalculatedRepetitions, %CalculatedRepetitions%
+Gui, Add, Text, w1 xs+120 right ys vCalculatedRepetitions, %CalculatedRepetitions%
 Gui, Font, s12
-Gui, Add, Text, w100 ys+8, battles
-Gui, Font, s8
+Gui, Add, Text, w100 xs+174 ys+3, battles
+Gui, Font, s10
 Gui, Tab, 3
 Gui, Add, text, w350 Section, %InfiniteMessage%
-Gui, Add, Text, w85 Section,
-Gui, Font, s20 
-Gui, Add, Text, w40 ys right, INFINITE
+Gui, Add, Text, xs w80 Section,
+Gui, Font, s45 
+Gui, Add, Text, xs+120 ys+12 w70 Right h30 w40 0x200, % InfiniteSymbol
 Gui, Font, s12
-Gui, Add, Text, w100 ys+8, battles
-Gui, Font, s8
+Gui, Add, Text, xs+174 ys+16, battles
+Gui, Font, s10
 Gui, Tab 
-
 Gui, Add, Text,
 Gui, Font, s10 bold
 Gui, Add, Button, w350 h30 Center gStart, %StartButton%
@@ -194,12 +171,12 @@ Gui, 2:Font, s10 bold
 Gui, 2:Add, Button, w250 h30 gStop, %StopButton%
 Gui, 2:Font, s8 norm
 
-;; 3rd UI: Help
+;; 3rd UI: Info
 Gui, 3:Font, s10 bold
 Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
 Gui, 3:Font, s8 norm
 Gui, 3:Add, Text, w280 y+2 Center, %ScriptDescription%
-Gui, 3:Add, Button, w50 ys y15 Center gBackFromHelp, Back
+Gui, 3:Add, Button, w50 ys y15 Center gBackFromInfo, Back
 Gui, 3:Add, text, xs w350 0x10    
 Gui, 3:Font, s10 bold
 Gui, 3:Add, Text, w350 Center xs, Help
@@ -234,48 +211,23 @@ return
 
 ;;; Labels
 
-TimeEdit:
-    Gui, Submit, NoHide
-	;Get Values
-	GuiControlGet,MinuteValue,,EditMinute
-	GuiControlGet,SecondValue,,EditSecond
-	;Store on settings
-	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
-	;Make Everything else aware
-	GuiControl,,UpDownMinute,%MinuteValue%
-	GuiControl,,UpDownSecond,%SecondValue%
-return
-
-TimeUpDown:
-	;Get Values
-	GuiControlGet,MinuteValue,,UpDownMinute
-	GuiControlGet,SecondValue,,UpDownSecond
-	;Store on settings
-	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
-	;Make Everything else aware
-	GuiControl,,EditMinute,%UpDownMinute%
-	GuiControl,,EditSecond,%UpDownSecond%
-return
-
-Help:
+ShowInfo:
     Gui,+LastFound
     WinGetPos,x,y
     Gui, 3:Show, x%x% y%y%, %ScriptTitle%
     Gui, 1:Hide
-    return
+return
    
-BackFromHelp:
+BackFromInfo:
     Gui,+LastFound
     WinGetPos,x,y
     Gui, 1:Show, x%x% y%y%, %ScriptTitle%
     Gui, 3:Hide
-    return
+return
 
 GoToSite:
     Run %ScriptSite%
-    return
+return
     
 GoToGame:
     if WinExist(RaidWinTitle){
@@ -293,35 +245,58 @@ GoToGame:
             return
         }
     }
-    return
-   
-    
-RepetitionsMinus:
-RepetitionsPlus:
-    Gui, Submit, NoHide
-    If (A_GuiControl = "+") 
-        RepetitionsEdit++
-    else 
-        RepetitionsEdit--
-    IniWrite, %RepetitionsEdit%, %SettingsFilePath%, %SettingsSection%, repetitions
-    GuiControl,, RepetitionsEdit, %RepetitionsEdit%
-    return
+return
 
-TabChanged:
+SettingChangedByEdit:
     Gui, Submit, NoHide
-    IniWrite, %TabSelector%, %SettingsFilePath%, %SettingsSection%, tab
-    return
+	;Get Values
+	GuiControlGet,MinuteValue,,EditMinute
+	GuiControlGet,SecondValue,,EditSecond
+    GuiControlGet,BattlesValue,,EditBattles
+	;Store on settings
+	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+    IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
+	;Make everything else aware
+	GuiControl,,UpDownMinute,%MinuteValue%
+	GuiControl,,UpDownSecond,%SecondValue%
+    GuiControl,,UpDownBattles,%BattlesValue%
+return
 
-StageChanged:
-BoostChanged:
-StarChanged:
-    Gui, Submit, NoHide
-    CalculatedRepetitions := CalculatorData[StageSelector][BoostSelector][StarSelector]
+SettingChangedByUpDown:
+	;Get Values
+	GuiControlGet,MinuteValue,,UpDownMinute
+	GuiControlGet,SecondValue,,UpDownSecond
+    GuiControlGet,BattlesValue,,UpDownBattles
+	;Store on settings
+	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+    IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
+	;Make everything else aware
+	GuiControl,,EditMinute,%UpDownMinute%
+	GuiControl,,EditSecond,%UpDownSecond%
+    GuiControl,,EditBattles,%BattlesValue%
+return  
+
+SettingChangedBySelector:
+    ;Get Values
+	GuiControlGet,StageValue,,StageSelector
+	GuiControlGet,BoostValue,,BoostSelector
+    GuiControlGet,StarValue,,StarSelector
+    ;Store on settings
+    IniWrite, %StageValue%, %SettingsFilePath%, %SettingsSection%, stage
+    IniWrite, %BoostValue%, %SettingsFilePath%, %SettingsSection%, boost
+    IniWrite, %StarValue%, %SettingsFilePath%, %SettingsSection%, star
+    ;Make everything else aware
+    CalculatedRepetitions := CalculatorData[StageValue][BoostValue][StarValue]
     GuiControl,, CalculatedRepetitions, %CalculatedRepetitions%
-    IniWrite, %StageSelector%, %SettingsFilePath%, %SettingsSection%, stage
-    IniWrite, %BoostSelector%, %SettingsFilePath%, %SettingsSection%, boost
-    IniWrite, %StarSelector%, %SettingsFilePath%, %SettingsSection%, star
-    return
+return
+    
+SettingChangedByTab:
+    ;Get Values
+	GuiControlGet,TagValue,,TabSelector
+    IniWrite, %TagValue%, %SettingsFilePath%, %SettingsSection%, tab
+return
 
 Start:
     if !WinExist(RaidWinTitle){
@@ -337,7 +312,7 @@ Start:
     Gui, 1:Hide
 
     isRunning := true
-    repetitions := (TabSelector = 1) ? RepetitionsEdit : (TabSelector = 2) ? CalculatedRepetitions : -1
+    repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? CalculatedRepetitions : -1
     isInfinite := (repetitions = -1)
 
     waitSeconds := SecondValue + ( MinuteValue * 60 )
@@ -426,7 +401,7 @@ Start:
         Gui, 1:Show, x%x% y%y%, %ScriptTitle%
         Gui, 2:Hide
     }
-    return
+return
 
 Stop:
     isRunning := false
@@ -435,14 +410,14 @@ Stop:
     WinGetPos,x,y
     Gui, 1:Show, x%x% y%y%, %ScriptTitle%
     Gui, 2:Hide
-    Return
+return
 
 GuiClose:
     Gui, Submit
     ; Following values need to be manually stored, as can be changed manually
     IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
     IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
-    IniWrite, %RepetitionsEdit%, %SettingsFilePath%, %SettingsSection%, repetitions
+    IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
     
     Gui, 1:Destroy
     Gui, 2:Destroy
