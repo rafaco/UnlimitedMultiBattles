@@ -37,8 +37,8 @@ RepetitionHeader := "3. Number of battles:"
 StartHeader := "4. Start farming:"
 StartButton := "Start Multi-Battle"
 StopButton := "Stop"
-InfiniteMessage := "`nWe will keep replaying till you press stop."
-ManualMessage := "`nEnter the number of times you want to multi-play."
+InfiniteMessage := "`nWe will keep playing mult-battles till you press stop."
+ManualMessage := "`nEnter any number of multi-battles."
 CalculatedMessage := "Exact battles to max out your level 1 champions:"
 NoRunningGameError := "You have to open the game and select your team before start."
 ClosedGameError := "Canceled, the game has been closed."
@@ -92,15 +92,16 @@ CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedSt
 ;; 1st UI: Home
 Gui, Font, s10 bold
 Gui, Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
-Gui, Font, s8 norm
+Gui, Font, s10 norm
 Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
 Gui, Add, Button, w50 ys y15 Center gShowInfo, Info
 Gui, Add, text, xs w350 0x10
 Gui, Font, s10 bold
 Gui, Add, Text, xs, %TeamHeader%
 Gui, Font, s10 norm
-Gui, Add, Text, w280 xs Section, %TeamDescription%
-Gui, Add, Button, w50 ys Center gGoToGame, Go
+Gui, Add, Text, w2 xs Section, 
+Gui, Add, Text, w258 ys, %TeamDescription%
+Gui, Add, Button, w50 ys+5 Center gGoToGame, Go
 Gui, Font, s10 bold
 Gui, Add, Text, xs, %DelayHeader%
 Gui, Font, s8 norm
@@ -174,7 +175,7 @@ Gui, 2:Font, s8 norm
 ;; 3rd UI: Info
 Gui, 3:Font, s10 bold
 Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
-Gui, 3:Font, s8 norm
+Gui, 3:Font, s10 norm
 Gui, 3:Add, Text, w280 y+2 Center, %ScriptDescription%
 Gui, 3:Add, Button, w50 ys y15 Center gBackFromInfo, Back
 Gui, 3:Add, text, xs w350 0x10    
