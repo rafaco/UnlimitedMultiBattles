@@ -54,7 +54,7 @@ RaidWinTitle := "Raid: Shadow Legends"
 SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
 RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
 SettingsSection := "SettingsSection"
-DefaultSettings := { delay: 25, repetitions: 10, tab: 1, stage: 1, boost: 3, star: 1 }
+DefaultSettings := { minute: 0, second: 25, repetitions: 10, tab: 1, stage: 1, boost: 3, star: 1 }
 TabOptions = Manual|Calculated|Infinite
 StageOptions = Brutal 12-3|Brutal 12-6
 BoostOptions := "None 0%|Raid Boost +20%|XP Boost +100%|Both +120%"
@@ -121,13 +121,17 @@ Gui, Add, Button, w50 ys Center gGoToGame, Go
 Gui, Font, s10 bold
 Gui, Add, Text, xs, %DelayHeader%
 Gui, Font, s8 norm
-Gui, Add, Text, w85 xs Section,
+Gui, Add, Text, w45 xs Section,
 Gui, Font, s20 
-Gui, Add, Button, ys w30 h40 Center gDelayMinus, -
-Gui, Add, Edit, ys w50 right vDelayEdit, % Settings.delay
-Gui, Add, Button, ys w30 h40 Center gDelayPlus, +
+Gui, Add, Edit, ys w55 Right gTimeEdit vEditMinute +Limit3 +Number, % Settings.minute
+Gui, Add, UpDown, ys Range0-60 vUpDownMinute gTimeUpDown, % Settings.minute
 Gui, Font, s12
-Gui, Add, Text, w100 ys+8, seconds
+Gui, Add, Text, ys+8, minutes
+Gui, Font, s20 
+Gui, Add, Edit, ys w55 Right gTimeEdit vEditSecond +Limit3 +Number, % Settings.second
+Gui, Add, UpDown, ys Range0-59 vUpDownSecond gTimeUpDown, % Settings.second
+Gui, Font, s12
+Gui, Add, Text, ys+8, seconds
 Gui, Font, s8
 
 Gui, Add, Text,
@@ -227,12 +231,39 @@ Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
 return
 
 
+
+;;; Labels
+
+TimeEdit:
+    Gui, Submit, NoHide
+	;Get Values
+	GuiControlGet,MinuteValue,,EditMinute
+	GuiControlGet,SecondValue,,EditSecond
+	;Store on settings
+	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+	;Make Everything else aware
+	GuiControl,,UpDownMinute,%MinuteValue%
+	GuiControl,,UpDownSecond,%SecondValue%
+return
+
+TimeUpDown:
+	;Get Values
+	GuiControlGet,MinuteValue,,UpDownMinute
+	GuiControlGet,SecondValue,,UpDownSecond
+	;Store on settings
+	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+	;Make Everything else aware
+	GuiControl,,EditMinute,%UpDownMinute%
+	GuiControl,,EditSecond,%UpDownSecond%
+return
+
 Help:
     Gui,+LastFound
     WinGetPos,x,y
     Gui, 3:Show, x%x% y%y%, %ScriptTitle%
     Gui, 1:Hide
-    Return
     return
    
 BackFromHelp:
@@ -240,7 +271,7 @@ BackFromHelp:
     WinGetPos,x,y
     Gui, 1:Show, x%x% y%y%, %ScriptTitle%
     Gui, 3:Hide
-    Return
+    return
 
 GoToSite:
     Run %ScriptSite%
@@ -263,17 +294,7 @@ GoToGame:
         }
     }
     return
-    
-DelayMinus:
-DelayPlus:
-    Gui, Submit, NoHide
-    If (A_GuiControl = "+") 
-        DelayEdit++
-    else 
-        DelayEdit--
-    IniWrite, %DelayEdit%, %SettingsFilePath%, %SettingsSection%, delay
-    GuiControl,, DelayEdit, %DelayEdit%
-    return
+   
     
 RepetitionsMinus:
 RepetitionsPlus:
@@ -319,7 +340,7 @@ Start:
     repetitions := (TabSelector = 1) ? RepetitionsEdit : (TabSelector = 2) ? CalculatedRepetitions : -1
     isInfinite := (repetitions = -1)
 
-    waitSeconds := DelayEdit
+    waitSeconds := SecondValue + ( MinuteValue * 60 )
     waitMillis := (waitSeconds * 1000)
 
     if (isInfinite){
@@ -419,7 +440,8 @@ Stop:
 GuiClose:
     Gui, Submit
     ; Following values need to be manually stored, as can be changed manually
-    IniWrite, %DelayEdit%, %SettingsFilePath%, %SettingsSection%, delay
+    IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %RepetitionsEdit%, %SettingsFilePath%, %SettingsSection%, repetitions
     
     Gui, 1:Destroy
