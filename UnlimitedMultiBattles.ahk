@@ -93,137 +93,138 @@ CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedSt
 
 
 ;;; Load UIs
-;; 1st UI: Home
-;TODO: Add/use Gui names instead of numbers 
 
-Gui, Font, s10 bold
-Gui, Add, Text, w250 h35 0x200 border Section Center, %ScriptTitle% %ScriptVersion%
-;Gui, Font, s10 norm
-;Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
-Gui, Font, s15 bold
-Gui, Add, Button, w35 h35 ys Center gInfoTooltip vSettingsButton, % GearSymbol
-Gui, Add, Button, w35 h35 ys Center gShowInfo, % InfoSymbol
-;Gui, Add, text, xs w350 0x10 
-Gui, Font, s2
-Gui, Add, Text, xs Section,
+;; 1st UI: Main
+Gui, Main:Font, s10 bold
+Gui, Main:Add, Text, w250 h35 0x200 border Section Center, %ScriptTitle% %ScriptVersion%
+;Gui, Main:Font, s10 norm
+;Gui, Main:Add, Text, w280 y+2 Center, %ScriptDescription%
+Gui, Main:Font, s15 bold
+Gui, Main:Add, Button, w35 h35 ys Center gInfoTooltip vSettingsButton, % GearSymbol
+Gui, Main:Add, Button, w35 h35 ys Center gShowInfo, % InfoSymbol
+;Gui, Main:Add, text, xs w350 0x10 
+Gui, Main:Font, s2
+Gui, Main:Add, Text, xs Section,
 
-Gui, Font, s10 bold
-Gui, Add, Text, xs Section, %TeamHeader%
-Gui, Font, s10 norm
-Gui, Add, Text, w280 xs vTeamDescription, %TeamDescription%
-Gui, Add, Button, w50 ys+15 Center gGoToGame vTeamButton, Open`nGame
-Gui, Font, s2
-Gui, Add, Text, xs,
-Gui, Font, s10 bold
-Gui, Add, Text, xs Section, %RepetitionHeader%
-Gui, Font, s10 norm
+Gui, Main:Font, s10 bold
+Gui, Main:Add, Text, xs Section, %TeamHeader%
+Gui, Main:Font, s10 norm
+Gui, Main:Add, Text, w280 xs vTeamDescription, %TeamDescription%
+Gui, Main:Add, Button, w50 ys+15 Center gGoToGame vTeamButton, Open`nGame
+Gui, Main:Font, s2
+Gui, Main:Add, Text, xs,
+Gui, Main:Font, s10 bold
+Gui, Main:Add, Text, xs Section, %RepetitionHeader%
+Gui, Main:Font, s10 norm
 TCS_FIXEDWIDTH := 0x0400
 TCM_SETITEMSIZE := 0x1329
 CtrlWidth := 350
 TabWidth := (CtrlWidth) / 3
-Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
+Gui, Main:Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
 SendMessage, TCM_SETITEMSIZE, 0, TabWidth+28, , ahk_id %HTAB%
-;Gui, Add, text, w350 Section, %ManualMessage%
-Gui, Add, Text, w75 Section,
-Gui, Font, s20 
-Gui, Add, Edit, ys+10 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
-Gui, Add, UpDown, ys Range0-999 vUpDownBattles gSettingChangedByUpDown, % Settings.battles
-Gui, Font, s14
-Gui, Add, Text, xs+174 ys+16, battles
+;Gui, Main:Add, text, w350 Section, %ManualMessage%
+Gui, Main:Add, Text, w75 Section,
+Gui, Main:Font, s20 
+Gui, Main:Add, Edit, ys+10 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
+Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gSettingChangedByUpDown, % Settings.battles
+Gui, Main:Font, s14
+Gui, Main:Add, Text, xs+174 ys+16, battles
 
-Gui, Tab, 2
-Gui, Font, s10
-;Gui, Add, text, w350 Section, %CalculatedMessage%
-Gui, Add, DropDownList, Section w90 vStageSelector gSettingChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
-Gui, Add, DropDownList, ys w100 vBoostSelector gSettingChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
-Gui, Add, DropDownList, ys w110 vStarSelector gSettingChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
-Gui, Add, Text, w106 xs Section,
-Gui, Font, s20 
-Gui, Add, Text, w45 right ys vCalculatedRepetitions, %CalculatedRepetitions%
-Gui, Font, s14
-Gui, Add, Text, w100 ys+4, battles
+Gui, Main:Tab, 2
+Gui, Main:Font, s10
+;Gui, Main:Add, text, w350 Section, %CalculatedMessage%
+Gui, Main:Add, DropDownList, Section w90 vStageSelector gSettingChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
+Gui, Main:Add, DropDownList, ys w100 vBoostSelector gSettingChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
+Gui, Main:Add, DropDownList, ys w110 vStarSelector gSettingChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
+Gui, Main:Add, Text, w106 xs Section,
+Gui, Main:Font, s20 
+Gui, Main:Add, Text, w45 right ys vCalculatedRepetitions, %CalculatedRepetitions%
+Gui, Main:Font, s14
+Gui, Main:Add, Text, w100 ys+4, battles
 
-Gui, Tab, 3
-Gui, Font, s10
-;Gui, Add, text, w350 Section, %InfiniteMessage%
-Gui, Add, text, w350 h5 Section, 
-Gui, Add, Text, w106 xs Section,
-Gui, Font, s45 
-Gui, Add, Text, w45 h30 ys Right 0x200, % InfiniteSymbol
-Gui, Font, s14
-Gui, Add, Text, w100 ys+4, battles
-Gui, Tab
-Gui, Font, s2
-Gui, Add, Text, Section,
-Gui, Font, s10 bold
-Gui, Add, Text, xs, %DelayHeader%
-Gui, Font, s10 norm
+Gui, Main:Tab, 3
+Gui, Main:Font, s10
+;Gui, Main:Add, text, w350 Section, %InfiniteMessage%
+Gui, Main:Add, text, w350 h5 Section, 
+Gui, Main:Add, Text, w106 xs Section,
+Gui, Main:Font, s45 
+Gui, Main:Add, Text, w45 h30 ys Right 0x200, % InfiniteSymbol
+Gui, Main:Font, s14
+Gui, Main:Add, Text, w100 ys+4, battles
+Gui, Main:Tab
+Gui, Main:Font, s2
+Gui, Main:Add, Text, Section,
+Gui, Main:Font, s10 bold
+Gui, Main:Add, Text, xs, %DelayHeader%
+Gui, Main:Font, s10 norm
 
-Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH%, Manual
+Gui, Main:Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH%, Manual
 SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
-Gui, Add, Text, Section w15,
-Gui, Font, s20 
-Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
-Gui, Add, UpDown, ys Range0-60 vUpDownMinute gSettingChangedByUpDown, % Settings.minute
-Gui, Font, s14
-Gui, Add, Text, ys+8, minutes
-Gui, Font, s20 
-Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditSecond +Limit3 +Number, % Settings.second
-Gui, Add, UpDown, ys Range0-59 vUpDownSecond gSettingChangedByUpDown, % Settings.second
-Gui, Font, s14
-Gui, Add, Text, ys+8, seconds
-Gui, Tab
+Gui, Main:Add, Text, Section w15,
+Gui, Main:Font, s20 
+Gui, Main:Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
+Gui, Main:Add, UpDown, ys Range0-60 vUpDownMinute gSettingChangedByUpDown, % Settings.minute
+Gui, Main:Font, s14
+Gui, Main:Add, Text, ys+8, minutes
+Gui, Main:Font, s20 
+Gui, Main:Add, Edit, ys w55 Right gSettingChangedByEdit vEditSecond +Limit3 +Number, % Settings.second
+Gui, Main:Add, UpDown, ys Range0-59 vUpDownSecond gSettingChangedByUpDown, % Settings.second
+Gui, Main:Font, s14
+Gui, Main:Add, Text, ys+8, seconds
+Gui, Main:Tab
 
-Gui, Font, s2
-Gui, Add, Text, Section,
-Gui, Font, s10 bold
-Gui, Add, Button, Section w350 h30 Center gStart, %StartButton%
+Gui, Main:Font, s2
+Gui, Main:Add, Text, Section,
+Gui, Main:Font, s10 bold
+Gui, Main:Add, Button, Section w350 h30 Center gStart, %StartButton%
 
 ;; 2nd UI: Progress
-Gui, 2:Font,bold
-Gui, 2:Add, Text, w250 Center vWorkingTitle,
-Gui, 2:Font
-Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress1, 0
-Gui, 2:Add, Progress, w250 h20 -Smooth vWorkingProgress2, 0
-Gui, 2:Add, Text, w250 Center vWorkingStatus
-Gui, 2:Font, s10 bold
-Gui, 2:Add, Button, w250 h30 gStop, %StopButton%
-Gui, 2:Font, s8 norm
+Gui, Progress:Font,bold
+Gui, Progress:Add, Text, w250 Center vWorkingTitle,
+Gui, Progress:Font
+Gui, Progress:Add, Progress, w250 h20 -Smooth vWorkingProgress1, 0
+Gui, Progress:Add, Progress, w250 h20 -Smooth vWorkingProgress2, 0
+Gui, Progress:Add, Text, w250 Center vWorkingStatus
+Gui, Progress:Font, s10 bold
+Gui, Progress:Add, Button, w250 h30 gStop, %StopButton%
+Gui, Progress:Font, s8 norm
 
 ;; 3rd UI: Info
-Gui, 3:Font, s10 bold
-Gui, 3:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
-Gui, 3:Font, s10 norm
-Gui, 3:Add, Text, w280 y+2 Center, %ScriptDescription%
-Gui, 3:Add, Button, w50 ys y15 Center gBackFromInfo, Back
-Gui, 3:Add, text, xs w350 0x10    
-Gui, 3:Font, s10 bold
-Gui, 3:Add, Text, w350 Center xs, Help
-Gui, 3:Font, s8 norm
-Gui, 3:Add, Text, w350 xs Section, %IntroHelp%
-Gui, 3:Font, s9 bold
-Gui, 3:Add, Text, xs, Usage
-Gui, 3:Font, s8 norm
-Gui, 3:Add, Text, w350 xs Section, %UsageHelp%
-Gui, 3:Font, s9 bold
-Gui, 3:Add, Text, xs, %DelayHeader%
-Gui, 3:Font, s8 norm
-Gui, 3:Add, Text, w350 xs Section, %DelayHelp%
-Gui, 3:Font, s9 bold
-Gui, 3:Add, Text, xs, %RepetitionHeader%
-Gui, 3:Font, s8 norm
-Gui, 3:Add, Text, w350 xs Section, %RepetitionHelp%
-Gui, 3:Add, Text, w350 xs Section, %StartBattleHelp%
-Gui, 3:Add, text, xs w350 0x10
-Gui, 3:Font, s10 bold
-Gui, 3:Add, Text, w350 Center xs, About
-Gui, 3:Font, s8 norm
-Gui, 3:Add, Text, w280 xs Section, %ScriptHelp%
-Gui, 3:Add, Button, w50 ys Center gGoToSite, Site
-Gui, 3:Add, Text, xs
+Gui, Info:Font, s10 bold
+Gui, Info:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+Gui, Info:Font, s10 norm
+Gui, Info:Add, Text, w280 y+2 Center, %ScriptDescription%
+Gui, Info:Add, Button, w50 ys y15 Center gBackFromInfo, Back
+Gui, Info:Add, text, xs w350 0x10    
+Gui, Info:Font, s10 bold
+Gui, Info:Add, Text, w350 Center xs, Help
+Gui, Info:Font, s8 norm
+Gui, Info:Add, Text, w350 xs Section, %IntroHelp%
+Gui, Info:Font, s9 bold
+Gui, Info:Add, Text, xs, Usage
+Gui, Info:Font, s8 norm
+Gui, Info:Add, Text, w350 xs Section, %UsageHelp%
+Gui, Info:Font, s9 bold
+Gui, Info:Add, Text, xs, %DelayHeader%
+Gui, Info:Font, s8 norm
+Gui, Info:Add, Text, w350 xs Section, %DelayHelp%
+Gui, Info:Font, s9 bold
+Gui, Info:Add, Text, xs, %RepetitionHeader%
+Gui, Info:Font, s8 norm
+Gui, Info:Add, Text, w350 xs Section, %RepetitionHelp%
+Gui, Info:Add, Text, w350 xs Section, %StartBattleHelp%
+Gui, Info:Add, text, xs w350 0x10
+Gui, Info:Font, s10 bold
+Gui, Info:Add, Text, w350 Center xs, About
+Gui, Info:Font, s8 norm
+Gui, Info:Add, Text, w280 xs Section, %ScriptHelp%
+Gui, Info:Add, Button, w50 ys Center gGoToSite, Site
+Gui, Info:Add, Text, xs
 
-; Show 1st UI
-Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
+; Show initial UI (Main)
+Gui, Main:Default
+Gui, Main:Show, xCenter y150 AutoSize, %ScriptTitle%
+
 return
 
 
@@ -246,13 +247,13 @@ ShowInfo:
     Gui,+LastFound
     WinGetPos,x,y
     Gui, 3:Show, x%x% y%y%, %ScriptTitle%
-    Gui, 1:Hide
+    Gui, Main:Hide
 return
    
 BackFromInfo:
     Gui,+LastFound
     WinGetPos,x,y
-    Gui, 1:Show, x%x% y%y%, %ScriptTitle%
+    Gui, Main:Show, x%x% y%y%, %ScriptTitle%
     Gui, 3:Hide
 return
 
@@ -339,8 +340,8 @@ Start:
     Gui, Submit
     Gui,+LastFound
     WinGetPos,x,y
-    Gui, 2:Show, x%x% y%y%, %ScriptTitle%
-    Gui, 1:Hide
+    Gui, Progress:Show, x%x% y%y%, %ScriptTitle%
+    Gui, Main:Hide
 
     isRunning := true
     repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? CalculatedRepetitions : -1
@@ -358,12 +359,12 @@ Start:
         title := "Farming " repetitions " runs of " waitSeconds " seconds: " totalMinutes " min. aprox."
         notification := "Starting " repetitions " runs estimated in " totalMinutes " minutes"
     }
-    GuiControl, 2:, WorkingTitle, %title%
+    GuiControl, Progress:, WorkingTitle, %title%
     TrayTip, %ScriptTitle%, %notification%, 20, 17
 
     ; TODO: Hide WorkingProgress2 not working
-    GuiControl, 2:, % (isInfinite) ? "Hide" : "Show", WorkingProgress2
-    GuiControl, 2:, % (isInfinite) ? "Hide" : "Show", WorkingStatus
+    GuiControl, Progress:, % (isInfinite) ? "Hide" : "Show", WorkingProgress2
+    GuiControl, Progress:, % (isInfinite) ? "Hide" : "Show", WorkingStatus
 
     stepProgress1 := floor(100 / waitSeconds)
     stepProgress2 := floor(100 / repetitions)   
@@ -379,11 +380,11 @@ Start:
         
         If (!isInfinite){
             currentProgress2 := (currentRepetition * stepProgress2)
-            GuiControl, 2:, WorkingProgress2, %currentProgress2%
-            GuiControl, 2:, WorkingStatus, %currentRepetition% / %repetitions% runs
+            GuiControl, Progress:, WorkingProgress2, %currentProgress2%
+            GuiControl, Progress:, WorkingStatus, %currentRepetition% / %repetitions% runs
         }else{
-            GuiControl, 2:, WorkingProgress2, 100
-            GuiControl, 2:, WorkingStatus, %currentRepetition% runs
+            GuiControl, Progress:, WorkingProgress2, 100
+            GuiControl, Progress:, WorkingStatus, %currentRepetition% runs
         }
         
         WinGetActiveTitle, PreviouslyActive
@@ -395,7 +396,7 @@ Start:
         sleep 100
         WinActivate, %PreviouslyActive%
         
-        GuiControl, 2:, WorkingProgress1, 0
+        GuiControl, Progress:, WorkingProgress1, 0
         currentSecond := 0
         loop{
             If not isRunning 
@@ -407,13 +408,13 @@ Start:
                 Gui,+LastFound
                 WinGetPos,x,y
                 MsgBox, 48, %ScriptTitle%, %ClosedGameError%
-                Gui, 1:Show, x%x% y%y%, %ScriptTitle%
-                Gui, 2:Hide
+                Gui, Main:Show, x%x% y%y%, %ScriptTitle%
+                Gui, Progress:Hide
                 break
             }
             
             currentProgress1 := ((currentSecond) * stepProgress1)
-            GuiControl, 2:, WorkingProgress1, %currentProgress1%
+            GuiControl, Progress:, WorkingProgress1, %currentProgress1%
             if (currentSecond >= waitSeconds){
                 break
             }
@@ -425,12 +426,12 @@ Start:
     If isRunning{
         isRunning := false
         ElapsedTime := (A_TickCount - StartTime) / 1000
-        MsgBox,  %ElapsedTime% seconds have elapsed.
         TrayTip, %ScriptTitle%, Farmed %repetitions% times!, 20, 17
+        MsgBox,  %ElapsedTime% seconds have elapsed.
         Gui,+LastFound
         WinGetPos,x,y
-        Gui, 1:Show, x%x% y%y%, %ScriptTitle%
-        Gui, 2:Hide
+        Gui, Main:Show, x%x% y%y%, %ScriptTitle%
+        Gui, Progress:Hide
     }
 return
 
@@ -439,8 +440,8 @@ Stop:
     TrayTip, %ScriptTitle%, Canceled by user, 20, 17
     Gui,+LastFound
     WinGetPos,x,y
-    Gui, 1:Show, x%x% y%y%, %ScriptTitle%
-    Gui, 2:Hide
+    Gui, Main:Show, x%x% y%y%, %ScriptTitle%
+    Gui, Progress:Hide
 return
 
 GuiClose:
@@ -450,6 +451,6 @@ GuiClose:
     IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
     
-    Gui, 1:Destroy
-    Gui, 2:Destroy
+    Gui, Main:Destroy
+    Gui, Progress:Destroy
     ExitApp
