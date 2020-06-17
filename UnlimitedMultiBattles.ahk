@@ -122,32 +122,35 @@ CtrlWidth := 350
 TabWidth := (CtrlWidth) / 3
 Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
 SendMessage, TCM_SETITEMSIZE, 0, TabWidth+28, , ahk_id %HTAB%
-Gui, Add, text, w350 Section, %ManualMessage%
-Gui, Add, Text, xs w80 Section,
+;Gui, Add, text, w350 Section, %ManualMessage%
+Gui, Add, Text, w75 Section,
 Gui, Font, s20 
-Gui, Add, Edit, ys+8 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
+Gui, Add, Edit, ys+10 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
 Gui, Add, UpDown, ys Range0-999 vUpDownBattles gSettingChangedByUpDown, % Settings.battles
 Gui, Font, s14
 Gui, Add, Text, xs+174 ys+16, battles
-Gui, Font, s10
+
 Gui, Tab, 2
+Gui, Font, s10
 ;Gui, Add, text, w350 Section, %CalculatedMessage%
 Gui, Add, DropDownList, Section w90 vStageSelector gSettingChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
 Gui, Add, DropDownList, ys w100 vBoostSelector gSettingChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
 Gui, Add, DropDownList, ys w110 vStarSelector gSettingChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
-Gui, Add, Text, w70 xs Section,
+Gui, Add, Text, w106 xs Section,
 Gui, Font, s20 
-Gui, Add, Text, w45 xs+120 right ys vCalculatedRepetitions, %CalculatedRepetitions%
+Gui, Add, Text, w45 right ys vCalculatedRepetitions, %CalculatedRepetitions%
 Gui, Font, s14
-Gui, Add, Text, w100 xs+174 ys+3, battles
-Gui, Font, s10
+Gui, Add, Text, w100 ys+4, battles
+
 Gui, Tab, 3
-Gui, Add, text, w350 Section, %InfiniteMessage%
-Gui, Add, Text, xs w80 Section,
+Gui, Font, s10
+;Gui, Add, text, w350 Section, %InfiniteMessage%
+Gui, Add, text, w350 h5 Section, 
+Gui, Add, Text, w106 xs Section,
 Gui, Font, s45 
-Gui, Add, Text, xs+120 ys+12 w70 Right h30 w40 0x200, % InfiniteSymbol
+Gui, Add, Text, w45 h30 ys Right 0x200, % InfiniteSymbol
 Gui, Font, s14
-Gui, Add, Text, xs+174 ys+16, battles
+Gui, Add, Text, w100 ys+4, battles
 Gui, Tab
 Gui, Font, s2
 Gui, Add, Text, Section,
