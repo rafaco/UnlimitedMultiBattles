@@ -23,7 +23,7 @@ SetWorkingDir %A_ScriptDir%     ; Ensures a consistent starting directory.
 SetTitleMatchMode 3             ; Exact title match
 
 ;;; Metadata
-ScriptVersion := "v1.0.0"
+ScriptVersion := "v1.0.2"
 ScriptTitle := "UnlimitedMultiBattles"
 ScriptDescription := "For official 'Raid: Shadow Legends' on Windows"
 ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
