@@ -31,14 +31,14 @@ ScriptAuthor := "Rafael Acosta Alvarez"
 
 ;;; Texts
 TeamHeader := "1. Prepare your team"
-TeamDescription := "Open the game, select a stage and prepare your team."
+TeamDescription := "Open the game, select a stage and prepare your team. Don't press 'Play' and come back."
 DelayHeader := "3. Select time between battles"
 RepetitionHeader := "2. Select number of battles"
 StartHeader := "4. Start farming"
 StartButton := "Start Multi-Battle"
 StopButton := "Stop"
-InfiniteMessage := "`nWe will keep playing mult-battles till you press stop."
-ManualMessage := "`nEnter any number of multi-battles."
+InfiniteMessage := "We will keep playing multi-battles till you press stop."
+ManualMessage := "Enter any number of multi-battles."
 CalculatedMessage := "Exact battles to max out your level 1 champions:"
 NoRunningGameError := "You have to open the game and select your team before start."
 ClosedGameError := "Canceled, the game has been closed."
@@ -57,10 +57,13 @@ RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
 SettingsSection := "SettingsSection"
 DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, stage: 1, boost: 3, star: 1 }
 InfiniteSymbol := Chr(0x221E)
-TabOptions = Manual|Calculated|Infinite
+StarSymbol := Chr(0x2605)
+GearSymbol := Chr(0x2699)
+InfoSymbol := Chr(0x2139)
+TabOptions = Manual|Max out|Infinite
 StageOptions = Brutal 12-3|Brutal 12-6
 BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
-StarOptions = 1 Star|2 Star|3 Star|4 Star|5 Star|6 Star
+StarOptions = 1%StarSymbol%: Level 1-10|2%StarSymbol%: Level 1-20|3%StarSymbol%: Level 1-30|4%StarSymbol%: Level 1-40|5%StarSymbol%: Level 1-50|6%StarSymbol%: Level 1-60
 Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 24, 52, 112, 233], [3, 8, 20, 44, 93, 194]]
 Brutal12_6 := [ [6, 19, 46, 103, 220, 457], [5, 16, 39, 86, 183, 381], [3, 10, 23, 52, 110, 229], [3, 8, 20, 43, 92, 191]]
 CalculatorData := [ Brutal12_3, Brutal12_6 ]
@@ -90,13 +93,24 @@ CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedSt
 
 ;;; Load UIs
 ;; 1st UI: Home
+;TODO: Add/use Gui names instead of numbers 
+
 Gui, Font, s10 bold
-Gui, Add, Text, w280 Section Center,
-Gui, Add, Button, w50 ys Center gShowInfo, Info
-Gui, Add, Text, w280 xs Section, %TeamHeader%
+Gui, Add, Text, w250 h35 0x200 border Section Center, %ScriptTitle% %ScriptVersion%
+;Gui, Font, s10 norm
+;Gui, Add, Text, w280 y+2 Center, %ScriptDescription%
+Gui, Font, s15 bold
+Gui, Add, Button, w35 h35 ys Center gInfoTooltip vSettingsButton, % GearSymbol
+Gui, Add, Button, w35 h35 ys Center gShowInfo, % InfoSymbol
+;Gui, Add, text, xs w350 0x10 
+Gui, Font, s2
+Gui, Add, Text, xs Section,
+
+Gui, Font, s10 bold
+Gui, Add, Text, xs Section, %TeamHeader%
 Gui, Font, s10 norm
-Gui, Add, Text, w280 xs, %TeamDescription%
-Gui, Add, Button, w50 ys+15 Center gGoToGame, Open`nGame
+Gui, Add, Text, w280 xs vTeamDescription, %TeamDescription%
+Gui, Add, Button, w50 ys+15 Center gGoToGame vTeamButton, Open`nGame
 Gui, Font, s2
 Gui, Add, Text, xs,
 Gui, Font, s10 bold
@@ -113,18 +127,18 @@ Gui, Add, Text, xs w80 Section,
 Gui, Font, s20 
 Gui, Add, Edit, ys+8 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
 Gui, Add, UpDown, ys Range0-999 vUpDownBattles gSettingChangedByUpDown, % Settings.battles
-Gui, Font, s12
+Gui, Font, s14
 Gui, Add, Text, xs+174 ys+16, battles
 Gui, Font, s10
 Gui, Tab, 2
-Gui, Add, text, w350 Section, %CalculatedMessage%
-Gui, Add, DropDownList, xs Section w100 vStageSelector gSettingChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
+;Gui, Add, text, w350 Section, %CalculatedMessage%
+Gui, Add, DropDownList, Section w90 vStageSelector gSettingChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
 Gui, Add, DropDownList, ys w100 vBoostSelector gSettingChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
-Gui, Add, DropDownList, ys w100 vStarSelector gSettingChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
+Gui, Add, DropDownList, ys w110 vStarSelector gSettingChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
 Gui, Add, Text, w70 xs Section,
 Gui, Font, s20 
-Gui, Add, Text, w1 xs+120 right ys vCalculatedRepetitions, %CalculatedRepetitions%
-Gui, Font, s12
+Gui, Add, Text, w45 xs+120 right ys vCalculatedRepetitions, %CalculatedRepetitions%
+Gui, Font, s14
 Gui, Add, Text, w100 xs+174 ys+3, battles
 Gui, Font, s10
 Gui, Tab, 3
@@ -132,7 +146,7 @@ Gui, Add, text, w350 Section, %InfiniteMessage%
 Gui, Add, Text, xs w80 Section,
 Gui, Font, s45 
 Gui, Add, Text, xs+120 ys+12 w70 Right h30 w40 0x200, % InfiniteSymbol
-Gui, Font, s12
+Gui, Font, s14
 Gui, Add, Text, xs+174 ys+16, battles
 Gui, Tab
 Gui, Font, s2
@@ -143,16 +157,16 @@ Gui, Font, s10 norm
 
 Gui, Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH%, Manual
 SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
-Gui, Add, Text, Section w45,
+Gui, Add, Text, Section w15,
 Gui, Font, s20 
 Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
 Gui, Add, UpDown, ys Range0-60 vUpDownMinute gSettingChangedByUpDown, % Settings.minute
-Gui, Font, s12
+Gui, Font, s14
 Gui, Add, Text, ys+8, minutes
 Gui, Font, s20 
 Gui, Add, Edit, ys w55 Right gSettingChangedByEdit vEditSecond +Limit3 +Number, % Settings.second
 Gui, Add, UpDown, ys Range0-59 vUpDownSecond gSettingChangedByUpDown, % Settings.second
-Gui, Font, s12
+Gui, Font, s14
 Gui, Add, Text, ys+8, seconds
 Gui, Tab
 
@@ -209,8 +223,20 @@ Gui, 1:Show, xCenter y150 AutoSize, %ScriptTitle%
 return
 
 
-
 ;;; Labels
+
+InfoTooltip:
+    message := ""
+    if (A_GuiControl="SettingsButton"){
+        message := "Comming soon"
+    }
+    ToolTip, Button '%A_GuiControl%' clicked.`n`n%message%
+    SetTimer, RemoveToolTip, -5000
+return
+
+RemoveToolTip:
+    ToolTip
+return
 
 ShowInfo:
     Gui,+LastFound
