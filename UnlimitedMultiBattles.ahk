@@ -51,6 +51,7 @@ StartBattleHelp := "When ready, just press 'Start Multi-Battle' and lay back whi
 ScriptHelp := "This script is license under Apache 2.0 and it's source code is hosted at GitHub. Find out more info at his repository."
 
 ;;; Constants
+isDebug := true
 RaidWinTitle := "Raid: Shadow Legends"
 SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
 RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
@@ -329,7 +330,7 @@ SettingChangedByTab:
 return
 
 Start:
-    if !WinExist(RaidWinTitle){
+    if !isDebug && !WinExist(RaidWinTitle){
         MsgBox, 48, %ScriptTitle%, %NoRunningGameError%
         return
     }
@@ -400,7 +401,7 @@ Start:
             If not isRunning 
                 break
                 
-            If !WinExist(RaidWinTitle) {
+            If !isDebug && !WinExist(RaidWinTitle) {
                 isRunning := false
                 TrayTip, %ScriptTitle%, %ClosedGameError%, 20, 17
                 Gui,+LastFound
