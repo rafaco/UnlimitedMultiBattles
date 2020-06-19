@@ -61,7 +61,8 @@ ResultMessageCanceled := "Multi-Battle canceled by user"
 ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
 
 ;;; Constants
-isDebug := true
+isDebug := false
+AllGui = Main|Running|Result|Info
 RaidWinTitle := "Raid: Shadow Legends"
 SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
 RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
@@ -262,6 +263,20 @@ return
 
 ;;; Labels
 
+ShowMain:
+ShowRunning:
+ShowResult:
+ShowInfo:
+    Gui,+LastFound
+    WinGetPos,x,y
+    targetGui := StrReplace(A_ThisLabel, "Show")
+    Gui, %targetGui%:Show, x%x% y%y%, %ScriptTitle%
+    for item in AllGui {
+        if (item != targetGui)
+            Gui, %item%:Hide
+    }
+return
+
 InfoTooltip:
     message := ""
     if (A_GuiControl="SettingsButton"){
@@ -273,20 +288,6 @@ return
 
 RemoveToolTip:
     ToolTip
-return
-
-ShowInfo:
-    Gui,+LastFound
-    WinGetPos,x,y
-    Gui, 3:Show, x%x% y%y%, %ScriptTitle%
-    Gui, Main:Hide
-return
-   
-BackFromInfo:
-    Gui,+LastFound
-    WinGetPos,x,y
-    Gui, Main:Show, x%x% y%y%, %ScriptTitle%
-    Gui, 3:Hide
 return
 
 GoToSite:
@@ -362,6 +363,13 @@ SettingChangedByTab:
     IniWrite, %TagValue%, %SettingsFilePath%, %SettingsSection%, tab
 return
 
+SettingChangedOnFinish:
+    Gui, submit, nohide
+    GuiControlGet, OnFinishValue,,OnFinishSelector
+    IniWrite, %OnFinishValue%, %SettingsFilePath%, %SettingsSection%, onFinish
+    Settings.onFinish := OnFinishValue
+return
+
 Start:
     if !isDebug && !WinExist(RaidWinTitle){
         MsgBox, 48, %ScriptTitle%, %NoRunningGameError%
@@ -370,10 +378,7 @@ Start:
     
     StartTime := A_TickCount
     Gui, Submit
-    Gui,+LastFound
-    WinGetPos,x,y
-    Gui, Progress:Show, x%x% y%y%, %ScriptTitle%
-    Gui, Main:Hide
+    GoSub ShowRunning
 
     isRunning := true
     repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? CalculatedRepetitions : -1
@@ -383,20 +388,20 @@ Start:
     waitMillis := (waitSeconds * 1000)
 
     if (isInfinite){
-        title := "Farming infinitely, " waitSeconds " seconds each."
-        notification := "Starting infinited runs"
+        overview := "Infinited battles, " waitSeconds " seconds each."
+        notification := "Starting infinited battles"
     }else{
         totalSeconds := (repetitions * waitSeconds)
         totalMinutes := floor(totalSeconds / 60)
-        title := "Farming " repetitions " runs of " waitSeconds " seconds: " totalMinutes " min. aprox."
-        notification := "Starting " repetitions " runs estimated in " totalMinutes " minutes"
+        overview := repetitions " battles of " waitSeconds " seconds"
+        notification := "Starting " repetitions " multi-battles (" totalMinutes " min)"
     }
-    GuiControl, Progress:, WorkingTitle, %title%
+    GuiControl, Running:, MultiBattleOverview, %overview%
     TrayTip, %ScriptTitle%, %notification%, 20, 17
 
-    ; TODO: Hide WorkingProgress2 not working
-    GuiControl, Progress:, % (isInfinite) ? "Hide" : "Show", WorkingProgress2
-    GuiControl, Progress:, % (isInfinite) ? "Hide" : "Show", WorkingStatus
+    ; TODO: Hide MultiBattleProgress not working
+    GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleProgress
+    GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleStatus
 
     stepProgress1 := floor(100 / waitSeconds)
     stepProgress2 := floor(100 / repetitions)   
@@ -412,11 +417,11 @@ Start:
         
         If (!isInfinite){
             currentProgress2 := (currentRepetition * stepProgress2)
-            GuiControl, Progress:, WorkingProgress2, %currentProgress2%
-            GuiControl, Progress:, WorkingStatus, %currentRepetition% / %repetitions% runs
+            GuiControl, Running:, MultiBattleProgress, %currentProgress2%
+            GuiControl, Running:, MultiBattleStatus, %currentRepetition% / %repetitions% battles
         }else{
-            GuiControl, Progress:, WorkingProgress2, 100
-            GuiControl, Progress:, WorkingStatus, %currentRepetition% runs
+            GuiControl, Running:, MultiBattleProgress, 100
+            GuiControl, Running:, MultiBattleStatus, %currentRepetition% battles
         }
         
         WinGetActiveTitle, PreviouslyActive
@@ -428,26 +433,22 @@ Start:
         sleep 100
         WinActivate, %PreviouslyActive%
         
-        GuiControl, Progress:, WorkingProgress1, 0
-        currentSecond := 0
+        GuiControl, Running:, CurrentBattleProgress, 0
+        currentSecond := 1
         loop{
             If not isRunning 
                 break
                 
             If !isDebug && !WinExist(RaidWinTitle) {
                 isRunning := false
-                TrayTip, %ScriptTitle%, %ClosedGameError%, 20, 17
-                Gui,+LastFound
-                WinGetPos,x,y
-                MsgBox, 48, %ScriptTitle%, %ClosedGameError%
-                Gui, Main:Show, x%x% y%y%, %ScriptTitle%
-                Gui, Progress:Hide
+                Gosub ShowResultInterrupted
                 break
             }
             
             currentProgress1 := ((currentSecond) * stepProgress1)
-            GuiControl, Progress:, WorkingProgress1, %currentProgress1%
-            if (currentSecond >= waitSeconds){
+            GuiControl, Running:, CurrentBattleProgress, %currentProgress1%
+            GuiControl, Running:, CurrentBattleStatus, %currentSecond% / %waitSeconds% seconds  
+            if (currentSecond > waitSeconds){
                 break
             }
             sleep 1000
@@ -456,25 +457,61 @@ Start:
 	}
     
     If isRunning{
-        isRunning := false
-        ElapsedTime := (A_TickCount - StartTime) / 1000
-        TrayTip, %ScriptTitle%, Farmed %repetitions% times!, 20, 17
-        MsgBox,  %ElapsedTime% seconds have elapsed.
-        Gui,+LastFound
-        WinGetPos,x,y
-        Gui, Main:Show, x%x% y%y%, %ScriptTitle%
-        Gui, Progress:Hide
+        Gosub ShowResultSuccess
+    }
+    
+return
+
+ShowResultSuccess:
+ShowResultCanceled:
+ShowResultInterrupted:
+    isRunning := false
+    
+    MultiBattleDuration := (A_TickCount - StartTime) / 1000
+    date = 2000 ;any year above 1600
+    date += Floor(MultiBattleDuration), SECONDS
+    FormatTime, formattedDuration, %date%, mm:ss
+    
+    noActivateFlag := ""
+    
+    if (A_ThisLabel = "ShowResultSuccess"){
+        TrayTip, %ScriptTitle%, %ResultMessageSuccess%, 20, 17
+        GuiControl, Result:, ResultHeader, %ResultHeaderSuccess%
+        GuiControl, Result:, ResultMessage, %ResultMessageSuccess%
+        
+        if (Settings.onFinish = 3 ){
+            WinGetActiveTitle, CurrentlyActive
+            noActivateFlag := CurrentlyActive != ScriptTitle ? "NoActivate" : ""
+        }
+        else if (Settings.onFinish = 1){
+            WinActivate, %RaidWinTitle%
+        }
+    }
+    else if (A_ThisLabel = "ShowResultCanceled"){
+        TrayTip, %ScriptTitle%, %ResultMessageCanceled%, 20, 17
+        ;GuiControl, Result:, ResultHeader, +cDA4F49
+        GuiControl, Result:, ResultHeader, %ResultHeaderCanceled%
+        GuiControl, Result:, ResultMessage, %ResultMessageCanceled%
+    }
+    else{
+        TrayTip, %ScriptTitle%, %ResultMessageInterrupted%, 20, 17
+        GuiControl, Result:, ResultHeader, %ResultHeaderInterrupted%
+        GuiControl, Result:, ResultMessage, %ResultMessageInterrupted%
+    }
+    
+    ;GuiControl, Result:, MultiBattleOverview, %overview%
+    formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? currentRepetition : currentRepetition " of " repetitions
+    GuiControl, Result:, ResultText, % formattedBattles " battles in " formattedDuration
+    
+    Gui,+LastFound
+    WinGetPos,x,y
+    Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
+    for item in AllGui {
+        if (item != Result)
+            Gui, %item%:Hide
     }
 return
 
-Stop:
-    isRunning := false
-    TrayTip, %ScriptTitle%, Canceled by user, 20, 17
-    Gui,+LastFound
-    WinGetPos,x,y
-    Gui, Main:Show, x%x% y%y%, %ScriptTitle%
-    Gui, Progress:Hide
-return
 
 GuiClose:
     Gui, Submit
@@ -483,6 +520,7 @@ GuiClose:
     IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
     
-    Gui, Main:Destroy
-    Gui, Progress:Destroy
+    for item in AllGui {
+        Gui, %item%:Destroy
+    }
     ExitApp
