@@ -72,6 +72,8 @@ InfiniteSymbol := Chr(0x221E)
 StarSymbol := Chr(0x2605)
 GearSymbol := Chr(0x2699)
 InfoSymbol := Chr(0x2139)
+TCS_FIXEDWIDTH := 0x0400
+TCM_SETITEMSIZE := 0x1329
 TabOptions = Manual|Max out|Infinite
 StageOptions = Brutal 12-3|Brutal 12-6
 BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
@@ -128,12 +130,8 @@ Gui, Main:Add, Text, xs,
 Gui, Main:Font, s10 bold
 Gui, Main:Add, Text, xs Section, %RepetitionHeader%
 Gui, Main:Font, s10 norm
-TCS_FIXEDWIDTH := 0x0400
-TCM_SETITEMSIZE := 0x1329
-CtrlWidth := 350
-TabWidth := (CtrlWidth) / 3
-Gui, Main:Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
-SendMessage, TCM_SETITEMSIZE, 0, TabWidth+28, , ahk_id %HTAB%
+Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
+SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
 Gui, Main:Add, Text, w75 Section,
 Gui, Main:Font, s20 
 Gui, Main:Add, Edit, ys+10 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
@@ -167,8 +165,8 @@ Gui, Main:Font, s10 bold
 Gui, Main:Add, Text, xs, %DelayHeader%
 Gui, Main:Font, s10 norm
 
-Gui, Main:Add, Tab3, hwndHTAB w%CtrlWidth% +%TCS_FIXEDWIDTH%, Manual
-SendMessage, TCM_SETITEMSIZE, 0, TabWidth, , ahk_id %HTAB%
+Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH%, Manual
+SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
 Gui, Main:Add, Text, Section w15,
 Gui, Main:Font, s20 
 Gui, Main:Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
@@ -271,10 +269,10 @@ ShowInfo:
     WinGetPos,x,y
     targetGui := StrReplace(A_ThisLabel, "Show")
     Gui, %targetGui%:Show, x%x% y%y%, %ScriptTitle%
-    for item in AllGui {
-        if (item != targetGui)
-            Gui, %item%:Hide
-    }
+    Loop, Parse, AllGui, |
+        if (A_LoopField != targetGui){
+            Gui, %A_LoopField%:Hide
+        }
 return
 
 InfoTooltip:
@@ -314,53 +312,44 @@ return
 
 SettingChangedByEdit:
     Gui, Submit, NoHide
-	;Get Values
 	GuiControlGet,MinuteValue,,EditMinute
 	GuiControlGet,SecondValue,,EditSecond
     GuiControlGet,BattlesValue,,EditBattles
-	;Store on settings
 	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
     IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
-	;Make everything else aware
 	GuiControl,,UpDownMinute,%MinuteValue%
 	GuiControl,,UpDownSecond,%SecondValue%
     GuiControl,,UpDownBattles,%BattlesValue%
 return
 
 SettingChangedByUpDown:
-	;Get Values
 	GuiControlGet,MinuteValue,,UpDownMinute
 	GuiControlGet,SecondValue,,UpDownSecond
     GuiControlGet,BattlesValue,,UpDownBattles
-	;Store on settings
 	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
     IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
-	;Make everything else aware
 	GuiControl,,EditMinute,%UpDownMinute%
 	GuiControl,,EditSecond,%UpDownSecond%
     GuiControl,,EditBattles,%BattlesValue%
 return  
 
 SettingChangedBySelector:
-    ;Get Values
 	GuiControlGet,StageValue,,StageSelector
 	GuiControlGet,BoostValue,,BoostSelector
     GuiControlGet,StarValue,,StarSelector
-    ;Store on settings
     IniWrite, %StageValue%, %SettingsFilePath%, %SettingsSection%, stage
     IniWrite, %BoostValue%, %SettingsFilePath%, %SettingsSection%, boost
     IniWrite, %StarValue%, %SettingsFilePath%, %SettingsSection%, star
-    ;Make everything else aware
     CalculatedRepetitions := CalculatorData[StageValue][BoostValue][StarValue]
     GuiControl,, CalculatedRepetitions, %CalculatedRepetitions%
 return
     
 SettingChangedByTab:
-    ;Get Values
 	GuiControlGet,TagValue,,TabSelector
     IniWrite, %TagValue%, %SettingsFilePath%, %SettingsSection%, tab
+    Settings.tag := TagValue
 return
 
 SettingChangedOnFinish:
@@ -506,10 +495,10 @@ ShowResultInterrupted:
     Gui,+LastFound
     WinGetPos,x,y
     Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
-    for item in AllGui {
-        if (item != Result)
-            Gui, %item%:Hide
-    }
+    Loop, Parse, AllGui, |
+        if (A_LoopField != "Result"){
+            Gui, %A_LoopField%:Hide
+        }
 return
 
 
@@ -520,7 +509,6 @@ GuiClose:
     IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
     
-    for item in AllGui {
-        Gui, %item%:Destroy
-    }
+    Loop, Parse, AllGui, |
+        Gui, %A_LoopField%:Destroy
     ExitApp
