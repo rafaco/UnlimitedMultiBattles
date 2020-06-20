@@ -109,13 +109,14 @@ CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedSt
 ;;; Load UIs
 
 ;; 1st UI: Main
+Gui, Main:Add, Picture, w350 h35 vpic, images\HeaderBackground.jpg
+
 Gui, Main:Font, s10 bold
-Gui, Main:Add, Text, w250 h35 0x200 border Section Center, %ScriptTitle% %ScriptVersion%
+Gui, Main:Add, Text, w300 h35 xp yp 0x200 BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
 ;Gui, Main:Font, s10 norm
 ;Gui, Main:Add, Text, w280 y+2 Center, %ScriptDescription%
-Gui, Main:Font, s15 bold
-Gui, Main:Add, Button, w35 h35 ys Center gInfoTooltip vSettingsButton, % GearSymbol
-Gui, Main:Add, Button, w35 h35 ys Center gShowInfo, % InfoSymbol
+Gui, Main:Font, s10 norm
+Gui, Main:Add, Button, ys yp+5 Center gShowInfo, Info
 ;Gui, Main:Add, text, xs w350 0x10 
 Gui, Main:Font, s2
 Gui, Main:Add, Text, xs Section,
@@ -123,7 +124,7 @@ Gui, Main:Add, Text, xs Section,
 Gui, Main:Font, s10 bold
 Gui, Main:Add, Text, xs Section, %TeamHeader%
 Gui, Main:Font, s10 norm
-Gui, Main:Add, Text, w280 xs vTeamDescription, %TeamDescription%
+Gui, Main:Add, Text, w287.5 xs vTeamDescription, %TeamDescription%
 Gui, Main:Add, Button, w50 ys+15 Center gGoToGame vTeamButton, Open`nGame
 Gui, Main:Font, s2
 Gui, Main:Add, Text, xs,
