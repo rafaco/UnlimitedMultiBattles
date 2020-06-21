@@ -109,6 +109,7 @@ CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedSt
 ;;; Load UIs
 
 ;; 1st UI: Main
+Gui, Main:Default
 Gui, Main:Add, Picture, w350 h35 vpic, images\HeaderBackground.jpg
 
 Gui, Main:Font, s10 bold
@@ -131,20 +132,20 @@ Gui, Main:Add, Text, xs,
 Gui, Main:Font, s10 bold
 Gui, Main:Add, Text, xs Section, %RepetitionHeader%
 Gui, Main:Font, s10 norm
-Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH% vTabSelector gSettingChangedByTab Choose%selectedTab% AltSubmit, %TabOptions%
+Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
 SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
 Gui, Main:Add, Text, w75 Section,
 Gui, Main:Font, s20 
-Gui, Main:Add, Edit, ys+10 w70 Right gSettingChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
-Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gSettingChangedByUpDown, % Settings.battles
+Gui, Main:Add, Edit, ys+10 w70 Right gBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
+Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gBattleChangedByUpDown, % Settings.battles
 Gui, Main:Font, s14
 Gui, Main:Add, Text, xs+174 ys+16, battles
 
 Gui, Main:Tab, 2
 Gui, Main:Font, s10
-Gui, Main:Add, DropDownList, Section w90 vStageSelector gSettingChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
-Gui, Main:Add, DropDownList, ys w100 vBoostSelector gSettingChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
-Gui, Main:Add, DropDownList, ys w110 vStarSelector gSettingChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
+Gui, Main:Add, DropDownList, Section w90 vStageSelector gCalculatorChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
+Gui, Main:Add, DropDownList, ys w100 vBoostSelector gCalculatorChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
+Gui, Main:Add, DropDownList, ys w110 vStarSelector gCalculatorChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
 Gui, Main:Add, Text, w106 xs Section,
 Gui, Main:Font, s20 
 Gui, Main:Add, Text, w45 right ys vCalculatedRepetitions, %CalculatedRepetitions%
@@ -168,17 +169,21 @@ Gui, Main:Font, s10 norm
 
 Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH%, Manual
 SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
-Gui, Main:Add, Text, Section w15,
+
+Gui, Main:Add, Text, Section w80,
 Gui, Main:Font, s20 
-Gui, Main:Add, Edit, ys w55 Right gSettingChangedByEdit vEditMinute +Limit3 +Number, % Settings.minute
-Gui, Main:Add, UpDown, ys Range0-60 vUpDownMinute gSettingChangedByUpDown, % Settings.minute
+Gui, Main:Add, Edit, ys w50 Right gTimeChangedByEdit vEditMinute +Limit2 +Number,
+Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gTimeChangedByUpDown
+Gui, Main:Font, s24 bold
+Gui, Main:Add, Text, ys-3 xp+55, :
+Gui, Main:Font, s20 normal
+Gui, Main:Add, Edit, ys xp+15 w50 Right gTimeChangedByEdit vEditSecond +Limit2 +Number,
+Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gTimeChangedByUpDown
 Gui, Main:Font, s14
-Gui, Main:Add, Text, ys+8, minutes
-Gui, Main:Font, s20 
-Gui, Main:Add, Edit, ys w55 Right gSettingChangedByEdit vEditSecond +Limit3 +Number, % Settings.second
-Gui, Main:Add, UpDown, ys Range0-59 vUpDownSecond gSettingChangedByUpDown, % Settings.second
-Gui, Main:Font, s14
-Gui, Main:Add, Text, ys+8, seconds
+;Gui, Main:Add, Text, ys+8, min:sec
+GuiControl, , EditMinute, % Settings.minute
+GuiControl, , EditSecond, % Settings.second
+
 Gui, Main:Tab
 
 Gui, Main:Font, s2
@@ -202,7 +207,7 @@ Gui, Running:Font, s3 normal
 Gui, Running:Add, Text, xs Section,
 Gui, Running:Font, s10 normal
 Gui, Running:Add, Text, w60 h23 Section Left 0x200, % RunningOnFinishMessage
-Gui, Running:Add, DropDownList, ys w175 vOnFinishSelector gSettingChangedOnFinish Choose%selectedOnFinish% AltSubmit, %RunningOnFinishOptions%
+Gui, Running:Add, DropDownList, ys w175 vOnFinishSelector gOnFinishChanged Choose%selectedOnFinish% AltSubmit, %RunningOnFinishOptions%
 Gui, Running:Font, s3 normal
 Gui, Running:Add, Text, xs Section,
 Gui, Running:Font, s10 bold
@@ -253,8 +258,8 @@ Gui, Info:Add, Text, w280 xs Section, %ScriptHelp%
 Gui, Info:Add, Button, w50 ys Center gGoToSite, Site
 Gui, Info:Add, Text, xs
 
+
 ; Show initial UI (Main)
-Gui, Main:Default
 Gui, Main:Show, xCenter y150 AutoSize, %ScriptTitle%
 
 return
@@ -311,32 +316,28 @@ GoToGame:
     }
 return
 
-SettingChangedByEdit:
+TabChanged:
+	GuiControlGet,TabValue,,TabSelector
+    IniWrite, %TabValue%, %SettingsFilePath%, %SettingsSection%, tab
+    Settings.tab := TabValue
+return
+
+BattleChangedByEdit:
     Gui, Submit, NoHide
-	GuiControlGet,MinuteValue,,EditMinute
-	GuiControlGet,SecondValue,,EditSecond
     GuiControlGet,BattlesValue,,EditBattles
-	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
-	GuiControl,,UpDownMinute,%MinuteValue%
-	GuiControl,,UpDownSecond,%SecondValue%
+    Settings.battle := BattlesValue
     GuiControl,,UpDownBattles,%BattlesValue%
 return
 
-SettingChangedByUpDown:
-	GuiControlGet,MinuteValue,,UpDownMinute
-	GuiControlGet,SecondValue,,UpDownSecond
+BattleChangedByUpDown:
     GuiControlGet,BattlesValue,,UpDownBattles
-	IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
-	GuiControl,,EditMinute,%UpDownMinute%
-	GuiControl,,EditSecond,%UpDownSecond%
+    Settings.battle := BattlesValue
     GuiControl,,EditBattles,%BattlesValue%
 return  
 
-SettingChangedBySelector:
+CalculatorChangedBySelector:
 	GuiControlGet,StageValue,,StageSelector
 	GuiControlGet,BoostValue,,BoostSelector
     GuiControlGet,StarValue,,StarSelector
@@ -346,14 +347,36 @@ SettingChangedBySelector:
     CalculatedRepetitions := CalculatorData[StageValue][BoostValue][StarValue]
     GuiControl,, CalculatedRepetitions, %CalculatedRepetitions%
 return
-    
-SettingChangedByTab:
-	GuiControlGet,TagValue,,TabSelector
-    IniWrite, %TagValue%, %SettingsFilePath%, %SettingsSection%, tab
-    Settings.tag := TagValue
+
+TimeChangedByUpDown:
+    Gui, Submit, NoHide
+    SetFormat, Float, 02.0
+    UpDownMinute += 0.0
+    UpDownSecond += 0.0
+    IniWrite, %UpDownMinute%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %UpDownSecond%, %SettingsFilePath%, %SettingsSection%, second
+    Settings.minute := UpDownMinute
+    Settings.second := UpDownSecond
+    GuiControl, , EditMinute, %UpDownMinute%
+    GuiControl, , EditSecond, %UpDownSecond%
+Return
+
+TimeChangedByEdit:
+    Gui, Submit, NoHide
+    GuiControlGet,MinuteValue,,EditMinute
+    GuiControlGet,SecondValue,,EditSecond
+    SetFormat, Float, 02.0
+    MinuteValue += 0.0
+    SecondValue += 0.0
+    IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+    Settings.minute := MinuteValue
+    Settings.second := SecondValue
+    GuiControl,,UpDownMinute,%MinuteValue%
+    GuiControl,,UpDownSecond,%SecondValue%
 return
 
-SettingChangedOnFinish:
+OnFinishChanged:
     Gui, submit, nohide
     GuiControlGet, OnFinishValue,,OnFinishSelector
     IniWrite, %OnFinishValue%, %SettingsFilePath%, %SettingsSection%, onFinish
@@ -375,6 +398,7 @@ Start:
     isInfinite := (repetitions = -1)
 
     waitSeconds := SecondValue + ( MinuteValue * 60 )
+    waitSecondsFormatted := timeFormatter(waitSeconds)
     waitMillis := (waitSeconds * 1000)
 
     if (isInfinite){
@@ -437,7 +461,8 @@ Start:
             
             currentProgress1 := ((currentSecond) * stepProgress1)
             GuiControl, Running:, CurrentBattleProgress, %currentProgress1%
-            GuiControl, Running:, CurrentBattleStatus, %currentSecond% / %waitSeconds% seconds  
+            currentTimeFormatted := timeFormatter(currentSecond)
+            GuiControl, Running:, CurrentBattleStatus, %currentTimeFormatted% / %waitSecondsFormatted%  
             if (currentSecond > waitSeconds){
                 break
             }
@@ -455,13 +480,8 @@ return
 ShowResultSuccess:
 ShowResultCanceled:
 ShowResultInterrupted:
-    isRunning := false
-    
     MultiBattleDuration := (A_TickCount - StartTime) / 1000
-    date = 2000 ;any year above 1600
-    date += Floor(MultiBattleDuration), SECONDS
-    FormatTime, formattedDuration, %date%, mm:ss
-    
+    isRunning := false
     noActivateFlag := ""
     
     if (A_ThisLabel = "ShowResultSuccess"){
@@ -491,7 +511,7 @@ ShowResultInterrupted:
     
     ;GuiControl, Result:, MultiBattleOverview, %overview%
     formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? currentRepetition : currentRepetition " of " repetitions
-    GuiControl, Result:, ResultText, % formattedBattles " battles in " formattedDuration
+    GuiControl, Result:, ResultText, % formattedBattles " battles in " timeFormatter(MultiBattleDuration)
     
     Gui,+LastFound
     WinGetPos,x,y
@@ -502,6 +522,12 @@ ShowResultInterrupted:
         }
 return
 
+timeFormatter(seconds){
+    date = 2000 ;any year above 1600
+    date += Floor(seconds), SECONDS
+    FormatTime, formattedDate, %date%, mm:ss
+    return formattedDate
+}
 
 GuiClose:
     Gui, Submit
