@@ -31,7 +31,7 @@ ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
 
 
 ;;; Constants
-isDebug := true
+isDebug := false
 AllGui = Main|Running|Result|Info
 RaidWinTitle := "Raid: Shadow Legends"
 SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
@@ -119,15 +119,12 @@ Gui, Main:Font, s2
 Gui, Main:Add, Text, xs Section,
 Gui, Main:Font, s10 bold
 Gui, Main:Add, GroupBox, hWndhGrp3 w350 h65, %TeamHeader%
-;Gui, Main:Add, Text, xs Section, %TeamHeader%
 Gui, Main:Font, s10 norm
 Gui, Main:Add, Text, xp+10 yp+20 w270, %InfoTeam%
 Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
 Gui, Main:Font, s2
 Gui, Main:Add, Text, xs,
 Gui, Main:Font, s10 bold
-;Gui, Main:Add, Text, xs Section, %BattlesHeader%
-
 
 Gui Main:Add, GroupBox, hWndhGrp w350 h125, %BattlesHeader%
 Gui, Main:Font, s10 norm
@@ -167,7 +164,6 @@ Gui, Main:Font, s2
 Gui, Main:Add, Text, x10 Section,
 Gui, Main:Font, s10 bold
 Gui, Main:Add, GroupBox, hWndhGrp2 w350 h65, %TimeHeader%
-;Gui, Main:Add, Text, xs, %TimeHeader%
 Gui, Main:Font, s10 norm
 Gui, Main:Add, Text, xp+10 yp+20 Section w90,
 Gui, Main:Font, s20 
@@ -429,11 +425,9 @@ Start:
         
         WinGetActiveTitle, PreviouslyActive
         WinActivate, %RaidWinTitle%
-        ;sleep 100
         ControlSend, , {Enter}, %RaidWinTitle%
-        ;sleep 100
         ControlSend, , r, %RaidWinTitle%
-        sleep 100
+        ;sleep 25
         WinActivate, %PreviouslyActive%
         
         GuiControl, Running:, CurrentBattleProgress, 0
