@@ -4,7 +4,7 @@
 
 This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has a graphic user interface to easy to use interface and can be used on background while doing other things with your PC. 
 
-### Features:
+### Features
 - Graphic interface to easily configure, control and track progres
 - Can be use on background
 - Adjustable time between battles to minimise the total time
@@ -39,7 +39,7 @@ You can easily generate your own exe from the sources to avoid using an executab
 2. Download a copy of our script [UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk).
 3. Right click on the downloaded file and press "Compile", your own exe will be generated in the same folder.
 
-# Disclaimer:
+# Disclaimer
 This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
 
 I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
