@@ -21,7 +21,7 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 # Usage
 
 1. Download ```UnlimitedMultiBattles.exe``` from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or [compile your exe](#compile-your-exe).
-2. Open ```UnlimitedMultiBattles.exe``` on your PC and configure your multi-battle:
+2. Open ```UnlimitedMultiBattles.exe``` on your PC and configure your multi-battle options using our UI:
    1. **Prepare your Team**: Go to the game, select a stage and prepare your team, but don't press 'Play' and come back to our app.
    2. **Select number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes:
      * Manual: Enter any number of battles
