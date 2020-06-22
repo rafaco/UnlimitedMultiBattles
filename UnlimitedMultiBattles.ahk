@@ -29,12 +29,32 @@ ScriptDescription := "This application allows unlimited auto battles on official
 ProjectDescription := "This is an open source project, license under Apache 2.0 and it's sources are published at GitHub. Find out more at our repository."
 ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
 
+
+;;; Constants
+isDebug := true
+AllGui = Main|Running|Result|Info
+RaidWinTitle := "Raid: Shadow Legends"
+SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
+RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
+SettingsSection := "SettingsSection"
+DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, stage: 1, boost: 3, star: 1, onFinish: 3 }
+InfiniteSymbol := Chr(0x221E)
+StarSymbol := Chr(0x2605)
+GearSymbol := Chr(0x2699)
+InfoSymbol := Chr(0x2139)
+TCS_FIXEDWIDTH := 0x0400
+TCM_SETITEMSIZE := 0x1329
+Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 24, 52, 112, 233], [3, 8, 20, 44, 93, 194]]
+Brutal12_6 := [ [6, 19, 46, 103, 220, 457], [5, 16, 39, 86, 183, 381], [3, 10, 23, 52, 110, 229], [3, 8, 20, 43, 92, 191]]
+CalculatorData := [ Brutal12_3, Brutal12_6 ]
+
+
 ;;; Texts
 TeamHeader := "1. Prepare your team"
 BattlesHeader := "2. Select number of battles"
 TimeHeader := "3. Select time between battles"
 StartHeader := "4. Start farming"
-StartButton := "Start Multi-Battle"
+StartButton := "Start`nMulti-Battle"
 
 TabOptions = Manual|Max out|Infinite
 StageOptions = Brutal 12-3|Brutal 12-6
@@ -59,24 +79,6 @@ ResultHeaderInterrupted := "Interrupted"
 ResultMessageSuccess := "Multi-Battle finished successfuly"
 ResultMessageCanceled := "Multi-Battle canceled by user"
 ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
-
-;;; Constants
-isDebug := true
-AllGui = Main|Running|Result|Info
-RaidWinTitle := "Raid: Shadow Legends"
-SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
-RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
-SettingsSection := "SettingsSection"
-DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, stage: 1, boost: 3, star: 1, onFinish: 3 }
-InfiniteSymbol := Chr(0x221E)
-StarSymbol := Chr(0x2605)
-GearSymbol := Chr(0x2699)
-InfoSymbol := Chr(0x2139)
-TCS_FIXEDWIDTH := 0x0400
-TCM_SETITEMSIZE := 0x1329
-Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 24, 52, 112, 233], [3, 8, 20, 44, 93, 194]]
-Brutal12_6 := [ [6, 19, 46, 103, 220, 457], [5, 16, 39, 86, 183, 381], [3, 10, 23, 52, 110, 229], [3, 8, 20, 43, 92, 191]]
-CalculatorData := [ Brutal12_3, Brutal12_6 ]
 
 
 ; Init settings (previous values or default ones)
@@ -116,72 +118,74 @@ Gui, Main:Add, Button, ys yp+5 Center gShowInfo, Info
 Gui, Main:Font, s2
 Gui, Main:Add, Text, xs Section,
 Gui, Main:Font, s10 bold
-Gui, Main:Add, Text, xs Section, %TeamHeader%
+Gui, Main:Add, GroupBox, hWndhGrp3 w350 h65, %TeamHeader%
+;Gui, Main:Add, Text, xs Section, %TeamHeader%
 Gui, Main:Font, s10 norm
-Gui, Main:Add, Text, w287.5 xs, %InfoTeam%
-Gui, Main:Add, Button, w50 ys+15 Center gGoToGame vTeamButton, Open`nGame
+Gui, Main:Add, Text, xp+10 yp+20 w270, %InfoTeam%
+Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
 Gui, Main:Font, s2
 Gui, Main:Add, Text, xs,
 Gui, Main:Font, s10 bold
-Gui, Main:Add, Text, xs Section, %BattlesHeader%
+;Gui, Main:Add, Text, xs Section, %BattlesHeader%
+
+
+Gui Main:Add, GroupBox, hWndhGrp w350 h125, %BattlesHeader%
 Gui, Main:Font, s10 norm
-Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
-SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
-Gui, Main:Add, Text, w75 Section,
+Gui, Main:Add, Tab3, hwndHTAB xp+10 yp+20 w330 h95 +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
+SendMessage, TCM_SETITEMSIZE, 0, (330/3)+20, , ahk_id %HTAB%
+DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
+WinSet Redraw,, ahk_id %HTab%
+Gui, Main:Add, Text, w79 Section,
 Gui, Main:Font, s20 
-Gui, Main:Add, Edit, ys+10 w70 Right gBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
+Gui, Main:Add, Edit, ys+10 w65 h35 Right gBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
 Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gBattleChangedByUpDown, % Settings.battles
 Gui, Main:Font, s14
-Gui, Main:Add, Text, xs+174 ys+16, battles
+Gui, Main:Add, Text, xp+80 ys+20, battles
 
 Gui, Main:Tab, 2
 Gui, Main:Font, s10
 Gui, Main:Add, DropDownList, Section w90 vStageSelector gCalculatorChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
-Gui, Main:Add, DropDownList, ys w100 vBoostSelector gCalculatorChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
-Gui, Main:Add, DropDownList, ys w110 vStarSelector gCalculatorChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
-Gui, Main:Add, Text, w106 xs Section,
+Gui, Main:Add, DropDownList, ys xp+95 w97 vBoostSelector gCalculatorChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
+Gui, Main:Add, DropDownList, ys xp+102 w110 vStarSelector gCalculatorChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
+Gui, Main:Add, Text, w80 xs Section,
 Gui, Main:Font, s20 
-Gui, Main:Add, Text, w45 right ys vCalculatedRepetitions, %CalculatedRepetitions%
+Gui, Main:Add, Text, w50 right ys vCalculatedRepetitions, %CalculatedRepetitions%
 Gui, Main:Font, s14
-Gui, Main:Add, Text, w100 ys+4, battles
+Gui, Main:Add, Text, w100 ys+7, battles
 
 Gui, Main:Tab, 3
 Gui, Main:Font, s10
 Gui, Main:Add, text, w350 h5 Section, 
-Gui, Main:Add, Text, w106 xs Section,
+Gui, Main:Add, Text, w75 xs Section,
 Gui, Main:Font, s45 
-Gui, Main:Add, Text, w45 h30 ys Right 0x200, % InfiniteSymbol
+Gui, Main:Add, Text, w50 h35 ys Right 0x200, % InfiniteSymbol
 Gui, Main:Font, s14
-Gui, Main:Add, Text, w100 ys+4, battles
+Gui, Main:Add, Text, w100 ys+7, battles
 Gui, Main:Tab
-Gui, Main:Font, s2
-Gui, Main:Add, Text, Section,
-Gui, Main:Font, s10 bold
-Gui, Main:Add, Text, xs, %TimeHeader%
-Gui, Main:Font, s10 norm
 
-Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH%, Manual
-SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
-Gui, Main:Add, Text, Section w80,
+Gui, Main:Font, s2
+Gui, Main:Add, Text, x10 Section,
+Gui, Main:Font, s10 bold
+Gui, Main:Add, GroupBox, hWndhGrp2 w350 h65, %TimeHeader%
+;Gui, Main:Add, Text, xs, %TimeHeader%
+Gui, Main:Font, s10 norm
+Gui, Main:Add, Text, xp+10 yp+20 Section w90,
 Gui, Main:Font, s20 
-Gui, Main:Add, Edit, ys w50 Right gTimeChangedByEdit vEditMinute +Limit2 +Number,
+Gui, Main:Add, Edit, ys w50 h35 Right gTimeChangedByEdit vEditMinute +Limit2 +Number,
 Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gTimeChangedByUpDown
 Gui, Main:Font, s24 bold
 Gui, Main:Add, Text, ys-3 xp+55, :
 Gui, Main:Font, s20 normal
-Gui, Main:Add, Edit, ys xp+15 w50 Right gTimeChangedByEdit vEditSecond +Limit2 +Number,
+Gui, Main:Add, Edit, ys xp+15 w50 h35 Right gTimeChangedByEdit vEditSecond +Limit2 +Number,
 Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gTimeChangedByUpDown
 Gui, Main:Font, s14
-;Gui, Main:Add, Text, ys+8, min:sec
+Gui, Main:Add, Text, ys+10, min:sec
 GuiControl, , EditMinute, % Settings.minute
 GuiControl, , EditSecond, % Settings.second
-Gui, Main:Tab
 
-Gui, Main:Font, s2
-Gui, Main:Add, Text, Section,
 Gui, Main:Font, s10 bold
-Gui, Main:Add, Text, w60 xs Section,
-Gui, Main:Add, Button, ys w200 h30 0x200 Center gStart, %StartButton%
+Gui, Main:Add, Text, w230 x+10 y+20 xs Section,
+Gui, Main:Add, Button, ys w100 0x200 Center gStart, %StartButton%
 
 ;; Load Running GUI
 Gui, Running:Font, s12 bold
