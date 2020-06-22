@@ -2,17 +2,18 @@
 
 <img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/media/social.jpg">
 
-This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has an easy to use interface and can be used on background while doing other things with your PC. 
+This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has a graphic user interface to easy to use interface and can be used on background while doing other things with your PC. 
 
 ### Features:
-- Graphic interface to easily configure, see progresses
+- Graphic interface to easily configure, control and track progres
 - Can be use on background
 - Adjustable time between battles to minimise the total time
 - Adjustable number of battles to avoid wasting your energy. Three modes available:
   - Manual: enter any number of battles
   - Calculated: Use our mini-calculator to run the exact battle to maximise your champions considering their stars, stage and xp boosts
   - Infinite: Run battles indefinitely, till you stop it or till your energy run outs
-- Detect if the game is not open or the game is closed while working
+- Game status detection, launching and quick swap
+- Configurable action on finish to show game, results or nothing
 - Remember previous options on app restart
 - Help screen included
 
@@ -20,12 +21,15 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 # Usage
 
 1. Download ```UnlimitedMultiBattles.exe``` from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or [compile your exe](#compile-your-exe).
-2. Open ```Raid: Shadow Legends``` on your PC, select a stage and prepare your team but don't press "Play" already.
-3. Open ```UnlimitedMultiBattles.exe``` on your PC, select your options and press "Start Multi-Battle".
+2. Open ```UnlimitedMultiBattles.exe``` on your PC and configure your multi-battle:
+   1. **Prepare your Team**: Go to the game, select a stage and prepare your team, but don't press 'Play' and come back to our app.
+   2. **Select number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes:
+     * Manual: Enter any number of battles
+     * Calculated: Use exact number to max out your champions
+     * Infinite: Run forever till you stop us or your energy run out
+   5. **Select time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next replay will carry on with the followings ones.
+3. Press "Start Multi-Battle" in our application. We will start the first battle and replay the followings.
 
-**Time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next replay will carry on with the followings ones.
-
-**Number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs you need to max out your level 1 champions.
 
 # Compile your exe
 

@@ -25,34 +25,34 @@ SetTitleMatchMode 3             ; Exact title match
 ;;; Metadata
 ScriptVersion := "v1.0.2"
 ScriptTitle := "UnlimitedMultiBattles"
-ScriptDescription := "For official 'Raid: Shadow Legends' on Windows"
+ScriptDescription := "This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows."
+ProjectDescription := "This is an open source project, license under Apache 2.0 and it's sources are published at GitHub. Find out more at our repository."
 ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
-ScriptAuthor := "Rafael Acosta Alvarez"
 
 ;;; Texts
 TeamHeader := "1. Prepare your team"
-TeamDescription := "Open the game, select a stage and prepare your team. Don't press 'Play' and come back."
-DelayHeader := "3. Select time between battles"
-RepetitionHeader := "2. Select number of battles"
+BattlesHeader := "2. Select number of battles"
+TimeHeader := "3. Select time between battles"
 StartHeader := "4. Start farming"
 StartButton := "Start Multi-Battle"
-StopButton := "Cancel"
-InfiniteMessage := "We will keep playing multi-battles till you press stop."
-ManualMessage := "Enter any number of multi-battles."
-CalculatedMessage := "Exact battles to max out your level 1 champions:"
-NoRunningGameError := "You have to open the game and select your team before start."
-ClosedGameError := "Canceled, the game has been closed."
-UnableToOpenGame := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
-IntroHelp := "This script allows to replay Raid on background while doing other things on foreground. It quickly swap to Raid game window, press the replay hotkey 'R' and go back to your previous window."
-UsageHelp := "1. Open 'Raid: Shadow Legends' on your PC, select the stage and prepare your farming team but don't press 'Play' already.`n2. Then on this application, select your farming options and press 'Start Multi-Battle'."
-DelayHelp := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
-RepetitionHelp := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
-StartBattleHelp := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
-ScriptHelp := "This script is license under Apache 2.0 and it's source code is hosted at GitHub. Find out more info at his repository."
 
+TabOptions = Manual|Max out|Infinite
+StageOptions = Brutal 12-3|Brutal 12-6
+BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
+StarOptions = 1%StarSymbol%: Level 1-10|2%StarSymbol%: Level 1-20|3%StarSymbol%: Level 1-30|4%StarSymbol%: Level 1-40|5%StarSymbol%: Level 1-50|6%StarSymbol%: Level 1-60
+
+InfoTeam := "Open the game, select a stage and prepare your team. Don't press 'Play' and come back."
+InfoBattles := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
+InfoStart := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
+InfoTime := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
+
+NoRunningGameMessage := "You have to open the game and select your team before start."
+UnableToOpenGameMessage := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
 RunningHeader := "Running..."
 RunningOnFinishMessage := "On finish:"
 RunningOnFinishOptions = Show game window|Show results window|Keep on background
+StopButton := "Cancel"
+
 ResultHeaderSuccess := "Completed!"
 ResultHeaderCanceled := "Cancelled"
 ResultHeaderInterrupted := "Interrupted"
@@ -61,7 +61,7 @@ ResultMessageCanceled := "Multi-Battle canceled by user"
 ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
 
 ;;; Constants
-isDebug := false
+isDebug := true
 AllGui = Main|Running|Result|Info
 RaidWinTitle := "Raid: Shadow Legends"
 SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
@@ -74,10 +74,6 @@ GearSymbol := Chr(0x2699)
 InfoSymbol := Chr(0x2139)
 TCS_FIXEDWIDTH := 0x0400
 TCM_SETITEMSIZE := 0x1329
-TabOptions = Manual|Max out|Infinite
-StageOptions = Brutal 12-3|Brutal 12-6
-BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
-StarOptions = 1%StarSymbol%: Level 1-10|2%StarSymbol%: Level 1-20|3%StarSymbol%: Level 1-30|4%StarSymbol%: Level 1-40|5%StarSymbol%: Level 1-50|6%StarSymbol%: Level 1-60
 Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 24, 52, 112, 233], [3, 8, 20, 44, 93, 194]]
 Brutal12_6 := [ [6, 19, 46, 103, 220, 457], [5, 16, 39, 86, 183, 381], [3, 10, 23, 52, 110, 229], [3, 8, 20, 43, 92, 191]]
 CalculatorData := [ Brutal12_3, Brutal12_6 ]
@@ -106,31 +102,28 @@ selectedOnFinish := Settings.onFinish
 CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
 
 
-;;; Load UIs
+;;; Load GUIs
 
-;; 1st UI: Main
+;; Load Main GUI
 Gui, Main:Default
-Gui, Main:Add, Picture, w350 h35 vpic, images\HeaderBackground.jpg
 
+Gui, Main:Add, Picture, w350 h35 vpic, images\HeaderBackground.jpg
 Gui, Main:Font, s10 bold
 Gui, Main:Add, Text, w300 h35 xp yp 0x200 BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
-;Gui, Main:Font, s10 norm
-;Gui, Main:Add, Text, w280 y+2 Center, %ScriptDescription%
 Gui, Main:Font, s10 norm
 Gui, Main:Add, Button, ys yp+5 Center gShowInfo, Info
-;Gui, Main:Add, text, xs w350 0x10 
+
 Gui, Main:Font, s2
 Gui, Main:Add, Text, xs Section,
-
 Gui, Main:Font, s10 bold
 Gui, Main:Add, Text, xs Section, %TeamHeader%
 Gui, Main:Font, s10 norm
-Gui, Main:Add, Text, w287.5 xs vTeamDescription, %TeamDescription%
+Gui, Main:Add, Text, w287.5 xs, %InfoTeam%
 Gui, Main:Add, Button, w50 ys+15 Center gGoToGame vTeamButton, Open`nGame
 Gui, Main:Font, s2
 Gui, Main:Add, Text, xs,
 Gui, Main:Font, s10 bold
-Gui, Main:Add, Text, xs Section, %RepetitionHeader%
+Gui, Main:Add, Text, xs Section, %BattlesHeader%
 Gui, Main:Font, s10 norm
 Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
 SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
@@ -164,12 +157,11 @@ Gui, Main:Tab
 Gui, Main:Font, s2
 Gui, Main:Add, Text, Section,
 Gui, Main:Font, s10 bold
-Gui, Main:Add, Text, xs, %DelayHeader%
+Gui, Main:Add, Text, xs, %TimeHeader%
 Gui, Main:Font, s10 norm
 
 Gui, Main:Add, Tab3, hwndHTAB w350 +%TCS_FIXEDWIDTH%, Manual
 SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
-
 Gui, Main:Add, Text, Section w80,
 Gui, Main:Font, s20 
 Gui, Main:Add, Edit, ys w50 Right gTimeChangedByEdit vEditMinute +Limit2 +Number,
@@ -183,7 +175,6 @@ Gui, Main:Font, s14
 ;Gui, Main:Add, Text, ys+8, min:sec
 GuiControl, , EditMinute, % Settings.minute
 GuiControl, , EditSecond, % Settings.second
-
 Gui, Main:Tab
 
 Gui, Main:Font, s2
@@ -192,11 +183,10 @@ Gui, Main:Font, s10 bold
 Gui, Main:Add, Text, w60 xs Section,
 Gui, Main:Add, Button, ys w200 h30 0x200 Center gStart, %StartButton%
 
-;; GUI: Running
+;; Load Running GUI
 Gui, Running:Font, s12 bold
 Gui, Running:Add, Text, w250 Center, % RunningHeader
 Gui, Running:Font, s10 normal
-;Gui, Running:Add, Text, w250 Center vMultiBattleOverview, 
 Gui, Running:Add, Text, w115 Section, Multi-Battle:
 Gui, Running:Add, Text, ys w120 Right vMultiBattleStatus,
 Gui, Running:Add, Progress, xs yp+18 w250 h20 -Smooth vMultiBattleProgress, 0
@@ -214,7 +204,7 @@ Gui, Running:Font, s10 bold
 Gui, Running:Add, Text, xs Section,
 Gui, Running:Add, Button, ys w200 h30 gShowResultCanceled 0x200 Center, %StopButton%
 
-;; GUI: Result
+;; Load Result GUI 
 Gui, Result:Font, s12 bold
 Gui, Result:Add, Text, w250 Center vResultHeader,
 Gui, Result:Font, s10 normal
@@ -225,41 +215,36 @@ Gui, Result:Font, s10 bold
 Gui, Result:Add, Text, Section,
 Gui, Result:Add, Button, ys w200 h30 gShowMain 0x200 Center, OK
 
-
-;; 3rd UI: Info
+;; Load Info GUI
+Gui, Info:Add, Picture, w350 h35 vpic, images\HeaderBackground.jpg
 Gui, Info:Font, s10 bold
-Gui, Info:Add, Text, w280 Section Center, %ScriptTitle% %ScriptVersion%
+Gui, Info:Add, Text, w290 h35 xp yp 0x200 BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
 Gui, Info:Font, s10 norm
-Gui, Info:Add, Text, w280 y+2 Center, %ScriptDescription%
-Gui, Info:Add, Button, w50 ys y15 Center gShowMain, Back
-Gui, Info:Add, text, xs w350 0x10    
-Gui, Info:Font, s10 bold
-Gui, Info:Add, Text, w350 Center xs, Help
-Gui, Info:Font, s8 norm
-Gui, Info:Add, Text, w350 xs Section, %IntroHelp%
-Gui, Info:Font, s9 bold
-Gui, Info:Add, Text, xs, Usage
-Gui, Info:Font, s8 norm
-Gui, Info:Add, Text, w350 xs Section, %UsageHelp%
-Gui, Info:Font, s9 bold
-Gui, Info:Add, Text, xs, %DelayHeader%
-Gui, Info:Font, s8 norm
-Gui, Info:Add, Text, w350 xs Section, %DelayHelp%
-Gui, Info:Font, s9 bold
-Gui, Info:Add, Text, xs, %RepetitionHeader%
-Gui, Info:Font, s8 norm
-Gui, Info:Add, Text, w350 xs Section, %RepetitionHelp%
-Gui, Info:Add, Text, w350 xs Section, %StartBattleHelp%
-Gui, Info:Add, text, xs w350 0x10
-Gui, Info:Font, s10 bold
-Gui, Info:Add, Text, w350 Center xs, About
-Gui, Info:Font, s8 norm
-Gui, Info:Add, Text, w280 xs Section, %ScriptHelp%
-Gui, Info:Add, Button, w50 ys Center gGoToSite, Site
-Gui, Info:Add, Text, xs
+Gui, Info:Add, Button, ys yp+5 Center gShowMain, Back
+Gui, Info:Add, Text, w350 xs Section, %ScriptDescription%
+Gui, Info:Add, Text, w287.5 xs Section, %ProjectDescription%
+Gui, Info:Add, Button, w50 ys Center gGoToSite, Open GitHub
+Gui, Info:Font, s11 bold
+Gui, Info:Add, Text, w350 Center xs, Usage
+Gui, Info:Font, s11 bold
+Gui, Info:Add, Text, xs, %TeamHeader%
+Gui, Info:Font, s10 norm
+Gui, Info:Add, Text, w350 xs Section, %InfoTeam%
+Gui, Info:Font, s11 bold
+Gui, Info:Add, Text, xs, %BattlesHeader%
+Gui, Info:Font, s10 norm
+Gui, Info:Add, Text, w350 xs Section, %InfoBattles%
+Gui, Info:Font, s11 bold
+Gui, Info:Add, Text, xs, %TimeHeader%
+Gui, Info:Font, s10 norm
+Gui, Info:Add, Text, w350 xs Section, %InfoTime%
+Gui, Info:Font, s11 bold
+Gui, Info:Add, Text, xs, %StartHeader%
+Gui, Info:Font, s10 norm
+Gui, Info:Add, Text, w350 xs Section, %InfoStart%
+Gui, Info:Add, Text, w350 xs Section,
 
-
-; Show initial UI (Main)
+;; Show initial UI (Main)
 Gui, Main:Show, xCenter y150 AutoSize, %ScriptTitle%
 
 return
@@ -310,7 +295,7 @@ GoToGame:
         }
         else{
             ; Show unable to open game dialog
-            MsgBox, 48, %ScriptTitle%, %UnableToOpenGame%
+            MsgBox, 48, %ScriptTitle%, %UnableToOpenGameMessage%
             return
         }
     }
@@ -385,7 +370,7 @@ return
 
 Start:
     if !isDebug && !WinExist(RaidWinTitle){
-        MsgBox, 48, %ScriptTitle%, %NoRunningGameError%
+        MsgBox, 48, %ScriptTitle%, %NoRunningGameMessage%
         return
     }
     
