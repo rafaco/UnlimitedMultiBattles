@@ -69,6 +69,7 @@
 
     NoRunningGameMessage := "You have to open the game and select your team before start."
     UnableToOpenGameMessage := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
+    UnableToSendKeysToGameMessage := "Unable to send keys to the game.`n`nThe game is running as admin but this script isn't. Reopen the game as not admin or reopen this script as admin.`n`nDo you want to run this script as Administrator?"
     RunningHeader := "Running..."
     RunningOnFinishMessage := "On finish:"
     RunningOnFinishOptions = Show game window|Show results window|Keep on background
@@ -81,7 +82,7 @@
     ResultMessageCanceled := "Multi-Battle canceled by user"
     ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
 
-
+ 
     ; Init settings (previous values or default ones)
     If (!FileExist(SettingsFilePath)){
         Settings := DefaultSettings
@@ -248,7 +249,7 @@
     ; Show initial UI (Main)
     Gui, Main:Show, xCenter y150 AutoSize, %ScriptTitle%
 
-return  ; End of auto-execute section
+return ; End of auto-execute section
 
 
 ;;; Labels
@@ -426,6 +427,19 @@ Start:
         
         WinGetActiveTitle, PreviouslyActive
         WinActivate, %RaidWinTitle%
+        
+        isAdminNeeded := !CanSendKeysToWin(RaidWinTitle)
+        if (isAdminNeeded){
+            Msgbox, 20, %ScriptTitle%, % UnableToSendKeysToGameMessage
+            IfMsgbox, no 
+            {
+                GoSub ShowMain
+                return
+            }
+            GoSub RunScriptAsAdmin
+            return
+        }
+        
         ControlSend, , {Enter}, %RaidWinTitle%
         ControlSend, , r, %RaidWinTitle%
         ;sleep 25
@@ -506,6 +520,16 @@ ShowResultInterrupted:
         }
 return
 
+RunScriptAsAdmin:
+    if A_IsAdmin{
+        MsgBox, % "Skipped: this script is already running as administrator"
+        GoSub ShowMain
+        return
+    }
+    Run *RunAs "%A_ScriptFullPath%"
+    ExitApp
+return
+
 GuiClose:
     Gui, Submit
     ; Following values need to be manually stored, as can be changed manually
@@ -525,4 +549,18 @@ timeFormatter(seconds){
     date += Floor(seconds), SECONDS
     FormatTime, formattedDate, %date%, mm:ss
     return formattedDate
+}
+
+CanSendKeysToWin(WinTitle)
+{
+    static WM_KEYDOWN=0x100, WM_KEYUP=0x101, vk_to_use=7
+    ; Test whether we can send keystrokes to this window.
+    ; Use a virtual keycode which is unlikely to do anything:
+    PostMessage, WM_KEYDOWN, vk_to_use, 0,, %WinTitle%
+    if !ErrorLevel
+    {   ; Seems best to post key-up, in case the window is keeping track.
+        PostMessage, WM_KEYUP, vk_to_use, 0xC0000000,, %WinTitle%
+        return true
+    }
+    return false
 }
