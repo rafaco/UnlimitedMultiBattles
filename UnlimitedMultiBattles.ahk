@@ -36,6 +36,7 @@
     AllGui = Main|Running|Result|Info
     RaidWinTitle := "Raid: Shadow Legends"
     SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
+    SettingsFilePathOld := A_ScriptDir . "/" . ScriptTitle . ".ini"
     RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
     SettingsSection := "SettingsSection"
     DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, stage: 1, boost: 3, star: 1, onFinish: 3 }
@@ -54,7 +55,7 @@
     TeamHeader := "1. Prepare your team"
     BattlesHeader := "2. Select number of battles"
     TimeHeader := "3. Select time between battles"
-    StartHeader := "4. Start farming"
+    StartHeader := "4. Start"
     StartButton := "Start`nMulti-Battle"
 
     TabOptions = Manual|Max out|Infinite
@@ -82,7 +83,7 @@
     ResultMessageCanceled := "Multi-Battle canceled by user"
     ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
 
- 
+        
     ; Init settings (previous values or default ones)
     If (!FileExist(SettingsFilePath)){
         Settings := DefaultSettings
@@ -95,6 +96,10 @@
             IniRead, temp, %SettingsFilePath%, %SettingsSection%, %key%
             Settings[key] := temp
         }
+    }
+    ; Delete old setting file (used on versions 1.0.1)
+    If (FileExist(SettingsFilePathOld)){
+        FileDelete, %SettingsFilePathOld%
     }
 
     ; Prepare selections
