@@ -2,20 +2,21 @@
 
 <img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/media/social.jpg">
 
-This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It has a graphic user interface to easy to use interface and can be used on background while doing other things with your PC. 
+This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic interface and it can be used on background while you do other things with your PC. 
 
 ### Features
-- Graphic interface to easily configure, control and track progres
+- Graphic user interface to configure, control and track the progress
 - Can be use on background
 - Adjustable time between battles to minimise the total time
 - Adjustable number of battles to avoid wasting your energy. Three modes available:
   - Manual: enter any number of battles
   - Calculated: Use our mini-calculator to run the exact battle to maximise your champions considering their stars, stage and xp boosts
   - Infinite: Run battles indefinitely, till you stop it or till your energy run outs
-- Game status detection, launching and quick swap
-- Configurable action on finish to show game, results or nothing
-- Remember previous options on app restart
-- Help screen included
+- Configurable action on finish multi-battle: show game, show results or nothing
+- Auto-detect game closed and allow opening it
+- Auto-detect admin rights required and allow relaunching as admin
+- Remember all settings
+- Include usage help and link to this repo
 
 
 # Usage
@@ -33,11 +34,11 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 
 # Compile your exe
 
-You can easily generate your own exe from the sources to avoid using an executable files downloaded from internet.
+You can generate your own exe from our sources to avoid using an executable files downloaded from internet:
 
-1. Install [AutoHotKey](https://www.autohotkey.com/) for Windows in your PC.
-2. Download a copy of our script [UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk).
-3. Right click on the downloaded file and press "Compile", your own exe will be generated in the same folder.
+1. Download and install [AutoHotKey](https://www.autohotkey.com/) for Windows in your PC.
+2. Clone [this repository] (https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
+3. Open your local repository, right click on [UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk) and select "Compile".
 
 # Disclaimer
 This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
