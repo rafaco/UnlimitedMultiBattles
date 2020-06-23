@@ -179,7 +179,9 @@
     Gui, Main:Font, s14
     Gui, Main:Add, Text, ys+10, min:sec
     GuiControl, , EditMinute, % Settings.minute
+    GuiControl, , UpDownMinute, % Settings.minute
     GuiControl, , EditSecond, % Settings.second
+    GuiControl, , UpDownSecond, % Settings.second
 
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w230 x+10 y+20 xs Section,
