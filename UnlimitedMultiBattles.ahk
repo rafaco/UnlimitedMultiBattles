@@ -331,21 +331,26 @@ CalculatorChangedBySelector:
     IniWrite, %StageValue%, %SettingsFilePath%, %SettingsSection%, stage
     IniWrite, %BoostValue%, %SettingsFilePath%, %SettingsSection%, boost
     IniWrite, %StarValue%, %SettingsFilePath%, %SettingsSection%, star
+    Settings.stage := BattlesValue
+    Settings.boost := BoostValue
+    Settings.star := StarValue
     CalculatedRepetitions := CalculatorData[StageValue][BoostValue][StarValue]
     GuiControl,, CalculatedRepetitions, %CalculatedRepetitions%
 return
 
 TimeChangedByUpDown:
     Gui, Submit, NoHide
+    GuiControlGet,MinuteValue,,UpDownMinute
+    GuiControlGet,SecondValue,,UpDownSecond
     SetFormat, Float, 02.0
-    UpDownMinute += 0.0
-    UpDownSecond += 0.0
-    IniWrite, %UpDownMinute%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %UpDownSecond%, %SettingsFilePath%, %SettingsSection%, second
-    Settings.minute := UpDownMinute
-    Settings.second := UpDownSecond
-    GuiControl, , EditMinute, %UpDownMinute%
-    GuiControl, , EditSecond, %UpDownSecond%
+    MinuteValue += 0.0
+    SecondValue += 0.0
+    IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+    Settings.minute := MinuteValue
+    Settings.second := SecondValue
+    GuiControl, , EditMinute, %MinuteValue%
+    GuiControl, , EditSecond, %SecondValue%
 Return
 
 TimeChangedByEdit:
@@ -532,7 +537,12 @@ return
 
 GuiClose:
     Gui, Submit
+    
+    ; TODO: is this really needed?
     ; Following values need to be manually stored, as can be changed manually
+    GuiControlGet,MinuteValue,,EditMinute
+    GuiControlGet,SecondValue,,EditSecond
+    GuiControlGet,BattlesValue,,EditBattles
     IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
     IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
