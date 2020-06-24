@@ -82,7 +82,7 @@
     ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
 
         
-    ; Init settings (previous values or default ones)
+    ;; Settings
     If (!FileExist(SettingsFilePath)){
         Settings := DefaultSettings
         for key, value in Settings{
@@ -95,18 +95,16 @@
             Settings[key] := temp
         }
     }
-    ; Delete old setting file (used on versions 1.0.1)
     If (FileExist(SettingsFilePathOld)){
-        FileDelete, %SettingsFilePathOld%
+        FileDelete, %SettingsFilePathOld% ;used on versions 1.0.1
     }
-
-    ; Prepare selections
     selectedTab := Settings.tab
     selectedStage := Settings.stage
     selectedBoost := Settings.boost
     selectedStar := Settings.star
     selectedOnFinish := Settings.onFinish
     CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
+
 
     ;; Load Menus and Icon
     Menu, Tray, Icon, images\icon.ico
@@ -255,6 +253,7 @@
     GuiControl, , EditMinute, % Settings.minute
     GuiControl, , UpDownSecond, % Settings.second
     GuiControl, , EditSecond, % Settings.second
+    
 return ; End of auto-execute section
 
 
@@ -273,12 +272,13 @@ ShowRunning:
 return
 
 MenuHandler:
-    ;MsgBox, You selected "%A_ThisMenuItem%" in menu "%A_ThisMenu%".
     if (A_ThisMenuItem = "Help"){
         GoSub ShowHelp
     }
     else if (A_ThisMenuItem = "About"){
         GoSub ShowAbout
+    }else{
+        MsgBox, No action for "%A_ThisMenuItem%" in menu "%A_ThisMenu%".
     }
 return
 
@@ -568,8 +568,7 @@ TimeFormatter(seconds){
     return formattedDate
 }
 
-CanSendKeysToWin(WinTitle)
-{
+CanSendKeysToWin(WinTitle){
     static WM_KEYDOWN=0x100, WM_KEYUP=0x101, vk_to_use=7
     ; Test whether we can send keystrokes to this window.
     ; Use a virtual keycode which is unlikely to do anything:
