@@ -27,7 +27,7 @@
     ScriptVersion := "v1.0.2"
     ScriptTitle := "UnlimitedMultiBattles"
     ScriptDescription := "This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows."
-    ProjectDescription := "This is an open source project, license under Apache 2.0 and it's sources are published at GitHub. Find out more at our repository."
+    ProjectDescription := "This project is open source project and it's licensed under Apache 2.0. Our source code and additional informations can be found at our Github repository.`n"
     ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
 
 
