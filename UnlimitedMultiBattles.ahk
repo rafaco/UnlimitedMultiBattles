@@ -33,7 +33,7 @@
 
     ;; Constants
     isDebug := false
-    AllGui = Main|Running|Result|Info
+    AllGuis = Main|Running|Result|Info
     RaidWinTitle := "Raid: Shadow Legends"
     SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
     SettingsFilePathOld := A_ScriptDir . "/" . ScriptTitle . ".ini"
@@ -183,10 +183,10 @@
     Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gTimeChangedByUpDown
     Gui, Main:Font, s14
     Gui, Main:Add, Text, ys+10, min:sec
-    GuiControl, , EditMinute, % Settings.minute
     GuiControl, , UpDownMinute, % Settings.minute
-    GuiControl, , EditSecond, % Settings.second
+    GuiControl, , EditMinute, % Settings.minute
     GuiControl, , UpDownSecond, % Settings.second
+    GuiControl, , EditSecond, % Settings.second
 
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w230 x+10 y+20 xs Section,
@@ -269,10 +269,7 @@ ShowInfo:
     WinGetPos,x,y
     targetGui := StrReplace(A_ThisLabel, "Show")
     Gui, %targetGui%:Show, x%x% y%y%, %ScriptTitle%
-    Loop, Parse, AllGui, |
-        if (A_LoopField != targetGui){
-            Gui, %A_LoopField%:Hide
-        }
+    HideAllGuisBut(AllGuis, targetGui)
 return
 
 InfoTooltip:
@@ -397,7 +394,7 @@ Start:
     isInfinite := (repetitions = -1)
 
     waitSeconds := SecondValue + ( MinuteValue * 60 )
-    waitSecondsFormatted := timeFormatter(waitSeconds)
+    waitSecondsFormatted := TimeFormatter(waitSeconds)
     waitMillis := (waitSeconds * 1000)
 
     if (isInfinite){
@@ -471,7 +468,7 @@ Start:
             
             currentProgress1 := ((currentSecond) * stepProgress1)
             GuiControl, Running:, CurrentBattleProgress, %currentProgress1%
-            currentTimeFormatted := timeFormatter(currentSecond)
+            currentTimeFormatted := TimeFormatter(currentSecond)
             GuiControl, Running:, CurrentBattleStatus, %currentTimeFormatted% / %waitSecondsFormatted%  
             if (currentSecond > waitSeconds){
                 break
@@ -521,15 +518,12 @@ ShowResultInterrupted:
     
     ;GuiControl, Result:, MultiBattleOverview, %overview%
     formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? currentRepetition : currentRepetition " of " repetitions
-    GuiControl, Result:, ResultText, % formattedBattles " battles in " timeFormatter(MultiBattleDuration)
+    GuiControl, Result:, ResultText, % formattedBattles " battles in " TimeFormatter(MultiBattleDuration)
     
     Gui,+LastFound
     WinGetPos,x,y
     Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
-    Loop, Parse, AllGui, |
-        if (A_LoopField != "Result"){
-            Gui, %A_LoopField%:Hide
-        }
+    HideAllGuisBut(AllGuis, "Result")
 return
 
 RunScriptAsAdmin:
@@ -542,26 +536,34 @@ RunScriptAsAdmin:
     ExitApp
 return
 
-GuiClose:
+
+RunningGuiClose:
+    GoSub ShowResultCanceled
+return
+
+ResultGuiClose:
+InfoGuiClose:
+    GoSub ShowMain
+return
+
+MainGuiClose:
     Gui, Submit
-    
     ; TODO: is this really needed?
     ; Following values need to be manually stored, as can be changed manually
-    GuiControlGet,MinuteValue,,EditMinute
-    GuiControlGet,SecondValue,,EditSecond
-    GuiControlGet,BattlesValue,,EditBattles
-    IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
-    IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
+    ;GuiControlGet,MinuteValue,,EditMinute
+    ;GuiControlGet,SecondValue,,EditSecond
+    ;GuiControlGet,BattlesValue,,EditBattles
+    ;IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
+    ;IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+    ;IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
     
-    Loop, Parse, AllGui, |
-        Gui, %A_LoopField%:Destroy
-    ExitApp
+    DestroyAllGuis()  
+ExitApp
 
 
 ;;; Functions
 
-timeFormatter(seconds){
+TimeFormatter(seconds){
     date = 2000 ;any year above 1600
     date += Floor(seconds), SECONDS
     FormatTime, formattedDate, %date%, mm:ss
@@ -580,4 +582,18 @@ CanSendKeysToWin(WinTitle)
         return true
     }
     return false
+}
+
+HideAllGuisBut(list, excluded){
+    Loop, Parse, list, |
+        if (A_LoopField != excluded){
+            Gui, %A_LoopField%:Hide
+        }
+    return
+}
+
+DestroyAllGuis(){
+    Loop, Parse, AllGuis, |
+        Gui, %A_LoopField%:Destroy
+    return
 }
