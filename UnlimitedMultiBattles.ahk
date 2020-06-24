@@ -14,7 +14,7 @@
 ;   limitations under the License.
 
 
-;;; Start of auto-execute section
+;;; Auto-execute section
     #NoEnv                          ; Recommended for performance and compatibility with future AutoHotkey releases.
     ;#Warn                          ; Enable warnings to assist with detecting common errors.
     SendMode Input                  ; Recommended for new scripts due to its superior speed and reliability.
@@ -135,22 +135,22 @@
 
     Gui Main:Add, GroupBox, hWndhGrp w350 h125, %BattlesHeader%
     Gui, Main:Font, s10 norm
-    Gui, Main:Add, Tab3, hwndHTAB xp+10 yp+20 w330 h95 +%TCS_FIXEDWIDTH% vTabSelector gTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
+    Gui, Main:Add, Tab3, hwndHTAB xp+10 yp+20 w330 h95 +%TCS_FIXEDWIDTH% vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
     SendMessage, TCM_SETITEMSIZE, 0, (330/3)+20, , ahk_id %HTAB%
     DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
     WinSet Redraw,, ahk_id %HTab%
     Gui, Main:Add, Text, w79 Section,
     Gui, Main:Font, s20 
-    Gui, Main:Add, Edit, ys+10 w65 h35 Right gBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
-    Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gBattleChangedByUpDown, % Settings.battles
+    Gui, Main:Add, Edit, ys+10 w65 h35 Right gOnBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
+    Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gOnBattleChangedByUpDown, % Settings.battles
     Gui, Main:Font, s14
     Gui, Main:Add, Text, xp+80 ys+20, battles
 
     Gui, Main:Tab, 2
     Gui, Main:Font, s10
-    Gui, Main:Add, DropDownList, Section w90 vStageSelector gCalculatorChangedBySelector Choose%selectedStage% AltSubmit, %StageOptions%
-    Gui, Main:Add, DropDownList, ys xp+95 w97 vBoostSelector gCalculatorChangedBySelector Choose%selectedBoost% AltSubmit, %BoostOptions%
-    Gui, Main:Add, DropDownList, ys xp+102 w110 vStarSelector gCalculatorChangedBySelector Choose%selectedStar% AltSubmit, %StarOptions%
+    Gui, Main:Add, DropDownList, Section w90 vStageSelector gOnCalculatorChanged Choose%selectedStage% AltSubmit, %StageOptions%
+    Gui, Main:Add, DropDownList, ys xp+95 w97 vBoostSelector gOnCalculatorChanged Choose%selectedBoost% AltSubmit, %BoostOptions%
+    Gui, Main:Add, DropDownList, ys xp+102 w110 vStarSelector gOnCalculatorChanged Choose%selectedStar% AltSubmit, %StarOptions%
     Gui, Main:Add, Text, w80 xs Section,
     Gui, Main:Font, s20 
     Gui, Main:Add, Text, w50 right ys vCalculatedRepetitions, %CalculatedRepetitions%
@@ -174,13 +174,13 @@
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Text, xp+10 yp+20 Section w90,
     Gui, Main:Font, s20 
-    Gui, Main:Add, Edit, ys w50 h35 Right gTimeChangedByEdit vEditMinute +Limit2 +Number,
-    Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gTimeChangedByUpDown
+    Gui, Main:Add, Edit, ys w50 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
+    Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown
     Gui, Main:Font, s24 bold
     Gui, Main:Add, Text, ys-3 xp+55, :
     Gui, Main:Font, s20 normal
-    Gui, Main:Add, Edit, ys xp+15 w50 h35 Right gTimeChangedByEdit vEditSecond +Limit2 +Number,
-    Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gTimeChangedByUpDown
+    Gui, Main:Add, Edit, ys xp+15 w50 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
+    Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown
     Gui, Main:Font, s14
     Gui, Main:Add, Text, ys+10, min:sec
     GuiControl, , UpDownMinute, % Settings.minute
@@ -260,11 +260,11 @@ return ; End of auto-execute section
 
 
 ;;; Labels
+;; Navigation labels
 
 ShowMain:
-ShowRunning:
-ShowResult:
 ShowInfo:
+ShowRunning:
     Gui,+LastFound
     WinGetPos,x,y
     targetGui := StrReplace(A_ThisLabel, "Show")
@@ -272,17 +272,17 @@ ShowInfo:
     HideAllGuisBut(AllGuis, targetGui)
 return
 
-InfoTooltip:
-    message := ""
-    if (A_GuiControl="SettingsButton"){
-        message := "Comming soon"
-    }
-    ToolTip, Button '%A_GuiControl%' clicked.`n`n%message%
-    SetTimer, RemoveToolTip, -5000
+MainGuiClose:
+    DestroyAllGuis()  
+ExitApp
+
+ResultGuiClose:
+InfoGuiClose:
+    GoSub ShowMain
 return
 
-RemoveToolTip:
-    ToolTip
+RunningGuiClose:
+    GoSub ShowResultCanceled
 return
 
 GoToSite:
@@ -307,13 +307,26 @@ GoToGame:
     }
 return
 
-TabChanged:
+RunScriptAsAdmin:
+    if A_IsAdmin{
+        MsgBox, % "Skipped: this script is already running as administrator"
+        GoSub ShowMain
+        return
+    }
+    Run *RunAs "%A_ScriptFullPath%"
+    ExitApp
+return
+
+
+;; OnChange labels
+
+OnTabChanged:
 	GuiControlGet,TabValue,,TabSelector
     IniWrite, %TabValue%, %SettingsFilePath%, %SettingsSection%, tab
     Settings.tab := TabValue
 return
 
-BattleChangedByEdit:
+OnBattleChangedByEdit:
     Gui, Submit, NoHide
     GuiControlGet,BattlesValue,,EditBattles
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
@@ -321,14 +334,14 @@ BattleChangedByEdit:
     GuiControl,,UpDownBattles,%BattlesValue%
 return
 
-BattleChangedByUpDown:
+OnBattleChangedByUpDown:
     GuiControlGet,BattlesValue,,UpDownBattles
     IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
     Settings.battle := BattlesValue
     GuiControl,,EditBattles,%BattlesValue%
 return  
 
-CalculatorChangedBySelector:
+OnCalculatorChanged:
 	GuiControlGet,StageValue,,StageSelector
 	GuiControlGet,BoostValue,,BoostSelector
     GuiControlGet,StarValue,,StarSelector
@@ -342,7 +355,7 @@ CalculatorChangedBySelector:
     GuiControl,, CalculatedRepetitions, %CalculatedRepetitions%
 return
 
-TimeChangedByUpDown:
+OnTimeChangedByUpDown:
     Gui, Submit, NoHide
     GuiControlGet,MinuteValue,,UpDownMinute
     GuiControlGet,SecondValue,,UpDownSecond
@@ -357,7 +370,7 @@ TimeChangedByUpDown:
     GuiControl, , EditSecond, %SecondValue%
 Return
 
-TimeChangedByEdit:
+OnTimeChangedByEdit:
     Gui, Submit, NoHide
     GuiControlGet,MinuteValue,,EditMinute
     GuiControlGet,SecondValue,,EditSecond
@@ -378,6 +391,9 @@ OnFinishChanged:
     IniWrite, %OnFinishValue%, %SettingsFilePath%, %SettingsSection%, onFinish
     Settings.onFinish := OnFinishValue
 return
+
+
+;; Core logic labels
 
 Start:
     if !isDebug && !WinExist(RaidWinTitle){
@@ -481,7 +497,6 @@ Start:
     If isRunning{
         Gosub ShowResultSuccess
     }
-    
 return
 
 ShowResultSuccess:
@@ -525,40 +540,6 @@ ShowResultInterrupted:
     Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
     HideAllGuisBut(AllGuis, "Result")
 return
-
-RunScriptAsAdmin:
-    if A_IsAdmin{
-        MsgBox, % "Skipped: this script is already running as administrator"
-        GoSub ShowMain
-        return
-    }
-    Run *RunAs "%A_ScriptFullPath%"
-    ExitApp
-return
-
-
-RunningGuiClose:
-    GoSub ShowResultCanceled
-return
-
-ResultGuiClose:
-InfoGuiClose:
-    GoSub ShowMain
-return
-
-MainGuiClose:
-    Gui, Submit
-    ; TODO: is this really needed?
-    ; Following values need to be manually stored, as can be changed manually
-    ;GuiControlGet,MinuteValue,,EditMinute
-    ;GuiControlGet,SecondValue,,EditSecond
-    ;GuiControlGet,BattlesValue,,EditBattles
-    ;IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    ;IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
-    ;IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
-    
-    DestroyAllGuis()  
-ExitApp
 
 
 ;;; Functions
