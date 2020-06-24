@@ -71,7 +71,7 @@
     UnableToSendKeysToGameMessage := "Unable to send keys to the game.`n`nThe game is running as admin but this script isn't. Reopen the game as not admin or reopen this script as admin.`n`nDo you want to run this script as Administrator?"
     RunningHeader := "Running..."
     RunningOnFinishMessage := "On finish:"
-    RunningOnFinishOptions = Show game window|Show results window|Keep on background
+    RunningOnFinishOptions = Pop up game window|Pop up results window|Do nothing
     StopButton := "Cancel"
 
     ResultHeaderSuccess := "Completed!"
