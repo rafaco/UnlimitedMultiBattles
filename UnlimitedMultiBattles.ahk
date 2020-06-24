@@ -110,8 +110,8 @@
     selectedOnFinish := Settings.onFinish
     CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
 
-
     ;; Load GUIs
+    Menu, Tray, Icon, images\icon.ico
 
     ; Load Main GUI
     Gui, Main:Default
