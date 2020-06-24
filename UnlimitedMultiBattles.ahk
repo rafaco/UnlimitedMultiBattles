@@ -68,7 +68,7 @@
 
     NoRunningGameMessage := "You have to open the game and select your team before start."
     UnableToOpenGameMessage := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
-    UnableToSendKeysToGameMessage := "Unable to send keys to the game.`n`nThe game is running as admin but this script isn't. Reopen the game as not admin or reopen this script as admin.`n`nDo you want to run this script as Administrator?"
+    UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
     RunningHeader := "Running..."
     RunningOnFinishMessage := "On finish:"
     RunningOnFinishOptions = Pop up game window|Pop up results window|Do nothing
