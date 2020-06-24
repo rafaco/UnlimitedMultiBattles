@@ -33,7 +33,7 @@
 
     ;; Constants
     isDebug := false
-    AllGuis = Main|Running|Result|Info
+    AllGuis = Main|Running|Result|Help|About
     RaidWinTitle := "Raid: Shadow Legends"
     SettingsFilePath := A_AppData . "/" . ScriptTitle . ".ini"
     SettingsFilePathOld := A_ScriptDir . "/" . ScriptTitle . ".ini"
@@ -42,8 +42,6 @@
     DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, stage: 1, boost: 3, star: 1, onFinish: 3 }
     InfiniteSymbol := Chr(0x221E)
     StarSymbol := Chr(0x2605)
-    GearSymbol := Chr(0x2699)
-    InfoSymbol := Chr(0x2139)
     TCS_FIXEDWIDTH := 0x0400
     TCM_SETITEMSIZE := 0x1329
     Brutal12_3 := [ [6, 19, 47, 104, 223, 465], [5, 16, 39, 87, 186, 388], [3, 10, 24, 52, 112, 233], [3, 8, 20, 44, 93, 194]]
@@ -110,22 +108,19 @@
     selectedOnFinish := Settings.onFinish
     CalculatedRepetitions := CalculatorData[selectedStage][selectedBoost][selectedStar]
 
-    ;; Load GUIs
+    ;; Load Menus and Icon
     Menu, Tray, Icon, images\icon.ico
-
+    Menu, InfoMenu, Add, Help, MenuHandler
+    Menu, InfoMenu, Add, About, MenuHandler
+    infoLabel := "&Info    "
+    Menu, MainMenuBar, Add, %infoLabel%, :InfoMenu, Right
+    
     ; Load Main GUI
     Gui, Main:Default
+    Gui, Main:Menu, MainMenuBar
 
-    Gui, Main:Add, Picture, w350 h35 vpic, images\HeaderBackground.jpg
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, Text, w300 h35 xp yp 0x200 BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
-    Gui, Main:Font, s10 norm
-    Gui, Main:Add, Button, ys yp+5 Center gShowInfo, Info
-
-    Gui, Main:Font, s2
-    Gui, Main:Add, Text, xs Section,
-    Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox, hWndhGrp3 w350 h65, %TeamHeader%
+    Gui, Main:Add, GroupBox, hWndhGrp3 w350 h65 Section, %TeamHeader%
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Text, xp+10 yp+20 w270, %InfoTeam%
     Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
@@ -170,9 +165,9 @@
     Gui, Main:Font, s2
     Gui, Main:Add, Text, x10 Section,
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox, hWndhGrp2 w350 h65, %TimeHeader%
+    Gui, Main:Add, GroupBox, hWndhGrp2 w350 h70, %TimeHeader%
     Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, xp+10 yp+20 Section w90,
+    Gui, Main:Add, Text, xp+10 yp+25 Section w90,
     Gui, Main:Font, s20 
     Gui, Main:Add, Edit, ys w50 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
     Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown
@@ -224,35 +219,38 @@
     Gui, Result:Add, Text, Section,
     Gui, Result:Add, Button, ys w200 h30 gShowMain 0x200 Center, OK
 
-    ; Load Info GUI
-    Gui, Info:Add, Picture, w350 h35 vpic, images\HeaderBackground.jpg
-    Gui, Info:Font, s10 bold
-    Gui, Info:Add, Text, w290 h35 xp yp 0x200 BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
-    Gui, Info:Font, s10 norm
-    Gui, Info:Add, Button, ys yp+5 Center gShowMain, Back
-    Gui, Info:Add, Text, w350 xs Section, %ScriptDescription%
-    Gui, Info:Add, Text, w287.5 xs Section, %ProjectDescription%
-    Gui, Info:Add, Button, w50 ys Center gGoToSite, Open GitHub
-    Gui, Info:Font, s11 bold
-    Gui, Info:Add, Text, w350 Center xs, Usage
-    Gui, Info:Font, s11 bold
-    Gui, Info:Add, Text, xs, %TeamHeader%
-    Gui, Info:Font, s10 norm
-    Gui, Info:Add, Text, w350 xs Section, %InfoTeam%
-    Gui, Info:Font, s11 bold
-    Gui, Info:Add, Text, xs, %BattlesHeader%
-    Gui, Info:Font, s10 norm
-    Gui, Info:Add, Text, w350 xs Section, %InfoBattles%
-    Gui, Info:Font, s11 bold
-    Gui, Info:Add, Text, xs, %TimeHeader%
-    Gui, Info:Font, s10 norm
-    Gui, Info:Add, Text, w350 xs Section, %InfoTime%
-    Gui, Info:Font, s11 bold
-    Gui, Info:Add, Text, xs, %StartHeader%
-    Gui, Info:Font, s10 norm
-    Gui, Info:Add, Text, w350 xs Section, %InfoStart%
-    Gui, Info:Add, Text, w350 xs Section,
+    ; Load Help GUI
+    Gui, Help:Font, s11 bold
+    Gui, Help:Add, Text, w350 Center Section, Help
+    Gui, Help:Font, s10 normal
+    Gui, Help:Add, Text, w350 xs, %ScriptDescription%
+    Gui, Help:Font, s11 bold
+    Gui, Help:Add, Text, xs, %TeamHeader%
+    Gui, Help:Font, s10 norm
+    Gui, Help:Add, Text, w350 xs Section, %InfoTeam%
+    Gui, Help:Font, s11 bold
+    Gui, Help:Add, Text, xs, %BattlesHeader%
+    Gui, Help:Font, s10 norm
+    Gui, Help:Add, Text, w350 xs Section, %InfoBattles%
+    Gui, Help:Font, s11 bold
+    Gui, Help:Add, Text, xs, %TimeHeader%
+    Gui, Help:Font, s10 norm
+    Gui, Help:Add, Text, w350 xs Section, %InfoTime%
+    Gui, Help:Font, s11 bold
+    Gui, Help:Add, Text, xs, %StartHeader%
+    Gui, Help:Font, s10 norm
+    Gui, Help:Add, Text, w350 xs Section, %InfoStart%
+    Gui, Help:Add, Text, w350 xs Section,
 
+    ; Load About GUI
+    Gui, About:Font, s10 bold
+    Gui, About:Add, Text, w350 h35 xp yp 0x200 BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
+    Gui, About:Font, s10 norm
+    Gui, About:Add, Text, w350 xs Section, %ProjectDescription%
+    Gui, About:Add, Button, Section w100 h30 gShowMain 0x200 Center, Back
+    Gui, About:Add, Text, w120 ys Section,
+    Gui, About:Add, Button, ys w100 h30 gGoToSite 0x200 Center, Go to GitHub
+    
     ; Show initial UI (Main)
     Gui, Main:Show, xCenter y150 AutoSize, %ScriptTitle%
 
@@ -263,7 +261,8 @@ return ; End of auto-execute section
 ;; Navigation labels
 
 ShowMain:
-ShowInfo:
+ShowHelp:
+ShowAbout:
 ShowRunning:
     Gui,+LastFound
     WinGetPos,x,y
@@ -272,12 +271,23 @@ ShowRunning:
     HideAllGuisBut(AllGuis, targetGui)
 return
 
+MenuHandler:
+    ;MsgBox, You selected "%A_ThisMenuItem%" in menu "%A_ThisMenu%".
+    if (A_ThisMenuItem = "Help"){
+        GoSub ShowHelp
+    }
+    else if (A_ThisMenuItem = "About"){
+        GoSub ShowAbout
+    }
+return
+
 MainGuiClose:
     DestroyAllGuis()  
 ExitApp
 
 ResultGuiClose:
-InfoGuiClose:
+HelpGuiClose:
+AboutGuiClose:
     GoSub ShowMain
 return
 
