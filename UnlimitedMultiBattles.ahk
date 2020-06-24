@@ -170,18 +170,14 @@
     Gui, Main:Add, Text, xp+10 yp+25 Section w90,
     Gui, Main:Font, s20 
     Gui, Main:Add, Edit, ys w50 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
-    Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown
+    Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown,
     Gui, Main:Font, s24 bold
     Gui, Main:Add, Text, ys-3 xp+55, :
     Gui, Main:Font, s20 normal
     Gui, Main:Add, Edit, ys xp+15 w50 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
-    Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown
+    Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown,
     Gui, Main:Font, s14
     Gui, Main:Add, Text, ys+10, min:sec
-    GuiControl, , UpDownMinute, % Settings.minute
-    GuiControl, , EditMinute, % Settings.minute
-    GuiControl, , UpDownSecond, % Settings.second
-    GuiControl, , EditSecond, % Settings.second
 
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w230 x+10 y+20 xs Section,
@@ -253,7 +249,12 @@
     
     ; Show initial UI (Main)
     Gui, Main:Show, xCenter y150 AutoSize, %ScriptTitle%
-
+    mainGuiShown := true
+    
+    GuiControl, , UpDownMinute, % Settings.minute
+    GuiControl, , EditMinute, % Settings.minute
+    GuiControl, , UpDownSecond, % Settings.second
+    GuiControl, , EditSecond, % Settings.second
 return ; End of auto-execute section
 
 
@@ -366,6 +367,9 @@ OnCalculatorChanged:
 return
 
 OnTimeChangedByUpDown:
+    if (!mainGuiShown){
+        return
+    }
     Gui, Submit, NoHide
     GuiControlGet,MinuteValue,,UpDownMinute
     GuiControlGet,SecondValue,,UpDownSecond
@@ -381,6 +385,9 @@ OnTimeChangedByUpDown:
 Return
 
 OnTimeChangedByEdit:
+    if (!mainGuiShown){
+        return
+    }
     Gui, Submit, NoHide
     GuiControlGet,MinuteValue,,EditMinute
     GuiControlGet,SecondValue,,EditSecond
