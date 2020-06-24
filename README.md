@@ -26,9 +26,9 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 2. Open ```UnlimitedMultiBattles.exe``` on your PC and configure your multi-battle options using our UI:
    1. **Prepare your Team**: Go to the game, select a stage and prepare your team, but don't press 'Play' and come back to our app.
    2. **Select number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes:
-     * Manual: Enter any number of battles
-     * Calculated: Use exact number to max out your champions
-     * Infinite: Run forever till you stop us or your energy run out
+      * Manual: Enter any number of battles
+      * Calculated: Use exact number to max out your champions
+      * Infinite: Run forever till you stop us or your energy run out
    5. **Select time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next replay will carry on with the followings ones.
 3. Press "Start Multi-Battle" in our application. We will start the first battle and replay the followings.
 
