@@ -107,7 +107,7 @@
 
 
     ;; Load Menus and Icon
-    Menu, Tray, Icon, images\icon.ico
+    ;Menu, Tray, Icon, images\icon.ico
     Menu, InfoMenu, Add, Help, MenuHandler
     Menu, InfoMenu, Add, About, MenuHandler
     infoLabel := "&Info    "
