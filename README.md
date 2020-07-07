@@ -22,7 +22,7 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 
 # Usage
 
-1. Download ```UnlimitedMultiBattles.exe``` from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or [compile your exe](#compile-your-exe).
+1. Download ```UnlimitedMultiBattles.exe``` from the assets in our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or [compile your exe](#compile-your-exe).
 2. Open ```UnlimitedMultiBattles.exe``` on your PC and configure your multi-battle options using our UI:
    1. **Prepare your Team**: Go to the game, select a stage and prepare your team, but don't press 'Play' and come back to our app.
    2. **Select number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes:
@@ -37,14 +37,18 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 
 You can generate your own exe from our sources to avoid using an executable files downloaded from internet:
 
-1. Download and install [AutoHotKey](https://www.autohotkey.com/) for Windows in your PC.
-2. Clone [this repository] (https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
-3. Open your local repository, right click on [UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk) and select "Compile".
+1. Clone [this repository] (https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
+2. Download and install [AutoHotKey](https://www.autohotkey.com/) in your PC.
+3. Open Ahk2Exe.exe from the installation folder or from  Start->Programs->AutoHotkey->"Convert .ahk to .exe".
+4. Select our script file as source ([UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk)), any local folder as destination and our icon as custom icon ([images/icon.ico](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/icon.ico)).
+5. Press 'Convert' and your exe will be created in your destination folder.
+
 
 # Disclaimer
 This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
 
 I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
+
 
 # License
 ```
