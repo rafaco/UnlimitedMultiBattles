@@ -37,7 +37,7 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 
 You can generate your own exe from our sources to avoid using an executable files downloaded from internet:
 
-1. Clone [this repository] (https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
+1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
 2. Download and install [AutoHotKey](https://www.autohotkey.com/) in your PC.
 3. Open Ahk2Exe.exe from the installation folder or from  Start->Programs->AutoHotkey->"Convert .ahk to .exe".
 4. Select our script file as source ([UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk)), any local folder as destination and our icon as custom icon ([images/icon.ico](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/icon.ico)).
