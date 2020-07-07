@@ -469,6 +469,7 @@ Start:
         
         WinGetActiveTitle, PreviouslyActive
         WinActivate, %RaidWinTitle%
+        sleep 25
         
         isAdminNeeded := !CanSendKeysToWin(RaidWinTitle)
         if (isAdminNeeded){
@@ -484,7 +485,7 @@ Start:
         
         ControlSend, , {Enter}, %RaidWinTitle%
         ControlSend, , r, %RaidWinTitle%
-        ;sleep 25
+        sleep 25
         WinActivate, %PreviouslyActive%
         
         GuiControl, Running:, CurrentBattleProgress, 0
