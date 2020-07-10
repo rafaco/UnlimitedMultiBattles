@@ -23,6 +23,8 @@
     #MaxThreadsPerHotkey 1          ; Only one thread
     SetTitleMatchMode 3             ; Exact title match
 
+    #Include, data/Tables.ahk
+    
     ;; Metadata
     ScriptVersion := "v1.0.3"
     ScriptTitle := "UnlimitedMultiBattles"
