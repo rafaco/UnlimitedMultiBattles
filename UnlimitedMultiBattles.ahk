@@ -152,10 +152,11 @@
 
     groupBoxHeight := 180
     tabContentHeight := groupBoxHeight - 30
-    Gui Main:Add, GroupBox, hWndhGrp w350 h%groupBoxHeight%, %BattlesHeader%
+    Gui, Main:Add, Text, w350 xs Section, % "  " . BattlesHeader
+    ;Gui Main:Add, GroupBox, hWndhGrp w350 h%groupBoxHeight%, %BattlesHeader%
     Gui, Main:Font, s10 norm
-    Gui, Main:Add, Tab3, hwndHTAB xp+10 yp+20 w330 h%tabContentHeight% +%TCS_FIXEDWIDTH% vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
-    SendMessage, TCM_SETITEMSIZE, 0, (330/3)+20, , ahk_id %HTAB%
+    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h%tabContentHeight% +%TCS_FIXEDWIDTH% vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
+    SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
     DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
     WinSet Redraw,, ahk_id %HTab%
     Gui, Main:Add, Text, w300 Section,
@@ -218,7 +219,7 @@
     Gui, Main:Font, s10 c808080
     Gui, Main:Add, Text, w230 xs Section Right %SS_CENTERIMAGE% ,
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, Button, ys w100 %SS_CENTERIMAGE% Center gStart, %StartButton%
+    Gui, Main:Add, Button, ys+10 w100 %SS_CENTERIMAGE% Center gStart, %StartButton%
 
     ; Load Running GUI
     Gui, Running:Font, s12 bold
@@ -721,7 +722,7 @@ FillEstimatedTime(seconds, minutes, repetitions){
         additionalMinutes := totalMinutes - (totalHours*60)
         text := totalHours . " hours and " . additionalMinutes . " minutes"
     }
-    GuiControl,, CalculatedDuration, % text
+    GuiControl,, CalculatedDuration, % "Total: " . text
 }
 
 GenerateNumericOptions(items){
