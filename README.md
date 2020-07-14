@@ -5,7 +5,9 @@
 
 **This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface and it can be used on background while you do other things with your PC.**
 
-We use standard hotkeys provided by the game to give you unlimited multi-battles. You only have to select a "number of battle" and a "battle time" assisted by our UI and our campaign XP calculator. Every "battle time" we bring to top the game window, press a hotkey on it and restore the window you were in. We do it very quickly and we do it a "number of battles" times.
+You only have to select a "number of battle" and a "battle duration" in our UI, assisted by our campaign calculator. Then, we will make use of standard hotkeys provided by the game to give you that multi-battles. Every "battle duration" we bring to top the game window, press a hotkey on it and restore the window you were in. We do it very quickly and we do it a "number of battles" times for you.
+
+*Shortlink: [`https://git.io/JJsLV`](https://git.io/JJsLV)*
 
 ### Features
 - Graphic user interface to configure, control and track the progress
