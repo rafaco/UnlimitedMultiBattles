@@ -20,9 +20,9 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 - Include help screen and link to this repo
 
 
-# Set up [![Latest download](https://img.shields.io/badge/Latest_Download-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat-square)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
+# Set up [![direct download](https://img.shields.io/badge/Direct_download-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat-square)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
 
-For a quick start, **just download** [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) directly from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
+For a quick start, use **just download** a precompiled [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
 
 To avoid this inconvinience, you can easily **generate your own exe** from our sources:
 
@@ -50,9 +50,7 @@ Open our executable file on your PC, configure your options and start multi-batt
 
 
 # Contributing
-There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback/bug/request :love_letter: by an [Issue](https://github.com/rafaco/UnlimitedMultiBattles/issues/new).
-
-Pull requests are more then welcome.
+There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback/bug/request :love_letter: by an [Issue](https://github.com/rafaco/UnlimitedMultiBattles/issues/new). Pull requests are more then welcome.
 
 
 # Disclaimer
