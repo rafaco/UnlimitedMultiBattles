@@ -20,11 +20,17 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 - Include help screen and link to this repo
 
 
-# Set up
+# Set up [![Latest version download](https://img.shields.io/badge/Latest_Version-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
 
-You can download ```UnlimitedMultiBattles.exe``` from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or you can [compile your own exe](#compile-your-exe). When using a downloaded one for the first time, Windows will alert you about risks as I don't pay for a Microsoft certificate. Compile your own exe from our sources to avoid this.
+For a quick start up, just download [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) directly from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
 
-No installation process is required as our exe files are portable and ready to use. Place it on desktop or any other folder and just use it.
+To avoid this inconvinience, you can easily generate your own exe from our sources:
+
+1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
+2. Download and install [AutoHotKey](https://www.autohotkey.com/) in your PC.
+3. Open Ahk2Exe.exe from the installation folder or from  Start->Programs->AutoHotkey->"Convert .ahk to .exe".
+4. Select our script file as source ([UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk)), any local folder as destination and our icon as custom icon ([images/icon.ico](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/icon.ico)).
+5. Press 'Convert' and your exe will be created in your destination folder.
 
 
 # Usage
@@ -39,19 +45,14 @@ Open our executable file on your PC, configure your options and start multi-batt
 4. Press **Start Multi-Battle** in our application when ready. We will start the first battle and replay the followings.
 
 
-# Compile your exe
-
-You can easily generate your own exe from our sources following ne:
-
-1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
-2. Download and install [AutoHotKey](https://www.autohotkey.com/) in your PC.
-3. Open Ahk2Exe.exe from the installation folder or from  Start->Programs->AutoHotkey->"Convert .ahk to .exe".
-4. Select our script file as source ([UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk)), any local folder as destination and our icon as custom icon ([images/icon.ico](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/icon.ico)).
-5. Press 'Convert' and your exe will be created in your destination folder.
-
-
 # Thanks
 - To [Myckoz](https://www.reddit.com/user/Myckoz/) for his [Campaign Run Calculator](https://www.reddit.com/r/RaidShadowLegends/comments/bgmoy0/campaign_run_calculator/) spreadsheet.
+
+
+# Contributing [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/rafaco/UnlimitedMultiBattles/issues)
+There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback :love_letter:.
+
+Create new [Issues](https://github.com/rafaco/UnlimitedMultiBattles/issues/new) in this repo to report bugs, request features or send us your feedback. Pull requests are more then welcome.
 
 
 # Disclaimer
