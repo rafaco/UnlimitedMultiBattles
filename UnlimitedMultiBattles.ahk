@@ -67,8 +67,8 @@
     ;StageOptions = Brutal 12-3|Brutal 12-6
     BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
     DifficultyOptions := "Normal|Hard|Brutal"
-    MapOptions := GenerateNumericOptions(12) ;"1-Kaerok Castle|2-Sewers of Arnoc|3-Catacombs of Narbuk|4-Durham Forest|5-Felwin's Gate|6-Palace of Aravia|7-Tilshire|8-Valdemar Strait|9-The Deadlands|10-Godfrey's Crossing|11-Hallowed Halls|12-Brimstone Path"
-    StageOptions := GenerateNumericOptions(7) ;"1-Helmet|2-Chest|3-Shield|4-Glove|5-Weapon|6-Boot|7-Boss"
+    MapOptions := GenerateNumericOptions(12)
+    StageOptions := GenerateNumericOptions(7)
     RankOptions := GenerateRankOptions()
 
     InfoTeam := "Open the game, select a stage and prepare your team. Don't press 'Play' and come back."
@@ -106,10 +106,10 @@
         }
     }
     If (FileExist(SettingsFilePathOld)){
-        FileDelete, %SettingsFilePathOld% ;used on versions 1.0.1
+        FileDelete, %SettingsFilePathOld%   ;used on versions 1.0.1
     }
     If (FileExist(SettingsFilePathOld2)){
-        FileDelete, %SettingsFilePathOld2% ;used on versions 1.0.2
+        FileDelete, %SettingsFilePathOld2%  ;used on versions 1.0.2
     }
     selectedTab := Settings.tab
     selectedBoost := Settings.boost
@@ -548,8 +548,6 @@ Start:
             currentProgress2 := (currentRepetition * stepProgress2)
             GuiControl, Running:, MultiBattleProgress, %currentProgress2%
             GuiControl, Running:, MultiBattleStatus, % currentRepetition . " / " . repetitions . ""
-            ;currentDuration := (A_TickCount - StartTime) / 1000
-            ;GuiControl, Running:, MultiBattleStatus, % FormatSeconds(currentDuration) . " / " .  FormatSeconds(totalSeconds)
         }
         
         WinGetActiveTitle, PreviouslyActive
@@ -624,7 +622,6 @@ ShowResultInterrupted:
     }
     else if (A_ThisLabel = "ShowResultCanceled"){
         TrayTip, %ScriptTitle%, %ResultMessageCanceled%, 20, 17
-        ;GuiControl, Result:, ResultHeader, +cDA4F49
         GuiControl, Result:, ResultHeader, %ResultHeaderCanceled%
         GuiControl, Result:, ResultMessage, %ResultMessageCanceled%
     }
@@ -697,13 +694,13 @@ FillCalculatedResults(calculatedResults){
 UpdateDuration(){
     global Settings
     global calculatedResults
-    if (Settings.tab=1){
+    if (Settings.tab=1){        ;Manual
         FillEstimatedTime(Settings.second, Settings.minute, Settings.battles)
     } 
-    else if (Settings.tab=2){
+    else if (Settings.tab=2){   ;Calculated
         FillEstimatedTime(Settings.second, Settings.minute, calculatedResults.repetitions)
     }
-    else {  ;Settings.tab=3
+    else {                      ;Infinite
         FillEstimatedTime(Settings.second, Settings.minute, -1)
     }
 }
