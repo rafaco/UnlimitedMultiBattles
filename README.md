@@ -19,9 +19,9 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 - Remember all settings
 - Include usage help and link to this repo
 
-# Installation
+# Set up
 
-You can download ```UnlimitedMultiBattles.exe``` from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or you can [compile your own exe](#compile-your-exe). When using a downloaded one, Windows will alert you about risks the first time (I don't pay for a Microsoft certificate). Compile your own exe from our sources to avoid this.
+You can download ```UnlimitedMultiBattles.exe``` from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or you can [compile your own exe](#compile-your-exe). When using a downloaded one for the first time, Windows will alert you about risks as I don't pay for a Microsoft certificate. Compile your own exe from our sources to avoid this.
 
 No installation process is required as our exe files are portable and ready to use. Place it on desktop or any other folder and just use it.
 
@@ -33,7 +33,7 @@ Open ```UnlimitedMultiBattles.exe``` on your PC, configure your options and star
    * Manual: Enter any number of battles
    * Calculated: Use exact number to max out your champions in campaign
    * Infinite: Run forever till you stop us or your energy run out
-3. **Select time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next replay will carry on with the followings ones.
+3. **Select battle duration**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next replay will carry on with the followings ones.
 4. Press **Start Multi-Battle** in our application when ready. We will start the first battle and replay the followings.
 
 # Compile your exe
