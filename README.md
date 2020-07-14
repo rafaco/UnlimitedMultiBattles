@@ -20,11 +20,11 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 - Include help screen and link to this repo
 
 
-# Set up [![Latest version download](https://img.shields.io/badge/Latest_Version-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
+# Set up [![Latest download](https://img.shields.io/badge/Latest_Download-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat-square)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
 
-For a quick start up, just download [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) directly from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
+For a quick start, **just download** [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) directly from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
 
-To avoid this inconvinience, you can easily generate your own exe from our sources:
+To avoid this inconvinience, you can easily **generate your own exe** from our sources:
 
 1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
 2. Download and install [AutoHotKey](https://www.autohotkey.com/) in your PC.
@@ -49,10 +49,10 @@ Open our executable file on your PC, configure your options and start multi-batt
 - To [Myckoz](https://www.reddit.com/user/Myckoz/) for his [Campaign Run Calculator](https://www.reddit.com/r/RaidShadowLegends/comments/bgmoy0/campaign_run_calculator/) spreadsheet.
 
 
-# Contributing [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/rafaco/UnlimitedMultiBattles/issues)
-There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback :love_letter:.
+# Contributing
+There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback/bug/request :love_letter: by an [Issue](https://github.com/rafaco/UnlimitedMultiBattles/issues/new).
 
-Create new [Issues](https://github.com/rafaco/UnlimitedMultiBattles/issues/new) in this repo to report bugs, request features or send us your feedback. Pull requests are more then welcome.
+Pull requests are more then welcome.
 
 
 # Disclaimer
