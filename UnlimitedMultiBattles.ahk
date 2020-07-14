@@ -57,7 +57,7 @@
     ;; Texts
     TeamHeader := "1. Prepare your team"
     BattlesHeader := "2. Select number of battles"
-    TimeHeader := "3. Select time between battles"
+    TimeHeader := "3. Select battle duration"
     StartHeader := "4. Start"
     StartButton := "Start`nMulti-Battle"
 
@@ -127,8 +127,6 @@
     CampaignData := ReadTable(LocalFolder . "\" . CampaignDataFileName, {"Headers" : True}, campaignColumnNames)
     initialLevelOptions := GenerateNumericOptions((selectedRank*10)-1)
     calculatedResults := CalculateResults(Settings, CampaignData, XpData)
-    CalculatedRepetitions := calculatedResults.repetitions
-
 
     ;; Load Menus and Icon
     ;Menu, Tray, Icon, images\icon.ico
@@ -142,7 +140,7 @@
     Gui, Main:Menu, MainMenuBar
 
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox, hWndhGrp3 w350 h65 Section, %TeamHeader%
+    Gui, Main:Add, GroupBox,  w350 h65 Section, %TeamHeader%
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Text, xp+10 yp+20 w270, %InfoTeam%
     Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
@@ -153,7 +151,6 @@
     groupBoxHeight := 180
     tabContentHeight := groupBoxHeight - 30
     Gui, Main:Add, Text, w350 xs Section, % "  " . BattlesHeader
-    ;Gui Main:Add, GroupBox, hWndhGrp w350 h%groupBoxHeight%, %BattlesHeader%
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h%tabContentHeight% +%TCS_FIXEDWIDTH% vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
     SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
@@ -164,11 +161,11 @@
     Gui, Main:Font, s20 
     Gui, Main:Add, Edit, ys+10 w65 h35 Right gOnBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
     Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gOnBattleChangedByUpDown, % Settings.battles
-    Gui, Main:Font, s14
+    Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, xp+80 ys+20, battles
 
     Gui, Main:Tab, 2
-    Gui, Main:Font, s10
+    Gui, Main:Font, s10 normal
     Gui, Main:Add, DropDownList, Section w80 vRankSelector gOnCalculatorChanged Choose%selectedRank% AltSubmit, %RankOptions%
     Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, champion from lvl
     Gui, Main:Add, DropDownList, ys w40 vLevelSelector gOnCalculatorChanged Choose%selectedLevel% AltSubmit, %initialLevelOptions%
@@ -181,11 +178,11 @@
     
     Gui, Main:Add, Text, xs Section w70,
     Gui, Main:Font, s20 
-    Gui, Main:Add, Text, w58 right ys vCalculatedRepetitions, %CalculatedRepetitions%
-    Gui, Main:Font, s14
+    Gui, Main:Add, Text, w58 right ys vCalculatedRepetitions, % calculatedResults.repetitions
+    Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, w100 ys+7, battles
-    Gui, Main:Font, s10 c808080
-    Gui, Main:Add, Text, w300 xs yp+25 Section Center vCalculatedExtra,
+    Gui, Main:Font, s10 c808080 normal
+    Gui, Main:Add, Text, w330 xs yp+25 Section Center vCalculatedExtra,
 
     Gui, Main:Tab, 3
     Gui, Main:Font
@@ -193,33 +190,34 @@
     Gui, Main:Add, Text, w75 xs Section,
     Gui, Main:Font, s45 
     Gui, Main:Add, Text, w50 h35 ys Right %SS_CENTERIMAGE%, % InfiniteSymbol
-    Gui, Main:Font, s14
+    Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, w100 ys+7, % " battles"
     Gui, Main:Tab
 
-    Gui, Main:Font, s2
+    Gui, Main:Font, s2 bold
     Gui, Main:Add, Text, x10 Section,
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox, hWndhGrp2 w350 h90, %TimeHeader%
-    Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, xp+10 yp+25 Section w90 Right, `nmin
-    Gui, Main:Font, s20 
+    Gui, Main:Add, Text, w350 xs Section, % "  " . TimeHeader
+    Gui, Main:Add, Progress, xs w350 h80 BackgroundDBDBDB Disabled
+    Gui, Main:Add, Progress, xp+1 yp+1 w349 h78 BackgroundWhite Disabled
+    Gui, Main:Add, Text, xp+5 yp+15 Section BackgroundTrans w60 Right,
+    Gui, Main:Font, s20 normal
     Gui, Main:Add, Edit, ys w50 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
     Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown,
-    Gui, Main:Font, s24 bold
-    Gui, Main:Add, Text, ys-3 xp+55, :
+    Gui, Main:Font, s14 bold
+    Gui, Main:Add, Text, ys+7 BackgroundTrans, min.
     Gui, Main:Font, s20 normal
-    Gui, Main:Add, Edit, ys xp+15 w50 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
+    Gui, Main:Add, Edit, ys w50 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
     Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown,
-    Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, ys, `nsec
-    Gui, Main:Font, s10 c808080
-    Gui, Main:Add, Text, h20 w330 xs Section Center %SS_CENTERIMAGE% vCalculatedDuration,
+    Gui, Main:Font, s14 bold
+    Gui, Main:Add, Text, ys+7 BackgroundTrans, sec.
+    Gui, Main:Font, s10 c808080 normal
+    Gui, Main:Add, Text, h20 w330 xs Section Center %SS_CENTERIMAGE% BackgroundTrans vCalculatedDuration,
 
     Gui, Main:Font, s10 c808080
     Gui, Main:Add, Text, w230 xs Section Right %SS_CENTERIMAGE% ,
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, Button, ys+10 w100 %SS_CENTERIMAGE% Center gStart, %StartButton%
+    Gui, Main:Add, Button, ys+10 w100 %SS_CENTERIMAGE% Center Default gStart, %StartButton%
 
     ; Load Running GUI
     Gui, Running:Font, s12 bold
@@ -240,7 +238,7 @@
     Gui, Running:Add, Text, xs Section,
     Gui, Running:Font, s10 bold
     Gui, Running:Add, Text, xs Section,
-    Gui, Running:Add, Button, ys w200 h30 gShowResultCanceled %SS_CENTERIMAGE% Center, %StopButton%
+    Gui, Running:Add, Button, ys w200 h30 gShowResultCanceled %SS_CENTERIMAGE% Center Default, %StopButton%
 
     ; Load Result GUI 
     Gui, Result:Font, s12 bold
@@ -251,7 +249,9 @@
     Gui, Result:Add, Text, w250 Center vResultText,
     Gui, Result:Font, s10 bold
     Gui, Result:Add, Text, Section,
-    Gui, Result:Add, Button, ys w200 h30 gShowMain %SS_CENTERIMAGE% Center, OK
+    Gui, Result:Add, Button, ys w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Done
+    Gui, Result:Add, Button, ys w100 h30 gStart %SS_CENTERIMAGE% Center, Replay
+    
 
     ; Load Help GUI
     Gui, Help:Font, s11 bold
@@ -281,7 +281,7 @@
     Gui, About:Add, Text, w350 h35 xp yp %SS_CENTERIMAGE% BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
     Gui, About:Font, s10 norm
     Gui, About:Add, Text, w350 xs Section, %ProjectDescription%
-    Gui, About:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center, Back
+    Gui, About:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Back
     Gui, About:Add, Text, w120 ys Section,
     Gui, About:Add, Button, ys w100 h30 gGoToSite %SS_CENTERIMAGE% Center, Go to GitHub
     
@@ -295,17 +295,7 @@
     GuiControl, , EditSecond, % Settings.second
     
     FillCalculatedResults(calculatedResults)
-    
-    if (selectedTab=1){
-        FillEstimatedTime(Settings.second, Settings.minute, Settings.battles)
-    } 
-    else if (selectedTab=2){
-        FillEstimatedTime(Settings.second, Settings.minute, CalculatedRepetitions)
-    }
-    else {  ;selectedTab=3
-        FillEstimatedTime(Settings.second, Settings.minute, -1)
-    }
-    
+    UpdateDuration()
     
 return ; End of auto-execute section
 
@@ -389,16 +379,7 @@ OnTabChanged:
     IniWrite, %TabValue%, %SettingsFilePath%, %SettingsSection%, tab
     Settings.tab := TabValue
     
-    ;TODO: extract to function, is triplicated!
-    if (TabValue=1){
-        FillEstimatedTime(Settings.second, Settings.minute, Settings.battles)
-    } 
-    else if (TabValue=2){
-        FillEstimatedTime(Settings.second, Settings.minute, CalculatedRepetitions)
-    }
-    else {  ;selectedTab=3
-        FillEstimatedTime(Settings.second, Settings.minute, -1)
-    }
+    UpdateDuration()
 return
 
 OnBattleChangedByEdit:
@@ -447,9 +428,8 @@ OnCalculatorChanged:
     Settings.rank := RankValue
     Settings.level := LevelValue
     
-    calculatedResults := CalculateResults(Settings, CampaignData, XpData)
-    FillCalculatedResults(calculatedResults)
-    FillEstimatedTime(Settings.second, Settings.minute, calculatedResults.repetitions)
+    UpdateCalculator()
+    UpdateDuration()
 return
 
 OnTimeChangedByUpDown:
@@ -469,15 +449,7 @@ OnTimeChangedByUpDown:
     GuiControl, , EditMinute, %MinuteValue%
     GuiControl, , EditSecond, %SecondValue%
     
-    if (selectedTab=1){
-        FillEstimatedTime(Settings.second, Settings.minute, Settings.battles)
-    } 
-    else if (selectedTab=2){
-        FillEstimatedTime(Settings.second, Settings.minute, CalculatedRepetitions)
-    }
-    else {  ;selectedTab=3
-        FillEstimatedTime(Settings.second, Settings.minute, -1)
-    }
+    UpdateDuration()
 Return
 
 OnTimeChangedByEdit:
@@ -497,15 +469,7 @@ OnTimeChangedByEdit:
     GuiControl,,UpDownMinute,%MinuteValue%
     GuiControl,,UpDownSecond,%SecondValue%
     
-    if (selectedTab=1){
-        FillEstimatedTime(Settings.second, Settings.minute, Settings.battles)
-    } 
-    else if (selectedTab=2){
-        FillEstimatedTime(Settings.second, Settings.minute, CalculatedRepetitions)
-    }
-    else {  ;selectedTab=3
-        FillEstimatedTime(Settings.second, Settings.minute, -1)
-    }
+    UpdateDuration()
 return
 
 OnFinishChanged:
@@ -529,7 +493,7 @@ Start:
     GoSub ShowRunning
 
     isRunning := true
-    repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? CalculatedRepetitions : -1
+    repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? calculatedResults.repetitions : -1
     isInfinite := (repetitions = -1)
 
     waitSeconds := SecondValue + ( MinuteValue * 60 )
@@ -552,8 +516,8 @@ Start:
     GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleProgress
     GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleStatus
 
-    stepProgress1 := floor(100 / waitSeconds)
-    stepProgress2 := floor(100 / repetitions)   
+    stepProgress1 := 100 / waitSeconds
+    stepProgress2 := 100 / repetitions 
 
     currentRepetition := 0
     loop{
@@ -668,6 +632,16 @@ return
 
 ;;; Functions
 
+UpdateCalculator(){
+    global Settings
+    global campaignData
+    global xpData
+    global calculatedResults
+    
+    calculatedResults := CalculateResults(Settings, campaignData, xpData)
+    FillCalculatedResults(calculatedResults)
+}
+
 CalculateResults(Settings, campaignData, xpData){
     rank := Settings.rank
     level := Settings.level
@@ -704,6 +678,20 @@ FillCalculatedResults(calculatedResults){
     GuiControl,, CalculatedExtra, %extratext%
 }
 
+UpdateDuration(){
+    global Settings
+    global calculatedResults
+    if (Settings.tab=1){
+        FillEstimatedTime(Settings.second, Settings.minute, Settings.battles)
+    } 
+    else if (Settings.tab=2){
+        FillEstimatedTime(Settings.second, Settings.minute, calculatedResults.repetitions)
+    }
+    else {  ;Settings.tab=3
+        FillEstimatedTime(Settings.second, Settings.minute, -1)
+    }
+}
+    
 FillEstimatedTime(seconds, minutes, repetitions){
     totalSeconds := (seconds + ( minutes * 60 )) * repetitions
     totalMinutes := Floor(totalSeconds / 60)
@@ -722,7 +710,7 @@ FillEstimatedTime(seconds, minutes, repetitions){
         additionalMinutes := totalMinutes - (totalHours*60)
         text := totalHours . " hours and " . additionalMinutes . " minutes"
     }
-    GuiControl,, CalculatedDuration, % "Total: " . text
+    GuiControl,, CalculatedDuration, % text . " in total"
 }
 
 GenerateNumericOptions(items){
