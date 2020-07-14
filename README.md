@@ -3,7 +3,9 @@
 
 <img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
 
-**This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic interface with a campaign calculator and it can be used on background while you do other things with your PC.**
+**This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface and it can be used on background while you do other things with your PC.**
+
+We use standard hotkeys provided by the game to give you unlimited multi-battles. You only have to select a "number of battle" and a "battle time" assisted by our UI and our campaign XP calculator. Every "battle time" we bring to top the game window, press a hotkey on it and restore the window you were in. We do it very quickly and we do it a "number of battles" times.
 
 ### Features
 - Graphic user interface to configure, control and track the progress
@@ -11,8 +13,10 @@
 - Adjustable time between battles to minimise the total time
 - Adjustable number of battles to avoid wasting your energy. Three modes available:
   - Manual: enter any number of battles
-  - Calculated: Use our calculator to run the exact battle to maximise your champions considering stars, level, difficulty, map, stage and xp boosts
+  - Calculated: Use our calculator to run the exact battles to maximise your champions considering stars, level, difficulty, map, stage and xp boosts
   - Infinite: Run battles indefinitely, till you stop it or till your energy run outs
+- Get extra info before start: Energy cost, Silver reward and total duration
+- Get progress detail while multi-battling
 - Configurable action on finish: bring up game (champions replacement), bring up results or only load results on background.
 - Auto-detect game closed and allow opening it
 - Auto-detect admin rights required and allow relaunching as admin
@@ -46,7 +50,7 @@ Open our executable file on your PC, configure your options and start multi-batt
 
 
 # Disclaimer
-This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
+This application is not an autoclicker as it works using standard hotkeys. You could get exactly the same results by pressing ```Enter``` on the selection screen to start and then periodically: ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
 
 I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
 
