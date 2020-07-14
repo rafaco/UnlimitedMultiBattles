@@ -53,7 +53,8 @@
     SS_CENTERIMAGE := 0x200
     TCS_FIXEDWIDTH := 0x0400
     TCM_SETITEMSIZE := 0x1329
-
+    PBS_MARQUEE := 0x8
+    PBM_SETMARQUEE := 0x40A
 
     ;; Texts
     TeamHeader := "1. Prepare your team"
@@ -71,14 +72,14 @@
     RankOptions := GenerateRankOptions()
 
     InfoTeam := "Open the game, select a stage and prepare your team. Don't press 'Play' and come back."
-    InfoBattles := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your level 1 champions."
+    InfoBattles := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your champions in a campaign stage."
     InfoStart := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
     InfoTime := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
 
     NoRunningGameMessage := "You have to open the game and select your team before start."
     UnableToOpenGameMessage := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
     UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
-    RunningHeader := "Running..."
+    RunningHeader := "Multi-battling"
     RunningOnFinishMessage := "On finish:"
     RunningOnFinishOptions = Pop up game window|Pop up results window|Do nothing
     StopButton := "Cancel"
@@ -224,11 +225,11 @@
 
     ; Load Running GUI
     Gui, Running:Font, s12 bold
-    Gui, Running:Add, Text, w250 Center, % RunningHeader
+    Gui, Running:Add, Text, w250 Center vMultiBattleHeader, % RunningHeader
     Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w115 Section, Multi-Battle:
+    Gui, Running:Add, Text, w115 Section, Battles:
     Gui, Running:Add, Text, ys w120 Right vMultiBattleStatus,
-    Gui, Running:Add, Progress, xs yp+18 w250 h20 -Smooth vMultiBattleProgress, 0
+    Gui, Running:Add, Progress, xs yp+18 w250 h20 HwndhPB2 -Smooth vMultiBattleProgress, 0
     Gui, Running:Add, Text, w115 Section, Current battle:
     Gui, Running:Add, Text, ys w120 Right vCurrentBattleStatus,
     Gui, Running:Add, Progress, xs yp+18 w250 h20 -Smooth vCurrentBattleProgress, 0
@@ -519,10 +520,19 @@ Start:
     GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleProgress
     GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleStatus
 
+    If (isInfinite){
+        WinSet, Style, +%PBS_MARQUEE%, % "ahk_id " hPB2
+        SendMessage, %PBM_SETMARQUEE%, 1, 50,, % "ahk_id " hPB2
+    }
+    else{
+        WinSet, Style, -%PBS_MARQUEE%, % "ahk_id " hPB2
+    }
+            
     stepProgress1 := 100 / waitSeconds
     stepProgress2 := 100 / repetitions 
 
     currentRepetition := 0
+    
     loop{
         currentRepetition++
         If not isRunning 
@@ -531,13 +541,15 @@ Start:
         If (!isInfinite && currentRepetition > repetitions)
             break
         
-        If (!isInfinite){
+        If (isInfinite){
+            GuiControl, Running:, MultiBattleStatus, % currentRepetition . " / Infinite"
+        }
+        else{
             currentProgress2 := (currentRepetition * stepProgress2)
             GuiControl, Running:, MultiBattleProgress, %currentProgress2%
-            GuiControl, Running:, MultiBattleStatus, %currentRepetition% / %repetitions% battles
-        }else{
-            GuiControl, Running:, MultiBattleProgress, 100
-            GuiControl, Running:, MultiBattleStatus, %currentRepetition% battles
+            GuiControl, Running:, MultiBattleStatus, % currentRepetition . " / " . repetitions . ""
+            ;currentDuration := (A_TickCount - StartTime) / 1000
+            ;GuiControl, Running:, MultiBattleStatus, % FormatSeconds(currentDuration) . " / " .  FormatSeconds(totalSeconds)
         }
         
         WinGetActiveTitle, PreviouslyActive
@@ -623,7 +635,8 @@ ShowResultInterrupted:
     }
     
     ;GuiControl, Result:, MultiBattleOverview, %overview%
-    formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? currentRepetition : currentRepetition " of " repetitions
+    formattedRepetitions := (repetitions=-1) ? "Infinite" : repetitions
+    formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? currentRepetition : currentRepetition " of " formattedRepetitions
     GuiControl, Result:, ResultText, % formattedBattles " battles in " FormatSeconds(MultiBattleDuration)
     
     Gui,+LastFound
