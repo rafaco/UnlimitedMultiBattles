@@ -52,7 +52,7 @@ I believe this is not against the T&C of the game, as it just automatise the mos
 
 
 # Contributing
-There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback/bug/request :love_letter: by an [Issue](https://github.com/rafaco/UnlimitedMultiBattles/issues/new). Pull requests are more then welcome.
+There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your [feedback/bug/request](https://github.com/rafaco/UnlimitedMultiBattles/issues/new) :love_letter:. Pull requests are more then welcome :nerd_face:.
 
 
 # Thanks
