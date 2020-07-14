@@ -45,18 +45,18 @@ Open our executable file on your PC, configure your options and start multi-batt
 4. Press **Start Multi-Battle** in our application when ready. We will start the first battle and replay the followings.
 
 
-# Thanks
-- To [Myckoz](https://www.reddit.com/user/Myckoz/) for his [Campaign Run Calculator](https://www.reddit.com/r/RaidShadowLegends/comments/bgmoy0/campaign_run_calculator/) spreadsheet.
+# Disclaimer
+This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
+
+I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
 
 
 # Contributing
 There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback/bug/request :love_letter: by an [Issue](https://github.com/rafaco/UnlimitedMultiBattles/issues/new). Pull requests are more then welcome.
 
 
-# Disclaimer
-This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
-
-I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
+# Thanks
+- To [Myckoz](https://www.reddit.com/user/Myckoz/) for his [Campaign Run Calculator](https://www.reddit.com/r/RaidShadowLegends/comments/bgmoy0/campaign_run_calculator/) spreadsheet.
 
 
 # License
