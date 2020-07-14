@@ -49,6 +49,7 @@
     DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 2 }
     InfiniteSymbol := Chr(0x221E)
     StarSymbol := Chr(0x2605)
+    COLOR_GRAY := "c808080"
     SS_CENTERIMAGE := 0x200
     TCS_FIXEDWIDTH := 0x0400
     TCM_SETITEMSIZE := 0x1329
@@ -181,12 +182,12 @@
     Gui, Main:Add, Text, w58 right ys vCalculatedRepetitions, % calculatedResults.repetitions
     Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, w100 ys+7, battles
-    Gui, Main:Font, s10 c808080 normal
+    Gui, Main:Font, s10 %COLOR_GRAY% normal
     Gui, Main:Add, Text, w330 xs yp+25 Section Center vCalculatedExtra,
 
     Gui, Main:Tab, 3
     Gui, Main:Font
-    Gui, Main:Add, Text, w300 h22 Section,
+    Gui, Main:Add, Text, w300 h28 Section,
     Gui, Main:Add, Text, w75 xs Section,
     Gui, Main:Font, s45 
     Gui, Main:Add, Text, w50 h35 ys Right %SS_CENTERIMAGE%, % InfiniteSymbol
@@ -211,10 +212,10 @@
     Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown,
     Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, ys+7 BackgroundTrans, sec.
-    Gui, Main:Font, s10 c808080 normal
+    Gui, Main:Font, s10 %COLOR_GRAY% normal
     Gui, Main:Add, Text, h20 w330 xs Section Center %SS_CENTERIMAGE% BackgroundTrans vCalculatedDuration,
 
-    Gui, Main:Font, s10 c808080
+    Gui, Main:Font, s10 %COLOR_GRAY%
     Gui, Main:Add, Text, w230 xs Section Right %SS_CENTERIMAGE% ,
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Button, ys+10 w100 %SS_CENTERIMAGE% Center Default gStart, %StartButton%
@@ -695,8 +696,8 @@ UpdateDuration(){
 FillEstimatedTime(seconds, minutes, repetitions){
     totalSeconds := (seconds + ( minutes * 60 )) * repetitions
     totalMinutes := Floor(totalSeconds / 60)
-    
-    if (repetitions=-1){
+    isInfinite := (repetitions=-1)
+    if (isInfinite){
         text := "Infinite" 
     }
     else if (totalMinutes=0){
@@ -710,7 +711,10 @@ FillEstimatedTime(seconds, minutes, repetitions){
         additionalMinutes := totalMinutes - (totalHours*60)
         text := totalHours . " hours and " . additionalMinutes . " minutes"
     }
-    GuiControl,, CalculatedDuration, % text . " in total"
+    if (!isInfinite){
+        text .= " aprox."
+    }
+    GuiControl,, CalculatedDuration, %text%
 }
 
 GenerateNumericOptions(items){
