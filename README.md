@@ -3,7 +3,7 @@
 
 <img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
 
-This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic interface and it can be used on background while you do other things with your PC. 
+This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic interface with a campaign calculator and it can be used on background while you do other things with your PC.
 
 ### Features
 - Graphic user interface to configure, control and track the progress
@@ -11,31 +11,34 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 - Adjustable time between battles to minimise the total time
 - Adjustable number of battles to avoid wasting your energy. Three modes available:
   - Manual: enter any number of battles
-  - Calculated: Use our mini-calculator to run the exact battle to maximise your champions considering their stars, stage and xp boosts
+  - Calculated: Use our calculator to run the exact battle to maximise your champions considering stars, level, difficulty, map, stage and xp boosts
   - Infinite: Run battles indefinitely, till you stop it or till your energy run outs
-- Configurable action on finish multi-battle: show game, show results or nothing
+- Configurable action on finish: show game (champions replacement), show results or nothing
 - Auto-detect game closed and allow opening it
 - Auto-detect admin rights required and allow relaunching as admin
 - Remember all settings
 - Include usage help and link to this repo
 
+# Installation
+
+You can download ```UnlimitedMultiBattles.exe``` from the assets of our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or you can [compile your own exe](#compile-your-exe). When using a downloaded one, Windows will alert you about risks the first time (I don't pay for a Microsoft certificate). Compile your own exe from our sources to avoid this.
+
+No installation process is required as our exe files are portable and ready to use. Place it on desktop or any other folder and just use it.
 
 # Usage
 
-1. Download ```UnlimitedMultiBattles.exe``` from the assets in our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) or [compile your exe](#compile-your-exe).
-2. Open ```UnlimitedMultiBattles.exe``` on your PC and configure your multi-battle options using our UI:
-   1. **Prepare your Team**: Go to the game, select a stage and prepare your team, but don't press 'Play' and come back to our app.
-   2. **Select number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes:
-      * Manual: Enter any number of battles
-      * Calculated: Use exact number to max out your champions
-      * Infinite: Run forever till you stop us or your energy run out
-   5. **Select time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next replay will carry on with the followings ones.
-3. Press "Start Multi-Battle" in our application. We will start the first battle and replay the followings.
-
+Open ```UnlimitedMultiBattles.exe``` on your PC, configure your options and start multi-battling.
+1. **Prepare your Team**: Go to the game, select a stage and prepare your team, but don't press 'Play' and come back to our app.
+2. **Select number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes:
+   * Manual: Enter any number of battles
+   * Calculated: Use exact number to max out your champions in campaign
+   * Infinite: Run forever till you stop us or your energy run out
+3. **Select time between battles**: Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens. If a battle take longer a replay will be missed and you will waste some time, but the next replay will carry on with the followings ones.
+4. Press **Start Multi-Battle** in our application when ready. We will start the first battle and replay the followings.
 
 # Compile your exe
 
-You can generate your own exe from our sources to avoid using an executable files downloaded from internet:
+You can easily generate your own exe from our sources following ne:
 
 1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
 2. Download and install [AutoHotKey](https://www.autohotkey.com/) in your PC.
@@ -49,6 +52,8 @@ This application is not an autoclicker and it works using standard hotkeys. Peri
 
 I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
 
+# Thanks
+- To [Myckoz](https://www.reddit.com/user/Myckoz/) for his [Campaign Run Calculator](https://www.reddit.com/r/RaidShadowLegends/comments/bgmoy0/campaign_run_calculator/) spreadsheet.
 
 # License
 ```
