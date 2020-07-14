@@ -20,14 +20,14 @@ This application allows unlimited auto battles on official 'Raid: Shadow Legends
 - Include help screen and link to this repo
 
 
-# Set up [![direct download](https://img.shields.io/badge/Direct_download-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat-square)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
+# Set up [![direct download](https://img.shields.io/badge/Latest_download-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat-square)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
 
-For a quick start, use **just download** a precompiled [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
+For a quick start, **download** a precompiled [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
 
-To avoid this inconvinience, you can easily **generate your own exe** from our sources:
+To avoid this inconvenience, you can easily **generate your own exe** from our sources:
 
 1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
-2. Download and install [AutoHotKey](https://www.autohotkey.com/) in your PC.
+2. Download and install [AutoHotKey for Windows](https://www.autohotkey.com/) in your PC.
 3. Open Ahk2Exe.exe from the installation folder or from  Start->Programs->AutoHotkey->"Convert .ahk to .exe".
 4. Select our script file as source ([UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk)), any local folder as destination and our icon as custom icon ([images/icon.ico](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/icon.ico)).
 5. Press 'Convert' and your exe will be created in your destination folder.
