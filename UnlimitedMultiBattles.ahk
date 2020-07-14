@@ -149,7 +149,7 @@
     Gui, Main:Add, Text, xs,
     Gui, Main:Font, s10 bold
 
-    groupBoxHeight := 180
+    groupBoxHeight := 187
     tabContentHeight := groupBoxHeight - 30
     Gui, Main:Add, Text, w350 xs Section, % "  " . BattlesHeader
     Gui, Main:Font, s10 norm
@@ -157,7 +157,7 @@
     SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
     DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
     WinSet Redraw,, ahk_id %HTab%
-    Gui, Main:Add, Text, w300 Section,
+    Gui, Main:Add, Text, w330 h50 Section Center %SS_CENTERIMAGE%, Enter any number of battles
     Gui, Main:Add, Text, w70 xs Section,
     Gui, Main:Font, s20 
     Gui, Main:Add, Edit, ys+10 w65 h35 Right gOnBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
@@ -166,6 +166,8 @@
     Gui, Main:Add, Text, xp+80 ys+20, battles
 
     Gui, Main:Tab, 2
+    Gui, Main:Font, s1
+    Gui, Main:Add, Text, 
     Gui, Main:Font, s10 normal
     Gui, Main:Add, DropDownList, Section w80 vRankSelector gOnCalculatorChanged Choose%selectedRank% AltSubmit, %RankOptions%
     Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, champion from lvl
@@ -176,7 +178,6 @@
     Gui, Main:Add, DropDownList, ys w35 vStageSelector gOnCalculatorChanged Choose%selectedStage% AltSubmit, %StageOptions%
     Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, with
     Gui, Main:Add, DropDownList, ys w97 vBoostSelector gOnCalculatorChanged Choose%selectedBoost% AltSubmit, %BoostOptions%
-    
     Gui, Main:Add, Text, xs Section w70,
     Gui, Main:Font, s20 
     Gui, Main:Add, Text, w58 right ys vCalculatedRepetitions, % calculatedResults.repetitions
@@ -187,7 +188,8 @@
 
     Gui, Main:Tab, 3
     Gui, Main:Font
-    Gui, Main:Add, Text, w300 h28 Section,
+    Gui, Main:Font, s10 norm
+    Gui, Main:Add, Text, w330 h60 Section Center %SS_CENTERIMAGE%, Run infinetly till your stop us.
     Gui, Main:Add, Text, w75 xs Section,
     Gui, Main:Font, s45 
     Gui, Main:Add, Text, w50 h35 ys Right %SS_CENTERIMAGE%, % InfiniteSymbol
