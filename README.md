@@ -44,6 +44,12 @@ You can generate your own exe from our sources to avoid using an executable file
 5. Press 'Convert' and your exe will be created in your destination folder.
 
 
+
+# Contributing [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/rafaco/UnlimitedMultiBattles/issues)
+There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your feedback :love_letter:.
+
+Create a new [Issues](https://github.com/rafaco/UnlimitedMultiBattles/issues/new) to report bugs, request features or send us your feedback. Pull requests are more then welcome.
+
 # Disclaimer
 This application is not an autoclicker and it works using standard hotkeys. Periodically, we quickly swap to the game window, press a in-game hotkey to replay and restore the window you were in. You could get exactly the same results by periodically pressing ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
 
