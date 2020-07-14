@@ -3,7 +3,7 @@
 
 <img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
 
-This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic interface with a campaign calculator and it can be used on background while you do other things with your PC.
+**This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic interface with a campaign calculator and it can be used on background while you do other things with your PC.**
 
 ### Features
 - Graphic user interface to configure, control and track the progress
