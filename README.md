@@ -7,7 +7,7 @@
 
 You only have to select a "number of battle" and a "battle duration" in our UI, assisted by our campaign calculator. Then, we will make use of standard hotkeys provided by the game to give you that multi-battles. Every "battle duration" we bring to top the game window, press a hotkey on it and restore the window you were in. We do it very quickly and we do it a "number of battles" times for you.
 
-*Shortlink: [`https://git.io/JJsLV`](https://git.io/JJsLV)*
+*Shortlink: [`https://git.io/UMB`](https://git.io/UMB)*
 
 ### Features
 - Graphic user interface to configure, control and track the progress
