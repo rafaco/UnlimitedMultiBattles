@@ -542,6 +542,7 @@ Start:
     stepProgress1 := 100 / waitSeconds
     stepProgress2 := 100 / repetitions 
 
+    replayCounter := 0
     currentRepetition := 0
     
     loop{
@@ -579,6 +580,7 @@ Start:
         
         ControlSend, , {Enter}, %RaidWinTitle%
         ControlSend, , r, %RaidWinTitle%
+        replayCounter++
         sleep 25
         WinActivate, %PreviouslyActive%
         
@@ -642,9 +644,8 @@ ShowResultInterrupted:
         GuiControl, Result:, ResultMessage, %ResultMessageInterrupted%
     }
     
-    ;GuiControl, Result:, MultiBattleOverview, %overview%
-    formattedRepetitions := (repetitions=-1) ? "Infinite" : repetitions
-    formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? currentRepetition : currentRepetition " of " formattedRepetitions
+    formattedTotal := (repetitions=-1) ? "Infinite" : repetitions
+    formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? replayCounter : replayCounter " of " formattedTotal
     GuiControl, Result:, ResultText, % formattedBattles " battles in " FormatSeconds(MultiBattleDuration)
     
     Gui,+LastFound
