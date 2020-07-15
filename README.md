@@ -1,13 +1,17 @@
 # UnlimitedMultiBattles 
-[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/)
+[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/) 
 
-<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/Screenshots.gif">
+*Shortlink: [`https://git.io/UMB`](https://git.io/UMB)*
 
-**This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface and it can be used on background while you do other things with your PC.**
+<p align="center"><img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg"></p>
+
+
+
+**This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface with a campaign calculator and it can be used on background while you do other things with your PC.**
 
 You only have to select a "number of battle" and a "battle duration" in our UI, assisted by our campaign calculator. Then, we will make use of standard hotkeys provided by the game to give you that multi-battles. Every "battle duration" we bring to top the game window, press a hotkey on it and restore the window you were in. We do it very quickly and we do it a "number of battles" times for you.
 
-*Shortlink: [`https://git.io/UMB`](https://git.io/UMB)*
+<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/Screenshots.gif">
 
 ### Features
 - Graphic user interface to configure, control and track the progress
@@ -28,14 +32,14 @@ You only have to select a "number of battle" and a "battle duration" in our UI, 
 
 # Set up
 
-For a quick start, **download** a precompiled [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) with the following link:
+For a quick start, **download** a precompiled ```UnlimitedMultiBattles.exe``` from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest):
 
 <p align="center">
-    <a href="https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe" alt="Latest download">
-        <img src="https://img.shields.io/badge/Latest_download-UnlimitedMultiBattles.exe-brightgreen.svg?style=for-the-badge&logo=github"/></a>
+    <a href="https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe" alt="Download Latest">
+        <img src="https://img.shields.io/badge/Download_Latest-UnlimitedMultiBattles.exe-brightgreen.svg?style=for-the-badge&logo=github"/></a>
 </p>
 
-Using exe files downloaded from internet is widely discourage and Windows will alert you when runnning our exe for the first time. To avoid this inconvenience, you can **generate your own exe** from our sources:
+Using exe files downloaded from internet is widely discourage and Windows will alert you when runnning it for the first time. To avoid this inconvenience, you can **generate your own exe** from our sources:
 
 1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
 2. Download and install [AutoHotKey for Windows](https://www.autohotkey.com/) in your PC.
@@ -56,14 +60,14 @@ Open our executable file on your PC, configure your options and start multi-batt
 4. Press **Start Multi-Battle** in our application when ready. We will start the first battle and replay the followings.
 
 
+# Contributing
+There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your [feedback/bug/request](https://github.com/rafaco/UnlimitedMultiBattles/issues/new) :love_letter:. Pull requests are more then welcome :nerd_face:.
+
+
 # Disclaimer
 This application is not an autoclicker as it works using standard hotkeys. You could get exactly the same results by pressing ```Enter``` on the selection screen to start and then periodically: ```Alt```+```Tab``` (swap window), ```R``` (replay) and ```Alt```+```Tab``` again (restore window).
 
 I believe this is not against the T&C of the game, as it just automatise the most annoying and less creative part of this game by using the hotkeys provided by the game itself. It also encourage players to spend more gems as they will run out of energy quicker. Please, let me know if I'm wrong.
-
-
-# Contributing
-There are many ways to contribute starting from giving us a GitHub :star:, recommending this library to your clan members :loudspeaker: or sending us your [feedback/bug/request](https://github.com/rafaco/UnlimitedMultiBattles/issues/new) :love_letter:. Pull requests are more then welcome :nerd_face:.
 
 
 # Thanks
