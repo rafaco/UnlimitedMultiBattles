@@ -1,5 +1,4 @@
-# UnlimitedMultiBattles
-
+<!-- # UnlimitedMultiBattles -->
 <p align="center">
   <img  width="50%" src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
 </p>
