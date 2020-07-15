@@ -91,52 +91,13 @@
     ResultMessageCanceled := "Multi-Battle canceled by user"
     ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
 
-        
-    ;; Prepare Settings
-    If (!FileExist(SettingsFilePath)){
-        filecreatedir, %LocalFolder%
-        Settings := DefaultSettings
-        for key, value in Settings{
-            if (key="minute" || key="second"){
-                SetFormat, Float, 02.0
-                value += 0.0
-                Settings[key] := value
-            }        
-            IniWrite, %value%, %SettingsFilePath%, %SettingsSection%, %key%
-        }
-    }else{
-        Settings := {}
-        for key, value in DefaultSettings{
-            IniRead, temp, %SettingsFilePath%, %SettingsSection%, %key%
-            Settings[key] := temp
-        }
-    }
-    If (FileExist(SettingsFilePathOld)){
-        FileDelete, %SettingsFilePathOld%   ;used on versions 1.0.1
-    }
-    If (FileExist(SettingsFilePathOld2)){
-        FileDelete, %SettingsFilePathOld2%  ;used on versions 1.0.2
-    }
-    selectedTab := Settings.tab
-    selectedBoost := Settings.boost
-    selectedDifficulty := Settings.difficulty
-    selectedMap := Settings.map
-    selectedStage := Settings.stage
-    selectedRank := Settings.rank
-    selectedLevel := Settings.level
-    selectedOnFinish := Settings.onFinish
-    
-    
-    ;; Prepare Calculator
+    ;; Init LOGIC
     filecreatedir, %LocalFolder%
-    FileInstall, data\XpData.csv, %LocalFolder%\%XpDataFileName%
-    FileInstall, data\CampaignData.csv, %LocalFolder%\%CampaignDataFileName%
-    XpData := ReadTable(LocalFolder . "\" . XpDataFileName, {"Headers" : True}, xpColumnNames)
-    CampaignData := ReadTable(LocalFolder . "\" . CampaignDataFileName, {"Headers" : True}, campaignColumnNames)
-    initialLevelOptions := GenerateNumericOptions((selectedRank*10)-1)
-    calculatedResults := CalculateResults(Settings, CampaignData, XpData)
+    InitSettings()
+    InitCalculator()
 
-    ;; Load Menus and Icon
+
+    ;; Load VIEW
     ;Menu, Tray, Icon, images\icon.ico
     Menu, InfoMenu, Add, Help, MenuHandler
     Menu, InfoMenu, Add, About, MenuHandler
@@ -296,17 +257,16 @@
     Gui, About:Add, Text, w120 ys Section,
     Gui, About:Add, Button, ys w100 h30 gGoToSite %SS_CENTERIMAGE% Center, Go to GitHub
     
+    
+    ; Init loaded UIs
+    InitTimeComponents()    
+    FillCalculatedResults(calculatedResults)
+    UpdateDuration()
+    
+    
     ; Show initial UI (Main)
     Gui, Main:Show, xCenter y100 AutoSize, %ScriptTitle%
     mainGuiShown := true
-    
-    GuiControl, , UpDownMinute, % Settings.minute
-    GuiControl, , EditMinute, % Settings.minute
-    GuiControl, , UpDownSecond, % Settings.second
-    GuiControl, , EditSecond, % Settings.second
-    
-    FillCalculatedResults(calculatedResults)
-    UpdateDuration()
     
 return ; End of auto-execute section
 
@@ -666,6 +626,59 @@ return
 
 
 ;;; Functions
+
+InitSettings(){
+    global
+    If (!FileExist(SettingsFilePath)){
+        Settings := DefaultSettings
+        for key, value in Settings{
+            if (key="minute" || key="second"){
+                SetFormat, Float, 02.0
+                value += 0.0
+                Settings[key] := value
+            }        
+            IniWrite, %value%, %SettingsFilePath%, %SettingsSection%, %key%
+        }
+    }else{
+        Settings := {}
+        for key, value in DefaultSettings{
+            IniRead, temp, %SettingsFilePath%, %SettingsSection%, %key%
+            Settings[key] := temp
+        }
+    }
+    If (FileExist(SettingsFilePathOld)){
+        FileDelete, %SettingsFilePathOld%   ;used on versions 1.0.1
+    }
+    If (FileExist(SettingsFilePathOld2)){
+        FileDelete, %SettingsFilePathOld2%  ;used on versions 1.0.2
+    }
+    selectedTab := Settings.tab
+    selectedBoost := Settings.boost
+    selectedDifficulty := Settings.difficulty
+    selectedMap := Settings.map
+    selectedStage := Settings.stage
+    selectedRank := Settings.rank
+    selectedLevel := Settings.level
+    selectedOnFinish := Settings.onFinish
+}
+
+InitCalculator(){
+    global
+    FileInstall, data\XpData.csv, %LocalFolder%\%XpDataFileName%
+    FileInstall, data\CampaignData.csv, %LocalFolder%\%CampaignDataFileName%
+    XpData := ReadTable(LocalFolder . "\" . XpDataFileName, {"Headers" : True}, xpColumnNames)
+    CampaignData := ReadTable(LocalFolder . "\" . CampaignDataFileName, {"Headers" : True}, campaignColumnNames)
+    initialLevelOptions := GenerateNumericOptions((selectedRank*10)-1)
+    calculatedResults := CalculateResults(Settings, CampaignData, XpData)
+}
+
+InitTimeComponents(){
+    global
+    GuiControl, , UpDownMinute, % Settings.minute
+    GuiControl, , EditMinute, % Settings.minute
+    GuiControl, , UpDownSecond, % Settings.second
+    GuiControl, , EditSecond, % Settings.second
+}
 
 UpdateCalculator(){
     global Settings
