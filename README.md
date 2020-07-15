@@ -1,7 +1,7 @@
 # UnlimitedMultiBattles 
 [![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/)
 
-<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
+<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/screenshots.gif">
 
 **This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface and it can be used on background while you do other things with your PC.**
 
