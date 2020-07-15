@@ -1,0 +1,17 @@
+
+# Instructions to create Screenshots.gif 
+
+
+##Storyboard:
+
+- Screenshot 1: Main gui with campaign tab and some level selected. Game in background with team selection.
+- Screenshot 2: Running gui in progress. Game in background playing a stage and doing damage.
+- Screenshot 3: Results gui showing success. Game in background showing last battle Victory.
+
+
+##Procedure:
+
+- Take screen with Fn + Imp Pant
+- Save on Paint
+- Crop with Paint 3D, using 1234px width and keeping ratio
+- Upload to https://gifmaker.me/ and select 5000 millis on delay
