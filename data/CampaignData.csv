@@ -1,0 +1,253 @@
+Map Name,Map,Step,Stage,Difficulty,Artefact,Energie,XP,XP/E,Silver,Silver/E
+Kaerok Castle,1,1,1-1,1-Normal,Life,4,640,160,750,188
+Kaerok Castle,1,2,1-2,1-Normal,Life,4,1600,400,800,200
+Kaerok Castle,1,3,1-3,1-Normal,Life,4,1606,402,850,213
+Kaerok Castle,1,4,1-4,1-Normal,Life,4,2254,564,900,225
+Kaerok Castle,1,5,1-5,1-Normal,Life,4,2260,565,950,238
+Kaerok Castle,1,6,1-6,1-Normal,Life,4,2264,566,1000,250
+Kaerok Castle,1,7,1-7,1-Normal,Life,5,1624,325,1200,240
+Kaerok Castle,1,1,1-1,2-Hard,Life,6,4560,760,4500,750
+Kaerok Castle,1,2,1-2,2-Hard,Life,6,4584,764,4550,758
+Kaerok Castle,1,3,1-3,2-Hard,Life,6,4608,768,4600,767
+Kaerok Castle,1,4,1-4,2-Hard,Life,6,4624,771,4650,775
+Kaerok Castle,1,5,1-5,2-Hard,Life,6,4654,776,4700,783
+Kaerok Castle,1,6,1-6,2-Hard,Life,6,4684,781,4750,792
+Kaerok Castle,1,7,1-7,2-Hard,Life,7,4116,588,4950,707
+Kaerok Castle,1,1,1-1,3-Brutal,Life,8,9600,1200,5500,688
+Kaerok Castle,1,2,1-2,3-Brutal,Life,8,9600,1200,5550,694
+Kaerok Castle,1,3,1-3,3-Brutal,Life,8,9600,1200,5600,700
+Kaerok Castle,1,4,1-4,3-Brutal,Life,8,9600,1200,5650,706
+Kaerok Castle,1,5,1-5,3-Brutal,Life,8,9600,1200,5700,713
+Kaerok Castle,1,6,1-6,3-Brutal,Life,8,9600,1200,5750,719
+Kaerok Castle,1,7,1-7,3-Brutal,Life,9,8400,933,5950,661
+Sewers of Arnoc,2,1,2-1,1-Normal,Offense,4,2288,572,1200,300
+Sewers of Arnoc,2,2,2-2,1-Normal,Offense,4,2296,574,1250,313
+Sewers of Arnoc,2,3,2-3,1-Normal,Offense,4,2304,576,1300,325
+Sewers of Arnoc,2,4,2-4,1-Normal,Offense,4,2320,580,1350,338
+Sewers of Arnoc,2,5,2-5,1-Normal,Offense,4,2336,584,1400,350
+Sewers of Arnoc,2,6,2-6,1-Normal,Offense,4,2352,588,1450,363
+Sewers of Arnoc,2,7,2-7,1-Normal,Offense,5,1684,337,1650,330
+Sewers of Arnoc,2,1,2-1,2-Hard,Offense,6,4752,792,4950,825
+Sewers of Arnoc,2,2,2-2,2-Hard,Offense,6,4768,795,5000,833
+Sewers of Arnoc,2,3,2-3,2-Hard,Offense,6,4768,795,5050,842
+Sewers of Arnoc,2,4,2-4,2-Hard,Offense,6,4808,801,5100,850
+Sewers of Arnoc,2,5,2-5,2-Hard,Offense,6,4894,816,5150,858
+Sewers of Arnoc,2,6,2-6,2-Hard,Offense,6,4864,811,5200,867
+Sewers of Arnoc,2,7,2-7,2-Hard,Offense,7,4344,621,5400,771
+Sewers of Arnoc,2,1,2-1,3-Brutal,Offense,8,9600,1200,5950,744
+Sewers of Arnoc,2,2,2-2,3-Brutal,Offense,8,9600,1200,6000,750
+Sewers of Arnoc,2,3,2-3,3-Brutal,Offense,8,9600,1200,6050,756
+Sewers of Arnoc,2,4,2-4,3-Brutal,Offense,8,9600,1200,6100,763
+Sewers of Arnoc,2,5,2-5,3-Brutal,Offense,8,9600,1200,6150,769
+Sewers of Arnoc,2,6,2-6,3-Brutal,Offense,8,9600,1200,6200,775
+Sewers of Arnoc,2,7,2-7,3-Brutal,Offense,9,8400,933,6400,711
+Catacombs of Narbuk,3,1,3-1,1-Normal,Defense,4,3060,765,1650,413
+Catacombs of Narbuk,3,2,3-2,1-Normal,Defense,4,3096,774,1700,425
+Catacombs of Narbuk,3,3,3-3,1-Normal,Defense,4,3132,783,1750,438
+Catacombs of Narbuk,3,4,3-4,1-Normal,Defense,4,3184,796,1800,450
+Catacombs of Narbuk,3,5,3-5,1-Normal,Defense,4,3208,802,1850,463
+Catacombs of Narbuk,3,6,3-6,1-Normal,Defense,4,3232,808,1900,475
+Catacombs of Narbuk,3,7,3-7,1-Normal,Defense,5,2908,582,2100,420
+Catacombs of Narbuk,3,1,3-1,2-Hard,Defense,6,5564,927,5400,900
+Catacombs of Narbuk,3,2,3-2,2-Hard,Defense,6,5670,945,5450,908
+Catacombs of Narbuk,3,3,3-3,2-Hard,Defense,6,5670,945,5500,917
+Catacombs of Narbuk,3,4,3-4,2-Hard,Defense,6,5778,963,5550,925
+Catacombs of Narbuk,3,5,3-5,2-Hard,Defense,6,5778,963,5600,933
+Catacombs of Narbuk,3,6,3-6,2-Hard,Defense,6,5814,969,5650,942
+Catacombs of Narbuk,3,7,3-7,2-Hard,Defense,7,5232,747,5850,836
+Catacombs of Narbuk,3,1,3-1,3-Brutal,Defense,8,10800,1350,6400,800
+Catacombs of Narbuk,3,2,3-2,3-Brutal,Defense,8,10800,1350,6450,806
+Catacombs of Narbuk,3,3,3-3,3-Brutal,Defense,8,10800,1350,6500,813
+Catacombs of Narbuk,3,4,3-4,3-Brutal,Defense,8,10800,1350,6550,819
+Catacombs of Narbuk,3,5,3-5,3-Brutal,Defense,8,10800,1350,6600,825
+Catacombs of Narbuk,3,6,3-6,3-Brutal,Defense,8,10800,1350,6650,831
+Catacombs of Narbuk,3,7,3-7,3-Brutal,Defense,9,9600,1067,6850,761
+Durham Forest,4,1,4-1,1-Normal,Critical Rate,4,3640,910,2100,525
+Durham Forest,4,2,4-2,1-Normal,Critical Rate,4,3656,914,2150,538
+Durham Forest,4,3,4-3,1-Normal,Critical Rate,4,3696,924,2200,550
+Durham Forest,4,4,4-4,1-Normal,Critical Rate,4,3716,929,2250,563
+Durham Forest,4,5,4-5,1-Normal,Critical Rate,4,3758,940,2300,575
+Durham Forest,4,6,4-6,1-Normal,Critical Rate,4,3782,946,2350,588
+Durham Forest,4,7,4-7,1-Normal,Critical Rate,5,3788,758,2550,510
+Durham Forest,4,1,4-1,2-Hard,Critical Rate,6,6576,1096,5850,975
+Durham Forest,4,2,4-2,2-Hard,Critical Rate,6,6616,1103,5900,983
+Durham Forest,4,3,4-3,2-Hard,Critical Rate,6,6660,1110,5950,992
+Durham Forest,4,4,4-4,2-Hard,Critical Rate,6,6664,1111,6000,1000
+Durham Forest,4,5,4-5,2-Hard,Critical Rate,6,6696,1116,6050,1008
+Durham Forest,4,6,4-6,2-Hard,Critical Rate,6,6744,1124,6100,1017
+Durham Forest,4,7,4-7,2-Hard,Critical Rate,7,6723,960,6300,900
+Durham Forest,4,1,4-1,3-Brutal,Critical Rate,8,12000,1500,6850,856
+Durham Forest,4,2,4-2,3-Brutal,Critical Rate,8,12000,1500,6900,863
+Durham Forest,4,3,4-3,3-Brutal,Critical Rate,8,12000,1500,6950,869
+Durham Forest,4,4,4-4,3-Brutal,Critical Rate,8,12000,1500,7000,875
+Durham Forest,4,5,4-5,3-Brutal,Critical Rate,8,12000,1500,7050,881
+Durham Forest,4,6,4-6,3-Brutal,Critical Rate,8,12000,1500,7100,888
+Durham Forest,4,7,4-7,3-Brutal,Critical Rate,9,12000,1333,7300,811
+Felwin's Gate,5,1,5-1,1-Normal,Accuracy,4,4180,1045,2550,638
+Felwin's Gate,5,2,5-2,1-Normal,Accuracy,4,4222,1056,2600,650
+Felwin's Gate,5,3,5-3,1-Normal,Accuracy,4,4246,1062,2650,663
+Felwin's Gate,5,4,5-4,1-Normal,Accuracy,4,4288,1072,2700,675
+Felwin's Gate,5,5,5-5,1-Normal,Accuracy,4,4312,1078,2750,688
+Felwin's Gate,5,6,5-6,1-Normal,Accuracy,4,4354,1089,2800,700
+Felwin's Gate,5,7,5-7,1-Normal,Accuracy,5,4366,873,3000,600
+Felwin's Gate,5,1,5-1,2-Hard,Accuracy,6,7458,1243,6300,1050
+Felwin's Gate,5,2,5-2,2-Hard,Accuracy,6,7458,1243,6350,1058
+Felwin's Gate,5,3,5-3,2-Hard,Accuracy,6,7458,1243,6400,1067
+Felwin's Gate,5,4,5-4,2-Hard,Accuracy,6,7556,1259,6450,1075
+Felwin's Gate,5,5,5-5,2-Hard,Accuracy,6,7616,1269,6500,1083
+Felwin's Gate,5,6,5-6,2-Hard,Accuracy,6,7616,1269,6550,1092
+Felwin's Gate,5,7,5-7,2-Hard,Accuracy,7,7584,1083,6750,964
+Felwin's Gate,5,1,5-1,3-Brutal,Accuracy,8,13200,1650,7300,913
+Felwin's Gate,5,2,5-2,3-Brutal,Accuracy,8,13200,1650,7350,919
+Felwin's Gate,5,3,5-3,3-Brutal,Accuracy,8,13200,1650,7400,925
+Felwin's Gate,5,4,5-4,3-Brutal,Accuracy,8,13200,1650,7450,931
+Felwin's Gate,5,5,5-5,3-Brutal,Accuracy,8,13200,1650,7500,938
+Felwin's Gate,5,6,5-6,3-Brutal,Accuracy,8,13200,1650,7550,944
+Felwin's Gate,5,7,5-7,3-Brutal,Accuracy,9,13200,1467,7750,861
+Palace of Aravia,6,1,6-1,1-Normal,Speed,4,4816,1204,3000,750
+Palace of Aravia,6,2,6-2,1-Normal,Speed,4,4840,1210,3050,763
+Palace of Aravia,6,3,6-3,1-Normal,Speed,4,4872,1218,3100,775
+Palace of Aravia,6,4,6-4,1-Normal,Speed,4,4920,1230,3150,788
+Palace of Aravia,6,5,6-5,1-Normal,Speed,4,4926,1232,3200,800
+Palace of Aravia,6,6,6-6,1-Normal,Speed,4,4944,1236,3250,813
+Palace of Aravia,6,7,6-7,1-Normal,Speed,5,4576,915,3450,690
+Palace of Aravia,6,1,6-1,2-Hard,Speed,6,8448,1408,6750,1125
+Palace of Aravia,6,2,6-2,2-Hard,Speed,6,8448,1408,6800,1133
+Palace of Aravia,6,3,6-3,2-Hard,Speed,6,8448,1408,6850,1142
+Palace of Aravia,6,4,6-4,2-Hard,Speed,6,8576,1429,6900,1150
+Palace of Aravia,6,5,6-5,2-Hard,Speed,6,8592,1432,6950,1158
+Palace of Aravia,6,6,6-6,2-Hard,Speed,6,8640,1440,7000,1167
+Palace of Aravia,6,7,6-7,2-Hard,Speed,7,7888,1127,7200,1029
+Palace of Aravia,6,1,6-1,3-Brutal,Speed,8,14400,1800,7750,969
+Palace of Aravia,6,2,6-2,3-Brutal,Speed,8,14400,1800,7800,975
+Palace of Aravia,6,3,6-3,3-Brutal,Speed,8,14400,1800,7850,981
+Palace of Aravia,6,4,6-4,3-Brutal,Speed,8,14400,1800,7900,988
+Palace of Aravia,6,5,6-5,3-Brutal,Speed,8,14400,1800,7950,994
+Palace of Aravia,6,6,6-6,3-Brutal,Speed,8,14400,1800,8000,1000
+Palace of Aravia,6,7,6-7,3-Brutal,Speed,9,14400,1600,8200,911
+Tilshire,7,1,7-1,1-Normal,Resistance,4,4816,1204,3450,863
+Tilshire,7,2,7-2,1-Normal,Resistance,4,5368,1342,3500,875
+Tilshire,7,3,7-3,1-Normal,Resistance,4,5136,1284,3550,888
+Tilshire,7,4,7-4,1-Normal,Resistance,4,5160,1290,3600,900
+Tilshire,7,5,7-5,1-Normal,Resistance,4,5188,1297,3650,913
+Tilshire,7,6,7-6,1-Normal,Resistance,4,5230,1308,3700,925
+Tilshire,7,7,7-7,1-Normal,Resistance,5,5268,1054,3900,780
+Tilshire,7,1,7-1,2-Hard,Resistance,6,8784,1464,7200,1200
+Tilshire,7,2,7-2,2-Hard,Resistance,6,8784,1464,7250,1208
+Tilshire,7,3,7-3,2-Hard,Resistance,6,8784,1464,7300,1217
+Tilshire,7,4,7-4,2-Hard,Resistance,6,8800,1467,7350,1225
+Tilshire,7,5,7-5,2-Hard,Resistance,6,8824,1471,7400,1233
+Tilshire,7,6,7-6,2-Hard,Resistance,6,8952,1492,7450,1242
+Tilshire,7,7,7-7,2-Hard,Resistance,7,8928,1275,7650,1093
+Tilshire,7,1,7-1,3-Brutal,Resistance,8,14000,1750,8200,1025
+Tilshire,7,2,7-2,3-Brutal,Resistance,8,14000,1750,8250,1031
+Tilshire,7,3,7-3,3-Brutal,Resistance,8,14000,1750,8300,1038
+Tilshire,7,4,7-4,3-Brutal,Resistance,8,14000,1750,8350,1044
+Tilshire,7,5,7-5,3-Brutal,Resistance,8,14000,1750,8400,1050
+Tilshire,7,6,7-6,3-Brutal,Resistance,8,14000,1750,8450,1056
+Tilshire,7,7,7-7,3-Brutal,Resistance,9,14000,1556,8650,961
+Valdemar Strait,8,1,8-1,1-Normal,Lifesteal,4,5328,1332,3900,975
+Valdemar Strait,8,2,8-2,1-Normal,Lifesteal,4,5368,1342,3950,988
+Valdemar Strait,8,3,8-3,1-Normal,Lifesteal,4,5390,1348,4000,1000
+Valdemar Strait,8,4,8-4,1-Normal,Lifesteal,4,5424,1356,4050,1013
+Valdemar Strait,8,5,8-5,1-Normal,Lifesteal,4,5472,1368,4100,1025
+Valdemar Strait,8,6,8-6,1-Normal,Lifesteal,4,5512,1378,4150,1038
+Valdemar Strait,8,7,8-7,1-Normal,Lifesteal,5,5528,1106,4350,870
+Valdemar Strait,8,1,8-1,2-Hard,Lifesteal,6,9144,1524,7650,1275
+Valdemar Strait,8,2,8-2,2-Hard,Lifesteal,6,9144,1524,7700,1283
+Valdemar Strait,8,3,8-3,2-Hard,Lifesteal,6,9144,1524,7750,1292
+Valdemar Strait,8,4,8-4,2-Hard,Lifesteal,6,9142,1524,7800,1300
+Valdemar Strait,8,5,8-5,2-Hard,Lifesteal,6,9232,1539,7850,1308
+Valdemar Strait,8,6,8-6,2-Hard,Lifesteal,6,9304,1551,7900,1317
+Valdemar Strait,8,7,8-7,2-Hard,Lifesteal,7,9330,1333,8100,1157
+Valdemar Strait,8,1,8-1,3-Brutal,Lifesteal,8,14000,1750,8650,1081
+Valdemar Strait,8,2,8-2,3-Brutal,Lifesteal,8,14000,1750,8700,1088
+Valdemar Strait,8,3,8-3,3-Brutal,Lifesteal,8,14000,1750,8750,1094
+Valdemar Strait,8,4,8-4,3-Brutal,Lifesteal,8,14000,1750,8800,1100
+Valdemar Strait,8,5,8-5,3-Brutal,Lifesteal,8,14000,1750,8850,1106
+Valdemar Strait,8,6,8-6,3-Brutal,Lifesteal,8,14000,1750,8900,1113
+Valdemar Strait,8,7,8-7,3-Brutal,Lifesteal,9,14000,1556,9100,1011
+The Deadlands,9,1,9-1,1-Normal,Destroy,4,6048,1512,4350,1088
+The Deadlands,9,2,9-2,1-Normal,Destroy,4,6080,1520,4400,1100
+The Deadlands,9,3,9-3,1-Normal,Destroy,4,6080,1520,4450,1113
+The Deadlands,9,4,9-4,1-Normal,Destroy,4,6160,1540,4500,1125
+The Deadlands,9,5,9-5,1-Normal,Destroy,4,6200,1550,4550,1138
+The Deadlands,9,6,9-6,1-Normal,Destroy,4,6240,1560,4600,1150
+The Deadlands,9,7,9-7,1-Normal,Destroy,5,4382,876,4800,960
+The Deadlands,9,1,9-1,2-Hard,Destroy,6,10208,1701,8100,1350
+The Deadlands,9,2,9-2,2-Hard,Destroy,6,10264,1711,8150,1358
+The Deadlands,9,3,9-3,2-Hard,Destroy,6,10264,1711,8200,1367
+The Deadlands,9,4,9-4,2-Hard,Destroy,6,10320,1720,8250,1375
+The Deadlands,9,5,9-5,2-Hard,Destroy,6,10320,1720,8300,1383
+The Deadlands,9,6,9-6,2-Hard,Destroy,6,10320,1720,8350,1392
+The Deadlands,9,7,9-7,2-Hard,Destroy,7,7288,1041,8550,1221
+The Deadlands,9,1,9-1,3-Brutal,Destroy,8,15600,1950,9100,1138
+The Deadlands,9,2,9-2,3-Brutal,Destroy,8,15600,1950,9150,1144
+The Deadlands,9,3,9-3,3-Brutal,Destroy,8,15600,1950,9200,1150
+The Deadlands,9,4,9-4,3-Brutal,Destroy,8,15600,1950,9250,1156
+The Deadlands,9,5,9-5,3-Brutal,Destroy,8,15600,1950,9300,1163
+The Deadlands,9,6,9-6,3-Brutal,Destroy,8,15600,1950,9350,1169
+The Deadlands,9,7,9-7,3-Brutal,Destroy,9,10800,1200,9550,1061
+Godfrey's Crossing,10,1,10-1,1-Normal,Retaliation,4,6392,1598,4800,1200
+Godfrey's Crossing,10,2,10-2,1-Normal,Retaliation,4,6432,1608,4850,1213
+Godfrey's Crossing,10,3,10-3,1-Normal,Retaliation,4,6432,1608,4900,1225
+Godfrey's Crossing,10,4,10-4,1-Normal,Retaliation,4,6528,1632,4950,1238
+Godfrey's Crossing,10,5,10-5,1-Normal,Retaliation,4,6568,1642,5000,1250
+Godfrey's Crossing,10,6,10-6,1-Normal,Retaliation,4,6568,1642,5050,1263
+Godfrey's Crossing,10,7,10-7,1-Normal,Retaliation,5,5720,1144,5250,1050
+Godfrey's Crossing,10,1,10-1,2-Hard,Retaliation,6,10624,1771,8550,1425
+Godfrey's Crossing,10,2,10-2,2-Hard,Retaliation,6,10696,1783,8600,1433
+Godfrey's Crossing,10,3,10-3,2-Hard,Retaliation,6,10696,1783,8650,1442
+Godfrey's Crossing,10,4,10-4,2-Hard,Retaliation,6,10768,1795,8700,1450
+Godfrey's Crossing,10,5,10-5,2-Hard,Retaliation,6,10768,1795,8750,1458
+Godfrey's Crossing,10,6,10-6,2-Hard,Retaliation,6,10768,1795,8800,1467
+Godfrey's Crossing,10,7,10-7,2-Hard,Retaliation,7,9304,1329,9000,1286
+Godfrey's Crossing,10,1,10-1,3-Brutal,Retaliation,8,15704,1963,9550,1194
+Godfrey's Crossing,10,2,10-2,3-Brutal,Retaliation,8,15784,1973,9600,1200
+Godfrey's Crossing,10,3,10-3,3-Brutal,Retaliation,8,15784,1973,9650,1206
+Godfrey's Crossing,10,4,10-4,3-Brutal,Retaliation,8,15864,1983,9700,²
+Godfrey's Crossing,10,5,10-5,3-Brutal,Retaliation,8,15864,1983,9750,1219
+Godfrey's Crossing,10,6,10-6,3-Brutal,Retaliation,8,15864,1983,9800,1225
+Godfrey's Crossing,10,7,10-7,3-Brutal,Retaliation,9,13664,1518,10000,1111
+Hallowed Halls,11,1,11-1,1-Normal,Fury,4,6808,1702,5250,1313
+Hallowed Halls,11,2,11-2,1-Normal,Fury,4,6848,1712,5300,1325
+Hallowed Halls,11,3,11-3,1-Normal,Fury,4,7092,1773,5350,1338
+Hallowed Halls,11,4,11-4,1-Normal,Fury,4,6944,1736,5400,1350
+Hallowed Halls,11,5,11-5,1-Normal,Fury,4,6984,1746,5450,1363
+Hallowed Halls,11,6,11-6,1-Normal,Fury,4,7024,1756,5500,1375
+Hallowed Halls,11,7,11-7,1-Normal,Fury,5,5520,1104,5700,1140
+Hallowed Halls,11,1,11-1,2-Hard,Fury,6,11320,1887,9000,1500
+Hallowed Halls,11,2,11-2,2-Hard,Fury,6,11392,1899,9050,1508
+Hallowed Halls,11,3,11-3,2-Hard,Fury,6,11392,1899,9100,1517
+Hallowed Halls,11,4,11-4,2-Hard,Fury,6,11556,1926,9150,1525
+Hallowed Halls,11,5,11-5,2-Hard,Fury,6,11628,1938,9200,1533
+Hallowed Halls,11,6,11-6,2-Hard,Fury,6,11700,1950,9250,1542
+Hallowed Halls,11,7,11-7,2-Hard,Fury,7,10074,1439,9450,1350
+Hallowed Halls,11,1,11-1,3-Brutal,Fury,8,17120,2140,10000,1250
+Hallowed Halls,11,2,11-2,3-Brutal,Fury,8,17168,2146,10050,1256
+Hallowed Halls,11,3,11-3,3-Brutal,Fury,8,17168,2146,10100,1263
+Hallowed Halls,11,4,11-4,3-Brutal,Fury,8,17264,2158,10150,1269
+Hallowed Halls,11,5,11-5,3-Brutal,Fury,8,17304,2163,10200,1275
+Hallowed Halls,11,6,11-6,3-Brutal,Fury,8,17344,2168,10250,1281
+Hallowed Halls,11,7,11-7,3-Brutal,Fury,9,14520,1613,10450,1161
+Brimstone Path,12,1,12-1,1-Normal,Curing,4,7080,1770,5700,1425
+Brimstone Path,12,2,12-2,1-Normal,Curing,4,7128,1782,5750,1438
+Brimstone Path,12,3,12-3,1-Normal,Curing,4,7128,1782,5800,1450
+Brimstone Path,12,4,12-4,1-Normal,Curing,4,7240,1810,5850,1463
+Brimstone Path,12,5,12-5,1-Normal,Curing,4,7288,1822,5900,1475
+Brimstone Path,12,6,12-6,1-Normal,Curing,4,7336,1834,5950,1488
+Brimstone Path,12,7,12-7,1-Normal,Curing,5,5190,1038,6150,1230
+Brimstone Path,12,1,12-1,2-Hard,Curing,6,11800,1967,9450,1575
+Brimstone Path,12,2,12-2,2-Hard,Curing,6,11800,1967,9500,1583
+Brimstone Path,12,3,12-3,2-Hard,Curing,6,11800,1967,9550,1592
+Brimstone Path,12,4,12-4,2-Hard,Curing,6,11800,1967,9600,1600
+Brimstone Path,12,5,12-5,2-Hard,Curing,6,11800,1967,9650,1608
+Brimstone Path,12,6,12-6,2-Hard,Curing,6,11800,1967,9700,1617
+Brimstone Path,12,7,12-7,2-Hard,Curing,7,8260,1180,9900,1414
+Brimstone Path,12,1,12-1,3-Brutal,Curing,8,17168,2146,10450,1306
+Brimstone Path,12,2,12-2,3-Brutal,Curing,8,17168,2146,10500,1313
+Brimstone Path,12,3,12-3,3-Brutal,Curing,8,17304,2163,10550,1319
+Brimstone Path,12,4,12-4,3-Brutal,Curing,8,17432,2179,10600,1325
+Brimstone Path,12,5,12-5,3-Brutal,Curing,8,17560,2195,10650,1331
+Brimstone Path,12,6,12-6,3-Brutal,Curing,8,17600,2200,10700,1338
+Brimstone Path,12,7,12-7,3-Brutal,Curing,9,12240,1360,10900,1211
