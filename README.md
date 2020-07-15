@@ -1,7 +1,7 @@
 # UnlimitedMultiBattles 
 [![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/)
 
-<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/screenshots.gif">
+<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/Screenshots.gif">
 
 **This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface and it can be used on background while you do other things with your PC.**
 
@@ -26,11 +26,16 @@ You only have to select a "number of battle" and a "battle duration" in our UI, 
 - Include help screen and link to this repo
 
 
-# Set up [![direct download](https://img.shields.io/badge/Latest_download-UnlimitedMultiBattles.exe-brightgreen.svg?style=flat-square)](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe)
+# Set up
 
-For a quick start, **download** a precompiled [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest). Windows will alert you about risks of using downloaded exe files from internet as I don't pay for a Microsoft certificate.
+For a quick start, **download** a precompiled [```UnlimitedMultiBattles.exe```](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe) from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest) with the following link:
 
-To avoid this inconvenience, you can easily **generate your own exe** from our sources:
+<p align="center">
+    <a href="https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe" alt="Latest download">
+        <img src="https://img.shields.io/badge/Latest_download-UnlimitedMultiBattles.exe-brightgreen.svg?style=for-the-badge&logo=github"/></a>
+</p>
+
+Using exe files downloaded from internet is widely discourage and Windows will alert you when runnning our exe for the first time. To avoid this inconvenience, you can **generate your own exe** from our sources:
 
 1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
 2. Download and install [AutoHotKey for Windows](https://www.autohotkey.com/) in your PC.
