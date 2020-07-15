@@ -1,13 +1,17 @@
 # UnlimitedMultiBattles 
-[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/)
+[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/) 
 
-<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/Screenshots.gif">
+*Shortlink: [`https://git.io/UMB`](https://git.io/UMB)*
 
-**This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface and it can be used on background while you do other things with your PC.**
+<p align="center"><img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg"></p>
+
+
+
+**This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface with a campaign calculator and it can be used on background while you do other things with your PC.**
 
 You only have to select a "number of battle" and a "battle duration" in our UI, assisted by our campaign calculator. Then, we will make use of standard hotkeys provided by the game to give you that multi-battles. Every "battle duration" we bring to top the game window, press a hotkey on it and restore the window you were in. We do it very quickly and we do it a "number of battles" times for you.
 
-*Shortlink: [`https://git.io/UMB`](https://git.io/UMB)*
+<img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/Screenshots.gif">
 
 ### Features
 - Graphic user interface to configure, control and track the progress
