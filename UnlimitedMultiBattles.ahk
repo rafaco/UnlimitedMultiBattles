@@ -279,6 +279,7 @@
     Gui, Help:Font, s10 norm
     Gui, Help:Add, Text, w350 xs Section, %InfoStart%
     Gui, Help:Add, Text, w350 xs Section,
+    Gui, Help:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Back
 
     ; Load About GUI
     Gui, About:Font, s10 bold
@@ -290,7 +291,7 @@
     Gui, About:Add, Button, ys w100 h30 gGoToSite %SS_CENTERIMAGE% Center, Go to GitHub
     
     ; Show initial UI (Main)
-    Gui, Main:Show, xCenter y150 AutoSize, %ScriptTitle%
+    Gui, Main:Show, xCenter y100 AutoSize, %ScriptTitle%
     mainGuiShown := true
     
     GuiControl, , UpDownMinute, % Settings.minute
@@ -313,6 +314,16 @@ ShowAbout:
 ShowRunning:
     Gui,+LastFound
     WinGetPos,x,y
+    if (A_ThisLabel="ShowRunning"){
+        x += 50
+        y += 200
+    }
+    else if (A_ThisLabel="ShowMain"){
+        if (A_Gui="Running" || A_Gui="Result"){
+            x -= 50
+            y -= 200
+        }
+    }
     targetGui := StrReplace(A_ThisLabel, "Show")
     Gui, %targetGui%:Show, x%x% y%y%, %ScriptTitle%
     HideAllGuisBut(AllGuis, targetGui)
@@ -638,6 +649,10 @@ ShowResultInterrupted:
     
     Gui,+LastFound
     WinGetPos,x,y
+    if (A_ThisLabel = "ShowResultSuccess"){
+        x += 50
+        y += 200
+    }
     Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
     HideAllGuisBut(AllGuis, "Result")
 return
