@@ -31,8 +31,8 @@ You only have to select a "number of battle" and a "battle duration" in our UI, 
 For a quick start, **download** a precompiled ```UnlimitedMultiBattles.exe``` from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest):
 
 <p align="center">
-    <a href="https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe" alt="Latest">
-        <img src="https://img.shields.io/badge/Latest-UnlimitedMultiBattles.exe-brightgreen.svg?style=for-the-badge&logo=github"/></a>
+    <a href="https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe" alt="Download Latest">
+        <img src="https://img.shields.io/badge/Download_Latest-UnlimitedMultiBattles.exe-brightgreen.svg?style=for-the-badge&logo=github"/></a>
 </p>
 
 Using exe files downloaded from internet is widely discourage and Windows will alert you when runnning it for the first time. To avoid this inconvenience, you can **generate your own exe** from our sources:
