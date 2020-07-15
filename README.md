@@ -1,9 +1,7 @@
 # UnlimitedMultiBattles 
-[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/) 
+[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/) [![ShortLink](https://img.shields.io/badge/ShortLink-https%3A%2F%2Fgit.io%2FUMB-blueviolet.svg?style=flat-square)](https://git.io/UMB) 
 
-*Shortlink: [`https://git.io/UMB`](https://git.io/UMB)*
-
-<p align="center"><img src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg"></p>
+<p align="center"><img  width="50% src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg"></p>
 
 
 
@@ -50,7 +48,7 @@ Using exe files downloaded from internet is widely discourage and Windows will a
 
 # Usage
 
-Open our executable file on your PC, configure your options and start multi-battling:
+Open ```UnlimitedMultiBattles.exe``` on your PC, configure your options and start multi-battling:
 1. **Prepare your Team**: Go to the game, select a stage and prepare your team, but don't press 'Play' and come back to our app.
 2. **Select number of battles**: Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes:
    * Manual: Enter any number of battles
