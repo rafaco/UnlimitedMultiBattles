@@ -1,9 +1,21 @@
 # UnlimitedMultiBattles 
-[![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/) [![ShortLink](https://img.shields.io/badge/ShortLink-https%3A%2F%2Fgit.io%2FUMB-blueviolet.svg?style=flat-square)](https://git.io/UMB) 
 
 <p align="center">
   <img  width="50%" src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
 </p>
+<p align="center">
+  <a href="https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay" alt="Game">
+        <img src="https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square"/></a>
+  <a href="https://www.microsoft.com/es-es/windows" alt="Operative System">
+        <img src="https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square"/></a>
+</p>
+<p align="center">
+  <a href="https://www.autohotkey.com" alt="Powered by">
+        <img src="https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square"/></a>
+  <a href="https://git.io/UMB" alt="ShortLink">
+        <img src="https://img.shields.io/badge/ShortLink-https%3A%2F%2Fgit.io%2FUMB-blueviolet.svg?style=flat-square"/></a>
+</p>
+<!-- [![Game](https://img.shields.io/badge/Game-Raid:_Shadow_Legends-yellow.svg?style=flat-square)](https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay) [![Operative System](https://img.shields.io/badge/Operative_System-Windows-blue.svg?style=flat-square)](https://www.microsoft.com/es-es/windows) [![Powered by](https://img.shields.io/badge/Powered_by-AutoHotKey-green.svg?style=flat-square)](https://www.autohotkey.com/) [![ShortLink](https://img.shields.io/badge/ShortLink-https%3A%2F%2Fgit.io%2FUMB-blueviolet.svg?style=flat-square)](https://git.io/UMB) -->
 
 **This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface with a campaign calculator and it can be used on background while you do other things with your PC.**
 
