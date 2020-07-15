@@ -46,7 +46,7 @@
     SettingsFilePathOld2 := A_AppData . "/" . ScriptTitle . ".ini"
     RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
     SettingsSection := "SettingsSection"
-    DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 1, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 2 }
+    DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 2 }
     InfiniteSymbol := Chr(0x221E)
     StarSymbol := Chr(0x2605)
     COLOR_GRAY := "c808080"
@@ -81,7 +81,7 @@
     UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
     RunningHeader := "Multi-battling"
     RunningOnFinishMessage := "On finish:"
-    RunningOnFinishOptions = Pop up game window|Pop up results window|Do nothing
+    RunningOnFinishOptions = Bring game to front|Bring results to front|Keep front window
     StopButton := "Cancel"
 
     ResultHeaderSuccess := "Completed!"
