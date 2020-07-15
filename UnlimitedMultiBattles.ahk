@@ -46,7 +46,7 @@
     SettingsFilePathOld2 := A_AppData . "/" . ScriptTitle . ".ini"
     RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
     SettingsSection := "SettingsSection"
-    DefaultSettings := { minute: 0, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 2 }
+    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 2 }
     InfiniteSymbol := Chr(0x221E)
     StarSymbol := Chr(0x2605)
     COLOR_GRAY := "c808080"
@@ -94,8 +94,14 @@
         
     ;; Prepare Settings
     If (!FileExist(SettingsFilePath)){
+        filecreatedir, %LocalFolder%
         Settings := DefaultSettings
         for key, value in Settings{
+            if (key="minute" || key="second"){
+                SetFormat, Float, 02.0
+                value += 0.0
+                Settings[key] := value
+            }        
             IniWrite, %value%, %SettingsFilePath%, %SettingsSection%, %key%
         }
     }else{
