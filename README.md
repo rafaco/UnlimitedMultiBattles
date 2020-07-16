@@ -1,6 +1,6 @@
 <!-- # UnlimitedMultiBattles -->
 <p align="center">
-  <img  width="50%" src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
+  <img  width="75%" src="https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/social.jpg">
 </p>
 <p align="center">
   <a href="https://plarium.com/en/download-games/raid-shadow-legends/?view=plariumplay" alt="Game">
