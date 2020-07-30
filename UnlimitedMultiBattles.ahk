@@ -477,7 +477,7 @@ Start:
     repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? calculatedResults.repetitions : -1
     isInfinite := (repetitions = -1)
 
-    waitSeconds := SecondValue + ( MinuteValue * 60 )
+    waitSeconds := Settings.second + ( Settings.minute * 60 )
     waitSecondsFormatted := FormatSeconds(waitSeconds)
     waitMillis := (waitSeconds * 1000)
 
