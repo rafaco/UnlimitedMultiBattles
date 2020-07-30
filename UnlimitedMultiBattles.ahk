@@ -26,7 +26,7 @@
     #Include, data/Tables.ahk
     
     ;; Metadata
-    ScriptVersion := "v1.0.4"
+    ScriptVersion := "v1.0.5"
     ScriptTitle := "UnlimitedMultiBattles"
     ScriptDescription := "This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows."
     ProjectDescription := "This project is open source project and it's licensed under Apache 2.0. Our source code and additional informations can be found at our Github repository.`n"
