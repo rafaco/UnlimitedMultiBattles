@@ -46,7 +46,7 @@
     SettingsFilePathOld2 := A_AppData . "/" . ScriptTitle . ".ini"
     RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
     SettingsSection := "SettingsSection"
-    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 2 }
+    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 1 }
     InfiniteSymbol := Chr(0x221E)
     StarSymbol := Chr(0x2605)
     COLOR_GRAY := "c808080"
@@ -81,7 +81,7 @@
     UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
     RunningHeader := "Multi-battling"
     RunningOnFinishMessage := "On finish:"
-    RunningOnFinishOptions = Bring game to front|Bring results to front|Keep front window
+    RunningOnFinishOptions = Bring the game to front|Bring this window to front|Sleep computer|Nothing
     StopButton := "Cancel"
 
     ResultHeaderSuccess := "Completed!"
@@ -591,13 +591,20 @@ ShowResultInterrupted:
         GuiControl, Result:, ResultHeader, %ResultHeaderSuccess%
         GuiControl, Result:, ResultMessage, %ResultMessageSuccess%
         
-        if (Settings.onFinish = 3 ){
+        if (Settings.onFinish = 1){
+            WinActivate, %RaidWinTitle%
+        }
+        else if (Settings.onFinish = 3){
+            hibernate := 0
+            inmediately := 0
+            disableWakes := 0
+            DllCall("PowrProf\SetSuspendState", "int", hibernate, "int", inmediately, "int", disableWakes)
+        }
+        else if (Settings.onFinish = 4){
             WinGetActiveTitle, CurrentlyActive
             noActivateFlag := CurrentlyActive != ScriptTitle ? "NoActivate" : ""
         }
-        else if (Settings.onFinish = 1){
-            WinActivate, %RaidWinTitle%
-        }
+        
     }
     else if (A_ThisLabel = "ShowResultCanceled"){
         TrayTip, %ScriptTitle%, %ResultMessageCanceled%, 20, 17
@@ -622,6 +629,7 @@ ShowResultInterrupted:
     }
     Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
     HideAllGuisBut(AllGuis, "Result")
+    
 return
 
 
