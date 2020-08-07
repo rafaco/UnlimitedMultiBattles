@@ -79,17 +79,19 @@
     NoRunningGameMessage := "You have to open the game and select your team before start."
     UnableToOpenGameMessage := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
     UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
-    RunningHeader := "Multi-battling"
-    RunningOnFinishMessage := "On finish:"
-    RunningOnFinishOptions = Bring the game to front|Bring this window to front|Sleep computer|Nothing
-    StopButton := "Cancel"
+    RunningHeader = Multi-battling
+    RunningTimeLeftMessage := "Time left: " 
+    RunningOnFinishMessage = On finish:
+    RunningOnFinishOptions = Bring game to front|Bring this window to front|Don't disturb me
+    RunningOnFinishCheckbox = Sleep computer
+    StopButton = Cancel
 
-    ResultHeaderSuccess := "Completed!"
-    ResultHeaderCanceled := "Cancelled"
-    ResultHeaderInterrupted := "Interrupted"
-    ResultMessageSuccess := "Multi-Battle finished successfuly"
-    ResultMessageCanceled := "Multi-Battle canceled by user"
-    ResultMessageInterrupted := "Multi-Battle interrupted, game closed"
+    ResultHeaderSuccess = Completed!
+    ResultHeaderCanceled = Cancelled
+    ResultHeaderInterrupted = Interrupted
+    ResultMessageSuccess = Multi-Battle finished successfuly
+    ResultMessageCanceled = Multi-Battle canceled by user
+    ResultMessageInterrupted = Multi-Battle interrupted, game closed
 
     ;; Init LOGIC
     filecreatedir, %LocalFolder%
@@ -194,17 +196,21 @@
     Gui, Running:Font, s12 bold
     Gui, Running:Add, Text, w250 Center vMultiBattleHeader, % RunningHeader
     Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w115 Section, Battles:
-    Gui, Running:Add, Text, ys w120 Right vMultiBattleStatus,
-    Gui, Running:Add, Progress, xs yp+18 w250 h20 HwndhPB2 -Smooth vMultiBattleProgress, 0
     Gui, Running:Add, Text, w115 Section, Current battle:
     Gui, Running:Add, Text, ys w120 Right vCurrentBattleStatus,
     Gui, Running:Add, Progress, xs yp+18 w250 h20 -Smooth vCurrentBattleProgress, 0
+    Gui, Running:Add, Text, w115 xs Section, All battles:
+    Gui, Running:Add, Text, ys w120 Right vMultiBattleStatus,
+    Gui, Running:Add, Progress, xs yp+18 w250 h20 HwndhPB2 -Smooth vMultiBattleProgress, 0
+    Gui, Running:Add, Text, w117 xs Section vOnFinishMessage, % RunningTimeLeftMessage
+    Gui, Running:Add, Text, w117 ys Right vOnFinishMessageValue, -
     Gui, Running:Font, s3 normal
     Gui, Running:Add, Text, xs Section,
     Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w60 h23 Section Left %SS_CENTERIMAGE%, % RunningOnFinishMessage
+    Gui, Running:Font, s10 normal
+    Gui, Running:Add, Text, w60 h23 xs Section Left %SS_CENTERIMAGE%, % RunningOnFinishMessage
     Gui, Running:Add, DropDownList, ys w175 vOnFinishSelector gOnFinishChanged Choose%selectedOnFinish% AltSubmit, %RunningOnFinishOptions%
+    Gui, Running:Add, Checkbox, vOnFinishCheckbox gOnFinishCheckboxChanged, % RunningOnFinishCheckbox
     Gui, Running:Font, s3 normal
     Gui, Running:Add, Text, xs Section,
     Gui, Running:Font, s10 bold
@@ -280,7 +286,7 @@ ShowAbout:
 ShowRunning:
     Gui,+LastFound
     WinGetPos,x,y
-    if (A_ThisLabel="ShowRunning"){
+    if (A_ThisLabel="ShowRunning" && A_Gui !="Result"){
         x += 50
         y += 200
     }
@@ -460,6 +466,11 @@ OnFinishChanged:
     Settings.onFinish := OnFinishValue
 return
 
+OnFinishCheckboxChanged:
+    Gui, submit, nohide
+    GuiControlGet, OnFinishCheckboxValue,,OnFinishCheckbox
+return
+
 
 ;; Core logic labels
 
@@ -566,6 +577,17 @@ Start:
             GuiControl, Running:, CurrentBattleProgress, %currentProgress1%
             currentTimeFormatted := FormatSeconds(currentSecond)
             GuiControl, Running:, CurrentBattleStatus, %currentTimeFormatted% / %waitSecondsFormatted%  
+            
+            if (!isInfinite){
+                totalSeconds := (repetitions * waitSeconds)
+                timeElapsed := (waitSeconds * (currentRepetition-1)) + currentSecond
+                timeLeft := totalSeconds - timeElapsed
+                if (timeLeft<0){
+                    timeLeft := 0
+                }
+                GuiControl, Running:, OnFinishMessageValue, % FormatSeconds(timeLeft)
+            }
+            
             if (currentSecond > waitSeconds){
                 break
             }
@@ -595,16 +617,18 @@ ShowResultInterrupted:
             WinActivate, %RaidWinTitle%
         }
         else if (Settings.onFinish = 3){
+            WinGetActiveTitle, CurrentlyActive
+            noActivateFlag := CurrentlyActive != ScriptTitle ? "NoActivate" : ""
+        }
+        
+        if (OnFinishCheckbox = 1){
+            OnFinishCheckbox := 0
+            GuiControl, Result:, OnFinishCheckbox, %OnFinishCheckbox%
             hibernate := 0
             inmediately := 0
             disableWakes := 0
             DllCall("PowrProf\SetSuspendState", "int", hibernate, "int", inmediately, "int", disableWakes)
         }
-        else if (Settings.onFinish = 4){
-            WinGetActiveTitle, CurrentlyActive
-            noActivateFlag := CurrentlyActive != ScriptTitle ? "NoActivate" : ""
-        }
-        
     }
     else if (A_ThisLabel = "ShowResultCanceled"){
         TrayTip, %ScriptTitle%, %ResultMessageCanceled%, 20, 17
@@ -668,6 +692,8 @@ InitSettings(){
     selectedRank := Settings.rank
     selectedLevel := Settings.level
     selectedOnFinish := Settings.onFinish
+    
+    OnFinishCheckboxValue := 0
 }
 
 InitCalculator(){
