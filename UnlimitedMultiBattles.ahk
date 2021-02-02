@@ -741,7 +741,7 @@ CalculateResults(Settings, campaignData, xpData){
     stageEnergy := campaignData[campaignLine]["Energie"]
     stageSilver := campaignData[campaignLine]["Silver"]
     boost := Settings.boost
-    boostOptionsMultiplier := [1, 1.2, 2, 2.2]
+    boostOptionsMultiplier := [1, 1.2, 2, 2.4]
     boostedXp := stageXp * boostOptionsMultiplier[Settings.boost]
     championXp := boostedXp/4
     
