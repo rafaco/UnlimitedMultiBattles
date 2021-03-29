@@ -44,8 +44,7 @@
     SettingsFilePath := LocalFolder . "/" . SettingsFileName
     SettingsFilePathOld := A_ScriptDir . "/" . ScriptTitle . ".ini"
     SettingsFilePathOld2 := A_AppData . "/" . ScriptTitle . ".ini"
-    ;;RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
-    RaidFilePath := "D:\Games\Plarium\Plarium\PlariumPlay\PlariumPlay.exe"
+    RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
     SettingsSection := "SettingsSection"
     DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 1, teamSize: 4 }
     InfiniteSymbol := Chr(0x221E)
