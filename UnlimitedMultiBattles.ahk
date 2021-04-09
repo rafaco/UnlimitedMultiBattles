@@ -696,9 +696,15 @@ InitSettings(){
         }
     }else{
         Settings := {}
-        for key, value in DefaultSettings{
-            IniRead, temp, %SettingsFilePath%, %SettingsSection%, %key%
-            Settings[key] := temp
+        for key, defaultValue in DefaultSettings{
+            IniRead, storedValue, %SettingsFilePath%, %SettingsSection%, %key%
+            if (storedValue="ERROR"){
+                ; Key never included or corrupted at setting file. Restore defaultValue.
+                IniWrite, %defaultValue%, %SettingsFilePath%, %SettingsSection%, %key%
+                Settings[key] := defaultValue
+            }else{
+                Settings[key] := storedValue
+            }
         }
     }
     If (FileExist(SettingsFilePathOld)){
