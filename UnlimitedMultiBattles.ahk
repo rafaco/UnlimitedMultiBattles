@@ -44,9 +44,10 @@
     SettingsFilePath := LocalFolder . "/" . SettingsFileName
     SettingsFilePathOld := A_ScriptDir . "/" . ScriptTitle . ".ini"
     SettingsFilePathOld2 := A_AppData . "/" . ScriptTitle . ".ini"
-    RaidFilePath := A_AppData . "\..\Local" . "\Plarium\PlariumPlay\PlariumPlay.exe"
+    RaidFileName := "PlariumPlay.exe"
+    DefaultGameFolder := A_AppData . "\..\Local" . "\Plarium\PlariumPlay"
     SettingsSection := "SettingsSection"
-    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 1 }
+    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 1, customGameFolder: ""}
     InfiniteSymbol := Chr(0x221E)
     StarSymbol := Chr(0x2605)
     COLOR_GRAY := "c808080"
@@ -77,7 +78,7 @@
     InfoTime := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
 
     NoRunningGameMessage := "You have to open the game and select your team before start."
-    UnableToOpenGameMessage := "Unable to open the game from the standard installation folder.`n`nYou have to open it manually."
+    UnableToOpenGameMessage := "Unable to open the game from the default installation folder.`n`nOpen it manually."
     UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
     RunningHeader = Multi-battling
     RunningTimeLeftMessage := "Time left: " 
@@ -92,6 +93,11 @@
     ResultMessageSuccess = Multi-Battle finished successfuly
     ResultMessageCanceled = Multi-Battle canceled by user
     ResultMessageInterrupted = Multi-Battle interrupted, game closed
+    
+    UnableToFindGameMessage := "Unable to find PlariumPlay on the default installation folder.`n`nChoose the folder where your PlariumPlay.exe is:"
+    NoFolderSelectedMessage := "You didn't select a folder. You can also start the game manually."
+    NoGameInFolderMessage := "Select a folder with a PlariumPlay.exe file inside or start the game manually."
+    
 
     ;; Init LOGIC
     filecreatedir, %LocalFolder%
@@ -331,21 +337,38 @@ GoToSite:
 return
     
 GoToGame:
+    ; If game is already open, activate their window
     if WinExist(RaidWinTitle){
-        ; Game already open, activate window
         WinActivate, %RaidWinTitle%
+        return
     }
-    else{
-        If (FileExist(RaidFilePath)){
-            ; Open game
-            Run, %RaidFilePath% --args -gameid=101
-        }
-        else{
-            ; Show unable to open game dialog
-            MsgBox, 48, %ScriptTitle%, %UnableToOpenGameMessage%
+    
+    ; If game not in default folder, ask for installation folder 
+    fileFolder := Settings.customGameFolder != "" ? Settings.customGameFolder : DefaultGameFolder
+    filePath := fileFolder . "\" . RaidFileName
+    if (!FileExist(filePath)){
+        ; Show select folder dialog
+        FileSelectFolder, OutputVar, , 0, %UnableToFindGameMessage%
+        if (!OutputVar || OutputVar == ""){
+            MsgBox, % NoFolderSelectedMessage
             return
         }
+        newFilePath := OutputVar . "\" . RaidFileName
+        if (!FileExist(newFilePath)){
+            MsgBox, % NoGameInFolderMessage
+            return
+        }
+           
+        ; Save custom raid folder
+        IniWrite, %OutputVar%, %SettingsFilePath%, %SettingsSection%, customGameFolder
+        Settings.customGameFolder := OutputVar
+        filePath := newFilePath
     }
+    
+    ; Open game from selected folder
+    if (FileExist(filePath))
+        Run, %filePath% --args -gameid=101
+      
 return
 
 RunScriptAsAdmin:
@@ -692,6 +715,7 @@ InitSettings(){
     selectedRank := Settings.rank
     selectedLevel := Settings.level
     selectedOnFinish := Settings.onFinish
+    selectedRaidFilePath := Settings.customGameFolder
     
     OnFinishCheckboxValue := 0
 }
