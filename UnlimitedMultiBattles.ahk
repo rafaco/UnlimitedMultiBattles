@@ -24,6 +24,8 @@
     SetTitleMatchMode 3             ; Exact title match
 
     #Include, data/Tables.ahk
+    #Include lib/FindText.ahk
+    #Include src/ScreenDetector.ahk
     
     ;; Metadata
     ScriptVersion := "v1.0.6"
@@ -340,6 +342,11 @@ GoToGame:
     ; If game is already open, activate their window
     if WinExist(RaidWinTitle){
         WinActivate, %RaidWinTitle%
+
+        ; Detect screens playground
+        screenDetector := new screenDetector()
+        screenDetector.detect()
+    
         return
     }
     
