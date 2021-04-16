@@ -346,7 +346,7 @@ GoToGame:
 
         ; Detect screens playground
         screenDetector := new screenDetector()
-        screenDetector.detect2()
+        screenDetector.detect()
 
         return
     }
