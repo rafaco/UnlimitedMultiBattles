@@ -25,6 +25,7 @@
 
     #Include, data/Tables.ahk
     #Include lib/FindText.ahk
+    ;#Include lib/graphicsearch_export.ahk
     #Include src/ScreenDetector.ahk
     
     ;; Metadata
@@ -345,8 +346,8 @@ GoToGame:
 
         ; Detect screens playground
         screenDetector := new screenDetector()
-        screenDetector.detect()
-    
+        screenDetector.detect2()
+
         return
     }
     
