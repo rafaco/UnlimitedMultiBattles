@@ -25,7 +25,8 @@
 
     #Include, data/Tables.ahk
     #Include lib/FindText.ahk
-    ;#Include lib/graphicsearch_export.ahk
+    #Include lib/CaptureScreen.ahk
+    #Include lib/graphicsearch_export.ahk
     #Include src/ScreenDetector.ahk
     
     ;; Metadata
