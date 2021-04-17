@@ -1,10 +1,8 @@
 ; #Include ../lib/FindText.ahk
-; #Include lib/graphicsearch_export.ahk
+; #Include ../lib/GraphicSearch_export.ahk
 
 Class ScreenDetector{
     
-    
-
     detect()
 	{
         this.detect1()

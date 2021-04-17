@@ -23,10 +23,18 @@
     #MaxThreadsPerHotkey 1          ; Only one thread
     SetTitleMatchMode 3             ; Exact title match
 
-    #Include, data/Tables.ahk
+    ; SetDefaults()
+    ; {
+    ;     global
+    ;     RaidWinTitle := "Raid: Shadow Legends"
+    ; }
+    ; SetDefaults()
+    
+
+    #Include data/Tables.ahk
     #Include lib/FindText.ahk
     #Include lib/CaptureScreen.ahk
-    #Include lib/graphicsearch_export.ahk
+    #Include lib/GraphicSearch_export.ahk
     #Include src/ScreenDetector.ahk
     
     ;; Metadata
