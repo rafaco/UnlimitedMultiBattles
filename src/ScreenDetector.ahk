@@ -5,83 +5,67 @@ Class ScreenDetector{
     
     detect()
 	{
-        this.detect1()
-        this.detect2()
-    }
-    
-    detect1()
-	{
         global
-        t1:=A_TickCount
 
-        ASCII_Battle_Button:="|<>0xFFFFFF@0.49$66.00000000000000000000000000000000000000001k003zU00001k003zs00Q71k003Vs00Q71k003Us00Q71k003UsDtzTlkTU3UsTxzTlkzk3zkwQQ71llk3zU8QQ71nUs3zs0QQ71nUs3UsDwQ71nzs3UQTQQ71nzs3UQsQQ71nU03UwsQQ71nk03VswQQ71lsk3zsTwD3lkzk3zUDyD3lkTU00000000000000000000000000000000000000000000U"
-        ASCII_Battle_Icon:="|<>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
+        local w := 1149
+        local h := 712
+        this.fixGameScale(w, h)
 
-        ;WinGetPos, X, Y, W, H, % RaidWinTitle
-        ;MsgBox, Calculator is at %X%,%Y% and its size is %W%x%H%
+        ; Calculate game area
+        WinGetPos, X, Y, W, H, % RaidWinTitle
+        local x1 := X
+        local y1 := Y
+        local x2 := X + w
+        local y2 := Y + h
 
-        MsgBox, 4096, ASCII detector, % RaidWinTitle
+        this.saveScreenArea(x1, y1, x2, y2, LocalFolder) 
 
+        local isHome := this.detectHome(x1, y1, x2, y2)
+        ;this.detect2()
+    }
+
+    fixGameScale(fixedW, fixedH) 
+    {
+        ; TODO: Why this dont print but following scale works?
+        ;MsgBox, 4096, ASCII detector, % RaidWinTitle
+        
         ; Reset screen size
         WinGetPos, X, Y, W, H, % RaidWinTitle
-        if (W!=1149 or H!=712){
-            WinMove, %RaidWinTitle%,, X, Y, 1149, 712
+        if (W!=fixedW or H!=fixedH){
+            WinMove, %RaidWinTitle%,, X, Y, fixedW, fixedH
             MsgBox, Game rescaled at %X%,%Y% to 1149x712, it was %W%x%H%.
-            WinGetPos, X, Y, W, H, % RaidWinTitle
         }
-        
-        if (ok1:=FindText(767-150000, 693-150000, 767+150000, 693+150000, 0, 0, ASCII_Battle_Button))
+    }
+
+    saveScreenArea(x1, y1, x2, y2, localFolderPath) 
+    {
+        localFilePath := localFolderPath . "\screenshot.jpg"
+        recta := x1 . ", " . y1  . ", " . x2 . ", " . y2
+        MsgBox, 4096, Screen area saved!, % "File: screenshot.jpg `nPath: " localFolderPath "`nArea: " recta 
+        CaptureScreen(recta, False, localFilePath, "")
+    }
+    
+    detectHome(x1, y1, x2, y2)
+	{
+        t1:=A_TickCount
+        ASCII_Battle_Icon:="|<>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
+        if (ok1:=FindText(x1, y1, x2, y2, 0.2, 0, ASCII_Battle_Icon))
         {
             CoordMode, Mouse
             ;X:=ok.1.x, Y:=ok.1.y, Comment:=ok.1.id
             ; Click, %X%, %Y%
         }
-
-        ; FindText(X, Y, W, H, 0, 0, ASCII_Battle_Icon,1,1))
-        myX := X ;767-150000
-        myY := Y ;693-150000
-        myW := X + 1149 ;767+150000
-        myH := Y +712 ;693+150000
-        if (ok2:=FindText(myX, myY, myW, myH, 0.2, 0, ASCII_Battle_Icon))
-        {
-            CoordMode, Mouse
-            ;X:=ok.1.x, Y:=ok.1.y, Comment:=ok.1.id
-            ; Click, %X%, %Y%
-        }
-
-        
-        
-        LocalSnapshot := LocalFolder . "\screenshot.jpg"
-        MsgBox, 4096, ASCII detector, %LocalSnapshot%
-        ;recta:=myX . ", " . myY  . ", " . myW . ", " . myH
-        recta:=X . ", " . Y  . ", " . myW . ", " . myH
-        CaptureScreen(recta, False, LocalSnapshot, "")
-
-        resultObj6 := graphicSearch.search(myX, myY, myW, myH, 0.2, 0, this.GraphicSearch_query6)
-        if (resultObj6) {
-            MsgBox, 4096, Tip, % "Found TitleDsGray175"
-            ;X := resultObj2.1.x, Y := resultObj2.1.y, Comment := resultObj2.1.id
-            ; Click, %X%, %Y%
-        }
-        
         t1:=A_TickCount-t1
 
-        MsgBox, 4096, ASCII detector, % "Found:`t`t`t" Round(ok1.MaxIndex() + ok2.MaxIndex())
-        . "`nASCII_Battle_Button:`t" (ok1 ? ok1.MaxIndex() : "Failed !")
-        . "`nASCII_Battle_Icon:`t`t" (ok2 ? ok2.MaxIndex() : "Failed !")
-        . "`n`TitleDsGray175:`t`t" (resultObj6 ? resultObj6.MaxIndex() : "Failed !")
-        . "`n`nTime:`t`t`t" (t1) " ms"
-        . "`n`nPosition rect:`t`t" myX "," myY " " myW "," myH
-        . "`nPosition vector:`t`t" X "," Y " " W ","H
+        MsgBox, 4096, ASCII detector, % "Found:`t`t`t" Round(ok1.MaxIndex())
+            . "`nASCII_Battle_Icon:`t`t" (ok1 ? ok1.MaxIndex() : "Failed !")
+            . "`n`nTime:`t`t`t" (t1) " ms"
+            . "`nArea:`t`t" x1 "," y1 " " x2 "," y2            
 
         ; for i,v in ok
         ; if (i<=5)
         ;     FindText.MouseTip(ok[i].x, ok[i].y)
-
-        ; for i,v in ok2
-        ; if (i<=5)
-        ;     FindText.MouseTip(ok2[i].x, ok2[i].y)
-
+        return ok1
     }
 
     ; From https://www.autohotkey.com/boards/viewtopic.php?t=67417
@@ -130,7 +114,6 @@ Class ScreenDetector{
         ;        . "Result:`t" (ok ? "Success!`n`n" Comment : "Failed!"),5
         return, ok.MaxIndex() ? ok:0
     }
-
 
     detect2()
 	{
