@@ -2,6 +2,20 @@
 ; #Include ../lib/GraphicSearch_export.ahk
 
 Class ScreenDetector{
+
+    ASCII_Battle_Icon:="|<ASCII_Battle_Icon>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
+    ASCII_ResultArrow:="|<ResultArrowArea110Gray>*110$23.0AM00ss01Us068k0Msk0XtU27lU4TlUFzl17rlaT7nMw7XXk7XDbDUSCDVlzD7VwTSVlDsV6DlUST7lwMTrw1zzwTzzzU"
+    ASCII_ResultSeparatorThick:="|<ResultSeparatorThick_Color63>0xE5CC5F@0.63$6.000zz000U"
+    ASCII_ResultSeparatorBottom:="|<ResultSeparatorBottom_Color63>0x18CE52@0.63$15.000000s0700s070DzVzwDzU700s0700s000004"
+    ASCII_ChampionCornerTopGold:="|<ChampionCornerTopGold_Color63>0xF5DE07@0.63$10.000007wTlU6wPlg6m"
+    ASCII_ChampionCornerTopPink:="|<ChampionCornerTopPink_Color63>0xFE78FF@0.63$7.0Dru1SgKE"
+    ASCII_ChampionCornerTopBlue:="|<ChampionCornerTopBlue_Color63>0x7ADBFF@0.63$7.0Dru1SgKE"
+    ASCII_ChampionCornerTopGreen:="|<ChampionCornerTopGreen_Color63>0x00D14F@0.63$5.0xvqAU"
+    ASCII_ChampionCornerTopGrey:="|<ChampionCornerTopGrey_Color63>0xAEAEAE@0.63$6.00DDDAAU"
+
+    ASCII_ChampionStarFull:="|<ChampionStarFull_Color100>0xE241C7@0.72$15.0E0200s0701w4TUzztzw7z0Tk3y0Ts770kMU"
+    ASCII_ChampionStarHalf:="|<ChampionStarHalf_Gray115>*115$8.zrwzDlwT00473kw7lzTvzs"
+    ASCII_ChampionStarInside:="|<ChampionStarInside_Color97>0xDEB223@0.92$10.0040E1V7XwDUy2I02"
     
     detect()
 	{
@@ -17,11 +31,79 @@ Class ScreenDetector{
         local y1 := Y
         local x2 := X + w
         local y2 := Y + h
+        local e1 := 0.1
+        local e2 := 0.1
+         
 
-        this.saveScreenArea(x1, y1, x2, y2, LocalFolder) 
+        t1:=A_TickCount
+        this.saveScreenArea(x1, y1, x2, y2, LocalFolder, "screenshot.jpg")
+        local isHome    := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Battle_Icon)
+        local isResult  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ResultArrow)
+        local championStarsFull  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ChampionStarFull)
+        local championStarsHalf  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ChampionStarHalf)
+        local championStarsInside  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ChampionStarInside)
+        
+        local resultSeparatorThick  := this.detectArea(x1+15, y1, x1+20, y2, e1, e2, this.ASCII_ResultSeparatorThick)
+        local championsAreaStartY := resultSeparatorThick ? resultSeparatorThick[1].y : y1
+        local resultSeparatorBottom  := this.detectArea(x1, championsAreaStartY, x2, y2, 0, 0.2, this.ASCII_ResultSeparatorBottom)
+        local championsAreaEndY := resultSeparatorBottom ? resultSeparatorBottom[1].y : y2
+        
+        local championsCornerGold  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, e1, e2, this.ASCII_ChampionCornerTopGold)
+        local championsCornerPink  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, e1, e2, this.ASCII_ChampionCornerTopPink)
+        local championsCornerBlue  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, e1, e2, this.ASCII_ChampionCornerTopBlue)
+        local championsCornerGreen  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, 0, 0.1, this.ASCII_ChampionCornerTopGreen)
+        local championsCornerGrey  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, 0, 0, this.ASCII_ChampionCornerTopGrey)
+        this.saveScreenArea(x1, championsAreaStartY, x2, championsAreaEndY, LocalFolder, "screenshot2.jpg") 
+        t1:=A_TickCount-t1
 
-        local isHome := this.detectHome(x1, y1, x2, y2)
+        local total := Round(isHome.MaxIndex()+isResult.MaxIndex()+championStarsFull.MaxIndex()+championStarsHalf.MaxIndex()+championStarsInside.MaxIndex()+championsCornerBlue.MaxIndex()) 
+
+        local desc
+        if(isHome){
+            desc := "Home screen"
+        }else if (isResult){
+            desc := "Battle result screen"
+            if (championsCornerGold) 
+                desc .= "`n  " championsCornerGold.MaxIndex() " x Legendary"
+            if (championsCornerPink) 
+                desc .= "`n  " championsCornerPink.MaxIndex() " x Epic" 
+            if (championsCornerBlue) 
+                desc .= "`n  " championsCornerBlue.MaxIndex() " x Rere" 
+            if (championsCornerGreen) 
+                desc .= "`n  " championsCornerGreen.MaxIndex() " x Uncommon" 
+            if (championsCornerGrey) 
+                desc .= "`n  " championsCornerGrey.MaxIndex() " x Common" 
+        }
+
+        MsgBox, 4096, Area detection, % desc
+            . "`n`n"
+            . "`nIs home:`t`t`t`t" (isHome ? "Yes, " isHome.MaxIndex() "!" : "No")
+            . "`nIs Battle result:`t`t`t" (isResult ? "Yes, " isResult.MaxIndex() "!" : "No")
+            . "`nIs ResultSeparatorMid:`t`t" (resultSeparatorThick ? "Yes, " resultSeparatorThick.MaxIndex() "!" : "No")
+            . "`nIs ResultSeparatorBot:`t`t" (resultSeparatorBottom ? "Yes, " resultSeparatorBottom.MaxIndex() "!" : "No")
+            . "`n  Legendary champions:`t`t" (championsCornerGold ? "Yes, " championsCornerGold.MaxIndex() "!" : "No")
+            . "`n  Epic chapions:`t`t`t" (championsCornerPink ? "Yes, " championsCornerPink.MaxIndex() "!" : "No")
+            . "`n  Rare champions:`t`t`t" (championsCornerBlue ? "Yes, " championsCornerBlue.MaxIndex() "!" : "No")
+            . "`n  Uncommon champions:`t`t" (championsCornerGreen ? "Yes, " championsCornerGreen.MaxIndex() "!" : "No")
+            . "`n  Common champions:`t`t" (championsCornerGrey ? "Yes, " championsCornerGrey.MaxIndex() "!" : "No")
+            . "`n`nIs championStarsFull:`t`t" (championStarsFull ? "Yes, " championStarsFull.MaxIndex() "!" : "No")
+            . "`nIs championStarsHalf:`t`t" (championStarsHalf ? "Yes, " championStarsHalf.MaxIndex() "!" : "No")
+            . "`nIs championStarsInside:`t`t" (championStarsInside ? "Yes, " championStarsInside.MaxIndex() "!" : "No")
+            
+            . "`n`nTime:`t`t`t" (t1) " ms"
+            . "`nFull Area:`t`t" x1 "," y1 " " x2 "," y2
+            . "`nChamp Area:`t`t" x1 "," championsAreaStartY " " x2 "," championsAreaEndY
+
+
+        this.printResults(championsCornerGreen)
+
         ;this.detect2()
+    }
+
+    printResults(result) 
+    {
+        for i,v in result
+            FindText.MouseTip(result[i].x, result[i].y)
     }
 
     fixGameScale(fixedW, fixedH) 
@@ -33,34 +115,34 @@ Class ScreenDetector{
         WinGetPos, X, Y, W, H, % RaidWinTitle
         if (W!=fixedW or H!=fixedH){
             WinMove, %RaidWinTitle%,, X, Y, fixedW, fixedH
-            MsgBox, Game rescaled at %X%,%Y% to 1149x712, it was %W%x%H%.
+            ;MsgBox, Fixed scale, Game rescaled at %X%,%Y% to 1149x712, it was %W%x%H%.
         }
     }
 
-    saveScreenArea(x1, y1, x2, y2, localFolderPath) 
+    saveScreenArea(x1, y1, x2, y2, localFolder, fileName) 
     {
-        localFilePath := localFolderPath . "\screenshot.jpg"
+        localPath := localFolder . "\" . fileName
         recta := x1 . ", " . y1  . ", " . x2 . ", " . y2
-        MsgBox, 4096, Screen area saved!, % "File: screenshot.jpg `nPath: " localFolderPath "`nArea: " recta 
-        CaptureScreen(recta, False, localFilePath, "")
+        CaptureScreen(recta, False, localPath, "")
+        ;MsgBox, 4096, Screenshot saved, % "File: " fileName "`nPath: " localFolderPath "`nArea: " recta 
     }
     
-    detectHome(x1, y1, x2, y2)
+    detectArea(x1, y1, x2, y2, e1, e2, graphic)
 	{
-        t1:=A_TickCount
-        ASCII_Battle_Icon:="|<>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
-        if (ok1:=FindText(x1, y1, x2, y2, 0.2, 0, ASCII_Battle_Icon))
+        ; t1:=A_TickCount
+        if (ok1:=FindText(x1, y1, x2, y2, e1, e2, graphic))
         {
             CoordMode, Mouse
             ;X:=ok.1.x, Y:=ok.1.y, Comment:=ok.1.id
             ; Click, %X%, %Y%
         }
-        t1:=A_TickCount-t1
+        ; t1:=A_TickCount-t1
 
-        MsgBox, 4096, ASCII detector, % "Found:`t`t`t" Round(ok1.MaxIndex())
-            . "`nASCII_Battle_Icon:`t`t" (ok1 ? ok1.MaxIndex() : "Failed !")
-            . "`n`nTime:`t`t`t" (t1) " ms"
-            . "`nArea:`t`t" x1 "," y1 " " x2 "," y2            
+        ; RegExMatch(graphic, "(?<=<)(.*)(?=>)", name)
+        ; MsgBox, 4096, Area detection, % "Found:`t`t`t" Round(ok1.MaxIndex())
+        ;     . "`n" name ":`t`t" (ok1 ? ok1.MaxIndex() : "Failed !")
+        ;     . "`n`nTime:`t`t`t" (t1) " ms"
+        ;     . "`nArea:`t`t" x1 "," y1 " " x2 "," y2
 
         ; for i,v in ok
         ; if (i<=5)
