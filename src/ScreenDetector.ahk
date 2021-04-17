@@ -1,21 +1,31 @@
 ; #Include ../lib/FindText.ahk
 ; #Include ../lib/GraphicSearch_export.ahk
 
-Class ScreenDetector{
 
-    ASCII_Battle_Icon:="|<ASCII_Battle_Icon>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
-    ASCII_ResultArrow:="|<ResultArrowArea110Gray>*110$23.0AM00ss01Us068k0Msk0XtU27lU4TlUFzl17rlaT7nMw7XXk7XDbDUSCDVlzD7VwTSVlDsV6DlUST7lwMTrw1zzwTzzzU"
-    ASCII_ResultSeparatorThick:="|<ResultSeparatorThick_Color63>0xE5CC5F@0.63$6.000zz000U"
-    ASCII_ResultSeparatorBottom:="|<ResultSeparatorBottom_Color63>0x18CE52@0.63$15.000000s0700s070DzVzwDzU700s0700s000004"
+Class ScreenDetector {
+
+    ASCII_Screen_Home:="|<ASCII_Screen_Home>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
+    ASCII_Screen_BattleStart:="|<BattleStart_affinitySymbol>*57$14.zwzzDznzszwDyHwAyTDjnvxyzTjwvwCyDi7v7z7zXzlzszwTzU"
+    ASCII_Screen_BattleResult:="|<ResultArrowArea110Gray>*110$23.0AM00ss01Us068k0Msk0XtU27lU4TlUFzl17rlaT7nMw7XXk7XDbDUSCDVlzD7VwTSVlDsV6DlUST7lwMTrw1zzwTzzzU"
+    ASCII_Screen_With_Dialog:="|<DialogLeftCorner_ColorGold>0xBCA63B@0.69$25.0000Ts000A0003U000s000C00zXXzzssTzyD3zzVkQ00S0003wzzzzk"
+    ASCII_Separator_BattleStart_ChampsStart:="|<BattleStartChampsEnd4x5_gray71>*71$4.zkzs"
+    ASCII_Separator_BattleStart_ChampsEnd:="|<BattleStartChampsEnd4x5_gray71>*71$4.zkzs"
+    ASCII_Separator_BattleResult_ChampsStart:="|<ResultSeparatorThick_Color63>0xE5CC5F@0.63$6.000zz000U"
+    ASCII_Separator_BattleResult_ChampsEnd:="|<ResultSeparatorBottom_Color63>0x18CE52@0.63$15.000000s0700s070DzVzwDzU700s0700s000004"
     ASCII_ChampionCornerTopGold:="|<ChampionCornerTopGold_Color63>0xF5DE07@0.63$10.000007wTlU6wPlg6m"
     ASCII_ChampionCornerTopPink:="|<ChampionCornerTopPink_Color63>0xFE78FF@0.63$7.0Dru1SgKE"
-    ASCII_ChampionCornerTopBlue:="|<ChampionCornerTopBlue_Color63>0x7ADBFF@0.63$7.0Dru1SgKE"
-    ASCII_ChampionCornerTopGreen:="|<ChampionCornerTopGreen_Color63>0x00D14F@0.63$5.0xvqAU"
-    ASCII_ChampionCornerTopGrey:="|<ChampionCornerTopGrey_Color63>0xAEAEAE@0.63$6.00DDDAAU"
+    ASCII_ChampionCornerTopBlue:="|<ChampionCornerTopBlue_Color>0x5EB1F1@0.69$9.000DtUBtjB1cB4"
+    ASCII_ChampionCornerTopGreen:="|<ChampionCornerTopGreen2_Color69>0x00D14F@0.69$8.00007lwT71m"
+    ASCII_ChampionCornerTopGrey:="|<ChampionCornerTopGrey_Color80>0xAEAEAE@0.81$7.003twkMAE"
+
+    ASCII_ChampionMaxLev:="|<ChampionMaxLev_Color69>0x60C8D4@0.69$65.00000000000M3000030000s7000060001kS0000A0003kwS4M0M1tX7XtyBk0k7v6D7mAT01UQPAPBXwQ030zqkqnDss061zhVbaNls0A30D3CBnbk0M30Q6QNzQn0zbss8EVwlY1z7UU0000000000000000000004"
 
     ASCII_ChampionStarFull:="|<ChampionStarFull_Color100>0xE241C7@0.72$15.0E0200s0701w4TUzztzw7z0Tk3y0Ts770kMU"
     ASCII_ChampionStarHalf:="|<ChampionStarHalf_Gray115>*115$8.zrwzDlwT00473kw7lzTvzs"
     ASCII_ChampionStarInside:="|<ChampionStarInside_Color97>0xDEB223@0.92$10.0040E1V7XwDUy2I02"
+    ASCII_Rank66:="|<Rank66>0xDD39C5@0.69$64.000000000000U00000E20020M30M30800Q1UA1UC1k01kC1sD0s70070w7Uw7Uy00uT3tT/tTs1zjwzbyzrzz1zDtzDxzjzk3yTtzDtzDy07wTXyTnyTk0TvzTvzDtz01zjxzjxzby0CAtr6sr6ss0k60k21M/1U20E20E20000000000000000000000000U"
+    ASCII_Rank5:="|<Rank5>**70$54.0Q30000000Q3US3kC00q6kK2kG00a6Em6EH01W4EW4MnU3XwTXwzVwzDtz7tzVzUC0k60k03s30M3UQ06A1UA1kC0Q60k60s70k20k60E20E60k60E24M4QXaQnqSQ5rawrqSvA7Ug5Vy7Vg60sC0s70wU"
+    ASCII_Rank3:="|<Rank3_GrayDiff90>**90$35.0000001k70s03kC1k06Uq6k09VA8U0l68lU12MTV1yTny3y0k600D0M301n0M30630M30Q60k60k8FWAEUFmCFl1iprau3kz3sQ60M3U8000001"
     
     detect()
 	{
@@ -33,71 +43,139 @@ Class ScreenDetector{
         local y2 := Y + h
         local e1 := 0.1
         local e2 := 0.1
-         
-
         t1:=A_TickCount
-        this.saveScreenArea(x1, y1, x2, y2, LocalFolder, "screenshot.jpg")
-        local isHome    := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Battle_Icon)
-        local isResult  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ResultArrow)
-        local championStarsFull  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ChampionStarFull)
-        local championStarsHalf  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ChampionStarHalf)
-        local championStarsInside  := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_ChampionStarInside)
+        this.saveScreenArea(x1, y1, x2, y2, LocalFolder, "screen_game.jpg")
         
-        local resultSeparatorThick  := this.detectArea(x1+15, y1, x1+20, y2, e1, e2, this.ASCII_ResultSeparatorThick)
-        local championsAreaStartY := resultSeparatorThick ? resultSeparatorThick[1].y : y1
-        local resultSeparatorBottom  := this.detectArea(x1, championsAreaStartY, x2, y2, 0, 0.2, this.ASCII_ResultSeparatorBottom)
-        local championsAreaEndY := resultSeparatorBottom ? resultSeparatorBottom[1].y : y2
+        ; Screen detection
+        local screenWithDialog      := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_With_Dialog)
+        local screenHome            := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_Home)
+        local screenBattleStart     := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_BattleStart)
+        local screenBattleResult    := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_BattleResult)
         
-        local championsCornerGold  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, e1, e2, this.ASCII_ChampionCornerTopGold)
-        local championsCornerPink  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, e1, e2, this.ASCII_ChampionCornerTopPink)
-        local championsCornerBlue  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, e1, e2, this.ASCII_ChampionCornerTopBlue)
-        local championsCornerGreen  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, 0, 0.1, this.ASCII_ChampionCornerTopGreen)
-        local championsCornerGrey  := this.detectArea(x1, championsAreaStartY, x2, championsAreaEndY, 0, 0, this.ASCII_ChampionCornerTopGrey)
-        this.saveScreenArea(x1, championsAreaStartY, x2, championsAreaEndY, LocalFolder, "screenshot2.jpg") 
+        ; Battle screens
+        if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
+            
+            ; Campions area
+            local champX1 := x1
+            local champY1 := y1
+            local champX2 := x2
+            local champY2 := y2
+            if screenBattleStart {
+                champX2 := x1 + (w / 2)
+                local separatorChampsStart  := this.detectArea(x1+15, y1, x1+20, y2, 0, 0.2, this.ASCII_Separator_BattleStart_ChampsStart)
+            } else {
+                local separatorChampsStart  := this.detectArea(x1+15, y1, x1+20, y2, e1, e2, this.ASCII_Separator_BattleResult_ChampsStart)
+            }
+            if (separatorChampsStart)
+                champsY1 := separatorChampsStart[1].y
+
+            if screenBattleStart {
+                local separatorChampsEnd    := this.detectArea(x1+15, champsY1, x1+20, y2, 0, 0.2, this.ASCII_Separator_BattleStart_ChampsEnd)
+            } else {
+                local separatorChampsEnd    := this.detectArea(x1, champsY1, x2, y2, 0, 0.2, this.ASCII_Separator_BattleResult_ChampsEnd)
+            }
+            if (separatorChampsEnd)
+                champsY2 := separatorChampsEnd[1].y
+
+            
+            ; Champions rarity
+            local championsCornerGold   := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, e2, this.ASCII_ChampionCornerTopGold)
+            local championsCornerPink   := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionCornerTopPink)
+            local championsCornerBlue   := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, 0.1, this.ASCII_ChampionCornerTopBlue)
+            local championsCornerGreen  := this.detectArea(champX1, champsY1, champX2, champsY2, e1, 0, this.ASCII_ChampionCornerTopGreen)
+            local championsCornerGrey   := this.detectArea(champX1, champsY1, champX2, champsY2, 0, 0, this.ASCII_ChampionCornerTopGrey)
+            
+            ; Campions count
+            local champsCountMaxLvl     := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, e2, this.ASCII_ChampionMaxLev)
+            local champsCountTotal      := this.safeSum(championsCornerGold, championsCornerPink, championsCornerBlue, championsCornerGreen, championsCornerGrey)
+            
+            ; Champions rank
+            local rank66                := this.detectArea(champX1, champsY1, champX2, champsY2, 0.3, e1, this.ASCII_Rank66)
+            local rank5                 := this.detectArea(champX1, champsY1, champX2, champsY2, 0.3, 0.2, this.ASCII_Rank5)
+            local rank3                 := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, e1, this.ASCII_Rank3)
+
+            ; TODO: Remove - old playground
+            local championStarsFull     := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionStarFull)
+            local championStarsHalf     := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionStarHalf)
+            local championStarsInside   := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionStarInside)
+
+            this.saveScreenArea(champX1, champsY1, champX2, champsY2, LocalFolder, "screenshot_champs.jpg") 
+        }
+        
+        this.saveScreenArea(x1, y1, x2, y2, LocalFolder, "screenshot_screen.jpg") 
         t1:=A_TickCount-t1
 
-        local total := Round(isHome.MaxIndex()+isResult.MaxIndex()+championStarsFull.MaxIndex()+championStarsHalf.MaxIndex()+championStarsInside.MaxIndex()+championsCornerBlue.MaxIndex()) 
-
-        local desc
-        if(isHome){
-            desc := "Home screen"
-        }else if (isResult){
-            desc := "Battle result screen"
+        local desc := "Screen "
+        if screenWithDialog {
+            desc .= "Unknown, a Dialog on top"
+        }
+        else if screenHome {
+            desc .= "Home"
+        }
+        else if screenBattleStart {
+            desc .= "Battle Start"
+        }
+        else if screenBattleResult {
+            desc .= "Battle Result"
+        }
+        
+        if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
+            desc .= "`n  " champsCountTotal " x champions:"
             if (championsCornerGold) 
-                desc .= "`n  " championsCornerGold.MaxIndex() " x Legendary"
+                desc .= "`n`t" championsCornerGold.MaxIndex() " x Legendary"
             if (championsCornerPink) 
-                desc .= "`n  " championsCornerPink.MaxIndex() " x Epic" 
+                desc .= "`n`t" championsCornerPink.MaxIndex() " x Epic" 
             if (championsCornerBlue) 
-                desc .= "`n  " championsCornerBlue.MaxIndex() " x Rere" 
+                desc .= "`n`t" championsCornerBlue.MaxIndex() " x Rare" 
             if (championsCornerGreen) 
-                desc .= "`n  " championsCornerGreen.MaxIndex() " x Uncommon" 
+                desc .= "`n`t" championsCornerGreen.MaxIndex() " x Uncommon" 
             if (championsCornerGrey) 
-                desc .= "`n  " championsCornerGrey.MaxIndex() " x Common" 
+                desc .= "`n`t" championsCornerGrey.MaxIndex() " x Common" 
         }
 
         MsgBox, 4096, Area detection, % desc
-            . "`n`n"
-            . "`nIs home:`t`t`t`t" (isHome ? "Yes, " isHome.MaxIndex() "!" : "No")
-            . "`nIs Battle result:`t`t`t" (isResult ? "Yes, " isResult.MaxIndex() "!" : "No")
-            . "`nIs ResultSeparatorMid:`t`t" (resultSeparatorThick ? "Yes, " resultSeparatorThick.MaxIndex() "!" : "No")
-            . "`nIs ResultSeparatorBot:`t`t" (resultSeparatorBottom ? "Yes, " resultSeparatorBottom.MaxIndex() "!" : "No")
+            
+            . "`n`n`nTime:`t`t`t`t" (t1) " ms"
+            
+            . "`n`nScreens:"
+            . "`n  WithDialog:`t`t`t" (screenWithDialog ? "Yes, " screenWithDialog.MaxIndex() "!" : "No")
+            . "`n  Home:`t`t`t`t" (screenHome ? "Yes, " screenHome.MaxIndex() "!" : "No")
+            . "`n  Battle Start:`t`t`t" (screenBattleStart ? "Yes, " screenBattleStart.MaxIndex() "!" : "No")
+            . "`n  Battle Result:`t`t`t" (screenBattleResult ? "Yes, " screenBattleResult.MaxIndex() "!" : "No")
+            
+            . "`n`nChampion area:"
+            . "`n  SeparatorChampsStart:`t`t" (separatorChampsStart ? "Yes, " separatorChampsStart.MaxIndex() "!" : "No")
+            . "`n  SeparatorChampsEnd:`t`t" (separatorChampsEnd ? "Yes, " separatorChampsEnd.MaxIndex() "!" : "No")
+            . "`n  Full Area:`t`t" x1 "," y1 " " x2 "," y2
+            . "`n  Champ Area:`t`t" x1 "," champsY1 " " x2 "," champsY2
+            
+            . "`n`nChampions:"
             . "`n  Legendary champions:`t`t" (championsCornerGold ? "Yes, " championsCornerGold.MaxIndex() "!" : "No")
             . "`n  Epic chapions:`t`t`t" (championsCornerPink ? "Yes, " championsCornerPink.MaxIndex() "!" : "No")
             . "`n  Rare champions:`t`t`t" (championsCornerBlue ? "Yes, " championsCornerBlue.MaxIndex() "!" : "No")
             . "`n  Uncommon champions:`t`t" (championsCornerGreen ? "Yes, " championsCornerGreen.MaxIndex() "!" : "No")
             . "`n  Common champions:`t`t" (championsCornerGrey ? "Yes, " championsCornerGrey.MaxIndex() "!" : "No")
-            . "`n`nIs championStarsFull:`t`t" (championStarsFull ? "Yes, " championStarsFull.MaxIndex() "!" : "No")
-            . "`nIs championStarsHalf:`t`t" (championStarsHalf ? "Yes, " championStarsHalf.MaxIndex() "!" : "No")
-            . "`nIs championStarsInside:`t`t" (championStarsInside ? "Yes, " championStarsInside.MaxIndex() "!" : "No")
             
-            . "`n`nTime:`t`t`t" (t1) " ms"
-            . "`nFull Area:`t`t" x1 "," y1 " " x2 "," y2
-            . "`nChamp Area:`t`t" x1 "," championsAreaStartY " " x2 "," championsAreaEndY
+            . "`n`nOthers:"
+            . "`n  championStarsFull:`t`t" (championStarsFull ? "Yes, " championStarsFull.MaxIndex() "!" : "No")
+            . "`n  championStarsHalf:`t`t" (championStarsHalf ? "Yes, " championStarsHalf.MaxIndex() "!" : "No")
+            . "`n  championStarsInside:`t`t" (championStarsInside ? "Yes, " championStarsInside.MaxIndex() "!" : "No")
+            . "`n  champsCountMaxLvl:`t`t" (champsCountMaxLvl ? "Yes, " champsCountMaxLvl.MaxIndex() "!" : "No")
+            . "`n  rank66:`t`t`t`t" (rank66 ? "Yes, " rank66.MaxIndex() "!" : "No")
+            . "`n  rank5:`t`t`t`t" (rank5 ? "Yes, " rank5.MaxIndex() "!" : "No")
+            . "`n  rank3:`t`t`t`t" (rank3 ? "Yes, " rank3.MaxIndex() "!" : "No")            
 
-
-        this.printResults(championsCornerGreen)
+        this.printResults(championsCornerGrey)
 
         ;this.detect2()
+    } 
+
+    safeSum(params*) {
+        total := 0
+        for index,param in params
+            if param
+                total += param.MaxIndex()
+        return total
     }
 
     printResults(result) 
@@ -219,7 +297,7 @@ Class ScreenDetector{
         GraphicSearch_query4 := "|<BattleIconColor100>0xFFFDDF@1.00$33.00zs0001z0000Dy0001zk0001y0000Dk0DC0Tt1zk3zs1z0Tw0Dy1zU1zkDw07s0zU1z03w0AM0EM1X063000000A0k00NU6003k0000600000U"
         GraphicSearch_query5 := "|<BattleIconColor80>0xFFFDDF@0.81$42.00Dzk00007zs00003zs00001zy000EEzz300ssTz7U1xwDzzU0zy7zz00Tz3zy00DzVzw007zUzs007z0Ts00Dy0Tw00Ty0Ty00yT0yT01wDVwDU3w7Vs7k7s30k3s7k0001w7U0000s300000E0000000U"
         GraphicSearch_query6 := "|<TitleDsGray175>*157$13.zzzTzjzrz33BjinrSNji6Dzz"
-        ASCII_Battle_Icon:="|<>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
+        ASCII_Screen_Home:="|<>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
 
         ;n:=150000
         ;resultObj1 := graphicsearch.search(-n, -n, n, n, 0, 0, GraphicSearch_query1)
@@ -293,9 +371,12 @@ Class ScreenDetector{
         for i,v in resultObj2
             if (i<=5)
                 oGraphicSearch.mouseTip(resultObj2[i].x, resultObj2[i].y)
+        
 
         for i,v in resultObj3
             if (i<=5)
                 oGraphicSearch.mouseTip(resultObj3[i].x, resultObj3[i].y)
     }
 }
+
+

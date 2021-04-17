@@ -31,7 +31,7 @@
     ; SetDefaults()
     
 
-    #Include data/Tables.ahk
+    #Include lib/CsvTableFunctions.ahk
     #Include lib/FindText.ahk
     #Include lib/CaptureScreen.ahk
     #Include lib/GraphicSearch_export.ahk
