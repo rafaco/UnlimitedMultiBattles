@@ -1,111 +1,104 @@
 ; #Include ../lib/FindText.ahk
 ; #Include ../lib/GraphicSearch_export.ahk
+#Include src/Graphic.ahk
 
+class Area {
+    __New(x1:=0, y1:=0, x2:=0, y2:=0){
+        this.x1:=x1
+        this.y1:=y1
+        this.x2:=x2
+        this.y2:=y2
+    }
+}
+
+Class Error {
+    static 0 := 0
+    static 1 := 0.1
+    static 2 := 0.2
+    static 3 := 0.3
+}
 
 Class ScreenDetector {
+    static FIXED_WIDTH := 1149
+    static FIXED_HEIGHT := 712
 
-    ASCII_Screen_Home:="|<ASCII_Screen_Home>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
-    ASCII_Screen_BattleStart:="|<BattleStart_affinitySymbol>*57$14.zwzzDznzszwDyHwAyTDjnvxyzTjwvwCyDi7v7z7zXzlzszwTzU"
-    ASCII_Screen_BattleResult:="|<ResultArrowArea110Gray>*110$23.0AM00ss01Us068k0Msk0XtU27lU4TlUFzl17rlaT7nMw7XXk7XDbDUSCDVlzD7VwTSVlDsV6DlUST7lwMTrw1zzwTzzzU"
-    ASCII_Screen_With_Dialog:="|<DialogLeftCorner_ColorGold>0xBCA63B@0.69$25.0000Ts000A0003U000s000C00zXXzzssTzyD3zzVkQ00S0003wzzzzk"
-    ASCII_Separator_BattleStart_ChampsStart:="|<BattleStartChampsEnd4x5_gray71>*71$4.zkzs"
-    ASCII_Separator_BattleStart_ChampsEnd:="|<BattleStartChampsEnd4x5_gray71>*71$4.zkzs"
-    ASCII_Separator_BattleResult_ChampsStart:="|<ResultSeparatorThick_Color63>0xE5CC5F@0.63$6.000zz000U"
-    ASCII_Separator_BattleResult_ChampsEnd:="|<ResultSeparatorBottom_Color63>0x18CE52@0.63$15.000000s0700s070DzVzwDzU700s0700s000004"
-    ASCII_ChampionCornerTopGold:="|<ChampionCornerTopGold_Color63>0xF5DE07@0.63$10.000007wTlU6wPlg6m"
-    ASCII_ChampionCornerTopPink:="|<ChampionCornerTopPink_Color63>0xFE78FF@0.63$7.0Dru1SgKE"
-    ASCII_ChampionCornerTopBlue:="|<ChampionCornerTopBlue_Color>0x5EB1F1@0.69$9.000DtUBtjB1cB4"
-    ASCII_ChampionCornerTopGreen:="|<ChampionCornerTopGreen2_Color69>0x00D14F@0.69$8.00007lwT71m"
-    ASCII_ChampionCornerTopGrey:="|<ChampionCornerTopGrey_Color80>0xAEAEAE@0.81$7.003twkMAE"
-
-    ASCII_ChampionMaxLev:="|<ChampionMaxLev_Color69>0x60C8D4@0.69$65.00000000000M3000030000s7000060001kS0000A0003kwS4M0M1tX7XtyBk0k7v6D7mAT01UQPAPBXwQ030zqkqnDss061zhVbaNls0A30D3CBnbk0M30Q6QNzQn0zbss8EVwlY1z7UU0000000000000000000004"
-
-    ASCII_ChampionStarFull:="|<ChampionStarFull_Color100>0xE241C7@0.72$15.0E0200s0701w4TUzztzw7z0Tk3y0Ts770kMU"
-    ASCII_ChampionStarHalf:="|<ChampionStarHalf_Gray115>*115$8.zrwzDlwT00473kw7lzTvzs"
-    ASCII_ChampionStarInside:="|<ChampionStarInside_Color97>0xDEB223@0.92$10.0040E1V7XwDUy2I02"
-    ASCII_Rank66:="|<Rank66>0xDD39C5@0.69$64.000000000000U00000E20020M30M30800Q1UA1UC1k01kC1sD0s70070w7Uw7Uy00uT3tT/tTs1zjwzbyzrzz1zDtzDxzjzk3yTtzDtzDy07wTXyTnyTk0TvzTvzDtz01zjxzjxzby0CAtr6sr6ss0k60k21M/1U20E20E20000000000000000000000000U"
-    ASCII_Rank5:="|<Rank5>**70$54.0Q30000000Q3US3kC00q6kK2kG00a6Em6EH01W4EW4MnU3XwTXwzVwzDtz7tzVzUC0k60k03s30M3UQ06A1UA1kC0Q60k60s70k20k60E20E60k60E24M4QXaQnqSQ5rawrqSvA7Ug5Vy7Vg60sC0s70wU"
-    ASCII_Rank3:="|<Rank3_GrayDiff90>**90$35.0000001k70s03kC1k06Uq6k09VA8U0l68lU12MTV1yTny3y0k600D0M301n0M30630M30Q60k60k8FWAEUFmCFl1iprau3kz3sQ60M3U8000001"
-    
     detect()
 	{
         global
-
-        local w := 1149
-        local h := 712
-        this.fixGameScale(w, h)
-
-        ; Calculate game area
-        WinGetPos, X, Y, W, H, % RaidWinTitle
-        local x1 := X
-        local y1 := Y
-        local x2 := X + w
-        local y2 := Y + h
-        local e1 := 0.1
-        local e2 := 0.1
+        ; Init
         t1:=A_TickCount
-        this.saveScreenArea(x1, y1, x2, y2, LocalFolder, "screen_game.jpg")
+        this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        this.saveScreenArea(gameArea, "screenshot_game.jpg")
         
         ; Screen detection
-        local screenWithDialog      := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_With_Dialog)
-        local screenHome            := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_Home)
-        local screenBattleStart     := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_BattleStart)
-        local screenBattleResult    := this.detectArea(x1, y1, x2, y2, e1, e2, this.ASCII_Screen_BattleResult)
+        screenWithDialog      := this.detectGraphic(Graphic.Screen_With_Dialog, gameArea, Error.2, Error.2)
+        screenHome            := this.detectGraphic(Graphic.Screen_Home, gameArea)
+        screenBattleStart     := this.detectGraphic(Graphic.Screen_BattleStart, gameArea)
+        screenBattleResult    := this.detectGraphic(Graphic.Screen_BattleResult, gameArea)
         
         ; Battle screens
         if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
             
             ; Campions area
-            local champX1 := x1
-            local champY1 := y1
-            local champX2 := x2
-            local champY2 := y2
+            champsArea := gameArea.clone()
+            tinyArea := new Area(gameArea.x1 + 15, gameArea.y1, gameArea.x1 + 20, gameArea.y2)
             if screenBattleStart {
-                champX2 := x1 + (w / 2)
-                local separatorChampsStart  := this.detectArea(x1+15, y1, x1+20, y2, 0, 0.2, this.ASCII_Separator_BattleStart_ChampsStart)
+                champsArea.x2 := champsArea.x1 + Round(this.FIXED_WIDTH / 2)
+                separatorChampsStart  := this.detectGraphic(Graphic.Separator_BattleStart_ChampsStart, tinyArea, Error.0, Error.2)
             } else {
-                local separatorChampsStart  := this.detectArea(x1+15, y1, x1+20, y2, e1, e2, this.ASCII_Separator_BattleResult_ChampsStart)
+                separatorChampsStart  := this.detectGraphic(Graphic.Separator_BattleResult_ChampsStart, tinyArea)
             }
-            if (separatorChampsStart)
-                champsY1 := separatorChampsStart[1].y
-
+            if (separatorChampsStart){
+                champsArea.y1 := separatorChampsStart[1].y
+                tinyArea.y1 := separatorChampsStart[1].y
+            }
+            
             if screenBattleStart {
-                local separatorChampsEnd    := this.detectArea(x1+15, champsY1, x1+20, y2, 0, 0.2, this.ASCII_Separator_BattleStart_ChampsEnd)
+                separatorChampsEnd    := this.detectGraphic(Graphic.Separator_BattleStart_ChampsEnd, tinyArea, Error.0, Error.2)
             } else {
-                local separatorChampsEnd    := this.detectArea(x1, champsY1, x2, y2, 0, 0.2, this.ASCII_Separator_BattleResult_ChampsEnd)
+                separatorChampsEnd    := this.detectGraphic(Graphic.Separator_BattleResult_ChampsEnd, champsArea, Error.0, Error.2)
             }
             if (separatorChampsEnd)
-                champsY2 := separatorChampsEnd[1].y
+                champsArea.y2 := separatorChampsEnd[1].y
 
+            ; Leader area
+            leaderAreaStart := new Area(-1551, 707, -1445, 839)
+            leaderAreaResultX4 := new Area(-1614, 780, -1496, 972)
+            ; leaderAreaResultX5 := new Area()
+            
+            ; Last champ column area. We can contain one or two champs, we use that to detect campaign/arena
+            lastChampAreaBattleStart := new Area(-1757, 641, -1659, 899)
+            
             
             ; Champions rarity
-            local championsCornerGold   := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, e2, this.ASCII_ChampionCornerTopGold)
-            local championsCornerPink   := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionCornerTopPink)
-            local championsCornerBlue   := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, 0.1, this.ASCII_ChampionCornerTopBlue)
-            local championsCornerGreen  := this.detectArea(champX1, champsY1, champX2, champsY2, e1, 0, this.ASCII_ChampionCornerTopGreen)
-            local championsCornerGrey   := this.detectArea(champX1, champsY1, champX2, champsY2, 0, 0, this.ASCII_ChampionCornerTopGrey)
+            championsCornerGold   := this.detectGraphic(Graphic.ChampionCornerTopGold, champsArea, Error.2, Error.1)
+            championsCornerPink   := this.detectGraphic(Graphic.ChampionCornerTopPink, champsArea)
+            championsCornerBlue   := this.detectGraphic(Graphic.ChampionCornerTopBlue, champsArea, Error.2, Error.1)
+            championsCornerGreen  := this.detectGraphic(Graphic.ChampionCornerTopGreen, champsArea, Error.1, Error.0)
+            championsCornerGrey   := this.detectGraphic(Graphic.ChampionCornerTopGrey, champsArea, Error.0, Error.0)
             
             ; Campions count
-            local champsCountMaxLvl     := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, e2, this.ASCII_ChampionMaxLev)
-            local champsCountTotal      := this.safeSum(championsCornerGold, championsCornerPink, championsCornerBlue, championsCornerGreen, championsCornerGrey)
+            champsCountMaxLvl     := this.detectGraphic(Graphic.ChampionMaxLev, champsArea, Error.2, Error.2)
+            champsCountTotal      := this.safeSum(championsCornerGold, championsCornerPink, championsCornerBlue, championsCornerGreen, championsCornerGrey)
             
             ; Champions rank
-            local rank66                := this.detectArea(champX1, champsY1, champX2, champsY2, 0.3, e1, this.ASCII_Rank66)
-            local rank5                 := this.detectArea(champX1, champsY1, champX2, champsY2, 0.3, 0.2, this.ASCII_Rank5)
-            local rank3                 := this.detectArea(champX1, champsY1, champX2, champsY2, 0.2, e1, this.ASCII_Rank3)
+            rank66                := this.detectGraphic(Graphic.Rank66, champsArea, Error.2, Error.1)
+            rank5                 := this.detectGraphic(Graphic.Rank5, champsArea, Error.3, Error.2)
+            rank3                 := this.detectGraphic(Graphic.Rank3, champsArea, Error.2, Error.1)
 
             ; TODO: Remove - old playground
-            local championStarsFull     := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionStarFull)
-            local championStarsHalf     := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionStarHalf)
-            local championStarsInside   := this.detectArea(champX1, champsY1, champX2, champsY2, e1, e2, this.ASCII_ChampionStarInside)
+            championStarsInside   := this.detectGraphic(Graphic.ChampionStarFull, champsArea)
+            championStarsFull     := this.detectGraphic(Graphic.ChampionStarHalf, champsArea)
+            championStarsHalf     := this.detectGraphic(Graphic.ChampionStarInside, champsArea)
 
-            this.saveScreenArea(champX1, champsY1, champX2, champsY2, LocalFolder, "screenshot_champs.jpg") 
+            this.saveScreenArea(champsArea, "screenshot_champs.jpg") 
         }
-        
-        this.saveScreenArea(x1, y1, x2, y2, LocalFolder, "screenshot_screen.jpg") 
+
         t1:=A_TickCount-t1
 
-        local desc := "Screen "
+        ; Build overview
+        desc := "Screen "
         if screenWithDialog {
             desc .= "Unknown, a Dialog on top"
         }
@@ -117,6 +110,9 @@ Class ScreenDetector {
         }
         else if screenBattleResult {
             desc .= "Battle Result"
+        }
+        else {
+            desc .= " NOT detected"
         }
         
         if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
@@ -133,6 +129,7 @@ Class ScreenDetector {
                 desc .= "`n`t" championsCornerGrey.MaxIndex() " x Common" 
         }
 
+        ; Show debug dialog
         MsgBox, 4096, Area detection, % desc
             
             . "`n`n`nTime:`t`t`t`t" (t1) " ms"
@@ -146,8 +143,8 @@ Class ScreenDetector {
             . "`n`nChampion area:"
             . "`n  SeparatorChampsStart:`t`t" (separatorChampsStart ? "Yes, " separatorChampsStart.MaxIndex() "!" : "No")
             . "`n  SeparatorChampsEnd:`t`t" (separatorChampsEnd ? "Yes, " separatorChampsEnd.MaxIndex() "!" : "No")
-            . "`n  Full Area:`t`t" x1 "," y1 " " x2 "," y2
-            . "`n  Champ Area:`t`t" x1 "," champsY1 " " x2 "," champsY2
+            . "`n  Full Area:`t`t" gameArea.x1 "," gameArea.y1 " - " gameArea.x2 "," gameArea.y2
+            . "`n  Champ Area:`t`t" champsArea.x1 "," champsArea.y1 " - " champsArea.x2 "," champsArea.y2
             
             . "`n`nChampions:"
             . "`n  Legendary champions:`t`t" (championsCornerGold ? "Yes, " championsCornerGold.MaxIndex() "!" : "No")
@@ -165,48 +162,55 @@ Class ScreenDetector {
             . "`n  rank5:`t`t`t`t" (rank5 ? "Yes, " rank5.MaxIndex() "!" : "No")
             . "`n  rank3:`t`t`t`t" (rank3 ? "Yes, " rank3.MaxIndex() "!" : "No")            
 
-        this.printResults(championsCornerGrey)
+        this.printResults(championsCornerGold)
 
         ;this.detect2()
-    } 
-
-    safeSum(params*) {
-        total := 0
-        for index,param in params
-            if param
-                total += param.MaxIndex()
-        return total
     }
 
-    printResults(result) 
-    {
-        for i,v in result
-            FindText.MouseTip(result[i].x, result[i].y)
-    }
-
-    fixGameScale(fixedW, fixedH) 
+    fixGameScale(width, height) 
     {
         ; TODO: Why this dont print but following scale works?
         ;MsgBox, 4096, ASCII detector, % RaidWinTitle
         
         ; Reset screen size
         WinGetPos, X, Y, W, H, % RaidWinTitle
-        if (W!=fixedW or H!=fixedH){
-            WinMove, %RaidWinTitle%,, X, Y, fixedW, fixedH
+        if (W != width OR H != height){
+            WinMove, %RaidWinTitle%,, X, Y, width, height
             ;MsgBox, Fixed scale, Game rescaled at %X%,%Y% to 1149x712, it was %W%x%H%.
         }
+
+        ; TODO: IMPORTANT: Move windows into view
     }
 
-    saveScreenArea(x1, y1, x2, y2, localFolder, fileName) 
+    calculateGameArea(width, height) 
     {
-        localPath := localFolder . "\" . fileName
-        recta := x1 . ", " . y1  . ", " . x2 . ", " . y2
-        CaptureScreen(recta, False, localPath, "")
+        WinGetPos, X, Y, W, H, % RaidWinTitle
+        gameArea := new Area(X, Y, X + width, Y + height)
+        return gameArea
+    }
+
+    saveScreenArea(area, fileName) 
+    {
+        this.saveScreenPoints(area.x1, area.y1, area.x2, area.y2, fileName)
+    }
+
+    saveScreenPoints(x1, y1, x2, y2, fileName) 
+    {
+        global
+        local localPath := LocalFolder . "\" . fileName
+        local rect := x1 . ", " . y1  . ", " . x2 . ", " . y2
+        CaptureScreen(rect, False, localPath, "")
         ;MsgBox, 4096, Screenshot saved, % "File: " fileName "`nPath: " localFolderPath "`nArea: " recta 
     }
-    
-    detectArea(x1, y1, x2, y2, e1, e2, graphic)
+
+    detectGraphic(graphic, area, e1:=0.1, e2:=0.1) 
+    {
+        return this.detectGraphicByPoints(graphic, area.x1, area.y1, area.x2, area.y2, e1, e2)
+    }
+
+    detectGraphicByPoints(graphic, x1, y1, x2, y2, e1:=0.1, e2:=0.1)
 	{
+        global
         ; t1:=A_TickCount
         if (ok1:=FindText(x1, y1, x2, y2, e1, e2, graphic))
         {
@@ -228,6 +232,24 @@ Class ScreenDetector {
         return ok1
     }
 
+    safeSum(params*) 
+    {
+        total := 0
+        for index,param in params
+            if param
+                total += param.MaxIndex()
+        return total
+    }
+
+    printResults(result) 
+    {
+        for i,v in result
+            FindText.MouseTip(result[i].x, result[i].y)
+    }
+
+
+    ; TODO: code to remove
+    ;
     ; From https://www.autohotkey.com/boards/viewtopic.php?t=67417
     FindTextAW(text,err1:=0,err0:=0)
     ; FindText only within the active window.  Much faster if you have a large
