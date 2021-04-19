@@ -129,18 +129,33 @@
     Gui, Main:Menu, MainMenuBar
 
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox,  w350 h65 Section, %TeamHeader%
+    Gui, Main:Add, GroupBox, w350 h65 Section, %TeamHeader%
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Text, xp+10 yp+20 w270, %InfoTeam%
     Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
     Gui, Main:Font, s2
     Gui, Main:Add, Text, xs,
-    Gui, Main:Font, s10 bold
+ 
+ 
+    HeaderAuto := "3. Auto detect battle duration"
+    InfoAuto := "We can detect the game ends for you. Fetaure under development."
+    ButtonAuto := "Start`nAuto"
+    UnableToAuto := "The game is closed, press 'Yes' to start 'Raid: Shadows Legend' now."
 
-    groupBoxHeight := 187
-    tabContentHeight := groupBoxHeight - 30
+
+    Gui, Main:Font, s10 bold
+    Gui, Main:Add, GroupBox, w350 h65 Section, %HeaderAuto%
+    Gui, Main:Font, s10 norm
+    Gui, Main:Add, Text, xp+10 yp+20 w270 vAutoText, %InfoAuto%
+    Gui, Main:Add, Button, w50 xp+280 yp-5 Center gStartAuto vAutoButton, %ButtonAuto%
+    Gui, Main:Font, s2
+    Gui, Main:Add, Text, xs,
+
+    Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w350 xs Section, % "  " . BattlesHeader
     Gui, Main:Font, s10 norm
+    groupBoxHeight := 187
+    tabContentHeight := groupBoxHeight - 30
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h%tabContentHeight% +%TCS_FIXEDWIDTH% vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
     SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
     DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
@@ -352,11 +367,6 @@ GoToGame:
     ; If game is already open, activate their window
     if WinExist(RaidWinTitle){
         WinActivate, %RaidWinTitle%
-
-        ; Detect screens playground
-        screenDetector := new screenDetector()
-        screenDetector.detect()
-
         return
     }
     
@@ -513,6 +523,94 @@ return
 
 
 ;; Core logic labels
+
+StartAuto:
+    ; If game is already open, activate their window
+    if !WinExist(RaidWinTitle){
+        WinActivate, %RaidWinTitle%
+        Msgbox, 20, %ScriptTitle%, % UnableToAuto
+            IfMsgbox, no 
+            {
+                GoSub ShowMain
+                return
+            }
+            GoSub RunScriptAsAdmin
+        
+
+        return
+    }
+
+    ; Detect screens playground
+    screenDetector := new screenDetector()
+    ;screenDetector.detect()
+    ;GuiControl, Main:, AutoText, "Detection started"
+
+    isRunning := true
+    repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? calculatedResults.repetitions : -1
+    isInfinite := (repetitions = -1)
+    
+    replayCounter := 0
+    currentRepetition := 0
+    
+    loop{
+        currentRepetition++
+        
+        If not isRunning 
+            break
+            
+        If (!isInfinite && currentRepetition > repetitions){
+            GuiControl, Main:, AutoText, "Finished all battles"
+            break
+        }
+            
+        WinGetActiveTitle, PreviouslyActive
+        WinActivate, %RaidWinTitle%
+        sleep 25
+        
+        isAdminNeeded := !CanSendKeysToWin(RaidWinTitle)
+        if (isAdminNeeded){
+            GuiControl, Main:, AutoText, "Cancelled, admin needed"
+            Msgbox, 20, %ScriptTitle%, % UnableToSendKeysToGameMessage
+            IfMsgbox, no 
+            {
+                GoSub ShowMain
+                return
+            }
+            GoSub RunScriptAsAdmin
+            return
+        }
+        
+        ; Detect replay screen and wait till it appears
+        loop{
+            result := screenDetector.detect()
+            if (result == "Screen Unknown, a Dialog on top"){
+                GuiControl, Main:, AutoText, "Cancelled by screen detector, a dialog come up."
+                isRunning := false
+                break
+            }
+            else if (result == "Screen Battle Start" OR result == "Screen Battle Result") {
+                GuiControl, Main:, AutoText, "Replay detected!"
+                break
+            }
+            else{
+                GuiControl, Main:, AutoText, "Waiting for replay screen..."
+                sleep 1000
+            }
+        }
+        if not isRunning {
+            break
+        }
+
+        ControlSend, , {Enter}, %RaidWinTitle%
+        ControlSend, , r, %RaidWinTitle%
+        replayCounter++
+        sleep 25
+        WinActivate, %PreviouslyActive%
+        readyToReplay := false
+        GuiControl, Main:, AutoText, "Replay #" currentRepetition " !!! :)"
+	}
+
+    return
 
 Start:
     if !isDebug && !WinExist(RaidWinTitle){

@@ -32,10 +32,11 @@ Class ScreenDetector {
         this.saveScreenArea(gameArea, "screenshot_game.jpg")
         
         ; Screen detection
-        screenWithDialog      := this.detectGraphic(Graphic.Screen_With_Dialog, gameArea, Error.2, Error.2)
-        screenHome            := this.detectGraphic(Graphic.Screen_Home, gameArea)
-        screenBattleStart     := this.detectGraphic(Graphic.Screen_BattleStart, gameArea)
-        screenBattleResult    := this.detectGraphic(Graphic.Screen_BattleResult, gameArea)
+        screenWithDialog        := this.detectGraphic(Graphic.Screen_With_Dialog, gameArea, Error.2, Error.2)
+        screenHome              := this.detectGraphic(Graphic.Screen_Home, gameArea)
+        screenBattleStart       := this.detectGraphic(Graphic.Screen_BattleStart, gameArea)
+        screenBattlePlay        := this.detectGraphic(Graphic.Screen_BattlePlay, gameArea)
+        screenBattleResult      := this.detectGraphic(Graphic.Screen_BattleResult, gameArea, Error.3, Error.3)
         
         ; Battle screens
         if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
@@ -44,10 +45,10 @@ Class ScreenDetector {
             champsArea := gameArea.clone()
             tinyArea := new Area(gameArea.x1 + 15, gameArea.y1, gameArea.x1 + 20, gameArea.y2)
             if screenBattleStart {
-                champsArea.x2 := champsArea.x1 + Round(this.FIXED_WIDTH / 2)
-                separatorChampsStart  := this.detectGraphic(Graphic.Separator_BattleStart_ChampsStart, tinyArea, Error.0, Error.2)
+                champsArea.x2           := champsArea.x1 + Round(this.FIXED_WIDTH / 2)
+                separatorChampsStart    := this.detectGraphic(Graphic.Separator_BattleStart_ChampsStart, tinyArea, Error.0, Error.2)
             } else {
-                separatorChampsStart  := this.detectGraphic(Graphic.Separator_BattleResult_ChampsStart, tinyArea)
+                separatorChampsStart    := this.detectGraphic(Graphic.Separator_BattleResult_ChampsStart, tinyArea)
             }
             if (separatorChampsStart){
                 champsArea.y1 := separatorChampsStart[1].y
@@ -55,17 +56,17 @@ Class ScreenDetector {
             }
             
             if screenBattleStart {
-                separatorChampsEnd    := this.detectGraphic(Graphic.Separator_BattleStart_ChampsEnd, tinyArea, Error.0, Error.2)
+                separatorChampsEnd      := this.detectGraphic(Graphic.Separator_BattleStart_ChampsEnd, tinyArea, Error.0, Error.2)
             } else {
-                separatorChampsEnd    := this.detectGraphic(Graphic.Separator_BattleResult_ChampsEnd, champsArea, Error.0, Error.2)
+                separatorChampsEnd      := this.detectGraphic(Graphic.Separator_BattleResult_ChampsEnd, champsArea, Error.0, Error.2)
             }
             if (separatorChampsEnd)
                 champsArea.y2 := separatorChampsEnd[1].y
 
             ; Leader area
-            leaderAreaStart := new Area(-1551, 707, -1445, 839)
-            leaderAreaResultX4 := new Area(-1614, 780, -1496, 972)
-            ; leaderAreaResultX5 := new Area()
+            leaderAreaStart         := new Area(-1551, 707, -1445, 839)
+            leaderAreaResultX4      := new Area(-1614, 780, -1496, 972)
+            ; leaderAreaResultX5    := new Area()
             
             ; Last champ column area. We can contain one or two champs, we use that to detect campaign/arena
             lastChampAreaBattleStart := new Area(-1757, 641, -1659, 899)
@@ -74,7 +75,7 @@ Class ScreenDetector {
             ; Champions rarity
             championsCornerGold   := this.detectGraphic(Graphic.ChampionCornerTopGold, champsArea, Error.2, Error.1)
             championsCornerPink   := this.detectGraphic(Graphic.ChampionCornerTopPink, champsArea)
-            championsCornerBlue   := this.detectGraphic(Graphic.ChampionCornerTopBlue, champsArea, Error.2, Error.1)
+            championsCornerBlue   := this.detectGraphic(Graphic.ChampionCornerTopBlue, champsArea, 0.19, Error.2)
             championsCornerGreen  := this.detectGraphic(Graphic.ChampionCornerTopGreen, champsArea, Error.1, Error.0)
             championsCornerGrey   := this.detectGraphic(Graphic.ChampionCornerTopGrey, champsArea, Error.0, Error.0)
             
@@ -111,10 +112,17 @@ Class ScreenDetector {
         else if screenBattleResult {
             desc .= "Battle Result"
         }
+        else if screenBattlePlay {
+            desc .= "Battle Play"
+        }
         else {
             desc .= " NOT detected"
         }
-        
+
+        return desc
+
+        ; Extra details about current screen
+        desc2 := ""
         if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
             desc .= "`n  " champsCountTotal " x champions:"
             if (championsCornerGold) 
@@ -130,7 +138,7 @@ Class ScreenDetector {
         }
 
         ; Show debug dialog
-        MsgBox, 4096, Area detection, % desc
+        MsgBox, 4096, Area detection, % desc desc2
             
             . "`n`n`nTime:`t`t`t`t" (t1) " ms"
             
@@ -164,7 +172,7 @@ Class ScreenDetector {
 
         this.printResults(championsCornerGold)
 
-        ;this.detect2()
+        return desc
     }
 
     fixGameScale(width, height) 
