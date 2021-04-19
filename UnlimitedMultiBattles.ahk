@@ -59,7 +59,7 @@
     RaidFileName := "PlariumPlay.exe"
     DefaultGameFolder := A_AppData . "\..\Local" . "\Plarium\PlariumPlay"
     SettingsSection := "SettingsSection"
-    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 1, customGameFolder: ""}
+    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 1, customGameFolder: "", durationTab: 1}
     InfiniteSymbol := Chr(0x221E)
     StarSymbol := Chr(0x2605)
     COLOR_GRAY := "c808080"
@@ -77,7 +77,7 @@
     StartButton := "Start`nMulti-Battle"
 
     TabOptions = Manual|Calculated|Infinite
-    ;StageOptions = Brutal 12-3|Brutal 12-6
+    DurationTabOptions = Auto|Manual
     BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
     DifficultyOptions := "Normal|Hard|Brutal"
     MapOptions := GenerateNumericOptions(12)
@@ -109,6 +109,11 @@
     UnableToFindGameMessage := "Unable to find PlariumPlay on the default installation folder.`n`nChoose the folder where your PlariumPlay.exe is:"
     NoFolderSelectedMessage := "You didn't select a folder. You can also start the game manually."
     NoGameInFolderMessage := "Select a folder with a PlariumPlay.exe file inside or start the game manually."
+
+    ; TODO: pending to translate
+    InfoAuto := "Auto detect battle finish and replay.`nExperimental feature, next version could stop at max lvl, auto sell or food swap :)"
+    ButtonAuto := "Start`nAuto"
+    UnableToAuto := "The game is closed, press 'Yes' to start 'Raid: Shadows Legend' now."
     
 
     ;; Init LOGIC
@@ -128,6 +133,7 @@
     Gui, Main:Default
     Gui, Main:Menu, MainMenuBar
 
+    ; Section 1: Prepare your team
     Gui, Main:Font, s10 bold
     Gui, Main:Add, GroupBox, w350 h65 Section, %TeamHeader%
     Gui, Main:Font, s10 norm
@@ -135,22 +141,8 @@
     Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
     Gui, Main:Font, s2
     Gui, Main:Add, Text, xs,
- 
- 
-    HeaderAuto := "3. Auto detect battle duration"
-    InfoAuto := "We can detect the game ends for you. Fetaure under development."
-    ButtonAuto := "Start`nAuto"
-    UnableToAuto := "The game is closed, press 'Yes' to start 'Raid: Shadows Legend' now."
 
-
-    Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox, w350 h65 Section, %HeaderAuto%
-    Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, xp+10 yp+20 w270 vAutoText, %InfoAuto%
-    Gui, Main:Add, Button, w50 xp+280 yp-5 Center gStartAuto vAutoButton, %ButtonAuto%
-    Gui, Main:Font, s2
-    Gui, Main:Add, Text, xs,
-
+    ; Section 2: Number of battles
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w350 xs Section, % "  " . BattlesHeader
     Gui, Main:Font, s10 norm
@@ -204,25 +196,34 @@
     Gui, Main:Add, Text, x10 Section,
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w350 xs Section, % "  " . TimeHeader
-    Gui, Main:Add, Progress, xs w350 h80 BackgroundDBDBDB Disabled
-    Gui, Main:Add, Progress, xp+1 yp+1 w349 h78 BackgroundWhite Disabled
-    Gui, Main:Add, Text, xp+5 yp+15 Section BackgroundTrans w60 Right,
+   
+    ; Section 3: Duration
+    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, %DurationTabOptions%
+    Gui, Main:Font, s10 norm
+    Gui, Main:Add, Text, w270 vAutoText, %InfoAuto%
+    Gui, Main:Add, Button, w50 xp+275 yp Center gStartAuto vAutoButton, %ButtonAuto%
+    Gui, Main:Font, s2
+    
+
+    Gui, Main:Tab, 2
+    Gui, Main:Add, Text, Section BackgroundTrans w60 Right,
     Gui, Main:Font, s20 normal
-    Gui, Main:Add, Edit, ys w50 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
+    Gui, Main:Add, Edit, ys w52 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
     Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown,
     Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, ys+7 BackgroundTrans, min.
     Gui, Main:Font, s20 normal
-    Gui, Main:Add, Edit, ys w50 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
+    Gui, Main:Add, Edit, ys w52 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
     Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown,
     Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, ys+7 BackgroundTrans, sec.
+    Gui, Main:Add, Text, ys+15 BackgroundTrans, sec.
     Gui, Main:Font, s10 %COLOR_GRAY% normal
-    Gui, Main:Add, Text, h20 w330 xs Section Center %SS_CENTERIMAGE% BackgroundTrans vCalculatedDuration,
-
-    Gui, Main:Font, s10 %COLOR_GRAY%
-    Gui, Main:Add, Text, w230 xs Section Right %SS_CENTERIMAGE% ,
+    Gui, Main:Add, Text, h20 w330 xs yp+30 Section Center vCalculatedDuration,
+    Gui, Main:Tab
+    
+    ; Section 4: Start button
     Gui, Main:Font, s10 bold
+    Gui, Main:Add, Text, w230 xs Section Right %SS_CENTERIMAGE% ,
     Gui, Main:Add, Button, ys+10 w100 %SS_CENTERIMAGE% Center Default gStart, %StartButton%
 
     ; Load Running GUI
@@ -417,6 +418,14 @@ OnTabChanged:
     Settings.tab := TabValue
     
     UpdateDuration()
+return
+
+OnDurationTabChanged:
+	GuiControlGet,TabValue,,DurationTabSelector
+    IniWrite, %TabValue%, %SettingsFilePath%, %SettingsSection%, durationTab
+    Settings.durationTab := TabValue
+    
+    ;UpdateDuration()
 return
 
 OnBattleChangedByEdit:
@@ -837,6 +846,7 @@ InitSettings(){
     selectedLevel := Settings.level
     selectedOnFinish := Settings.onFinish
     selectedRaidFilePath := Settings.customGameFolder
+    selectedDurationTab := Settings.durationTab
     
     OnFinishCheckboxValue := 0
 }
