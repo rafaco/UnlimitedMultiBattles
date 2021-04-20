@@ -22,14 +22,17 @@ Class ScreenDetector {
     static FIXED_WIDTH := 1149
     static FIXED_HEIGHT := 712
 
-    detect()
+    detect(isDebug := false)
 	{
         global
         ; Init
         t1:=A_TickCount
         this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
         gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
-        this.saveScreenArea(gameArea, "screenshot_game.jpg")
+
+        if(isDebug){
+            this.saveScreenArea(gameArea, "screenshot_game.jpg")
+        }        
         
         ; Screen detection
         screenWithDialog        := this.detectGraphic(Graphic.Screen_With_Dialog, gameArea, Error.2, Error.2)
@@ -93,7 +96,9 @@ Class ScreenDetector {
             championStarsFull     := this.detectGraphic(Graphic.ChampionStarHalf, champsArea)
             championStarsHalf     := this.detectGraphic(Graphic.ChampionStarInside, champsArea)
 
-            this.saveScreenArea(champsArea, "screenshot_champs.jpg") 
+            if(isDebug){
+                this.saveScreenArea(champsArea, "screenshot_champs.jpg") 
+            }
         }
 
         t1:=A_TickCount-t1
@@ -119,58 +124,66 @@ Class ScreenDetector {
             desc .= " NOT detected"
         }
 
-        return desc
+        if (isDebug){
+            ; Extra details about current screen
+            desc2 := ""
+            if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
+                desc .= "`n  " champsCountTotal " x champions:"
+                if (championsCornerGold) 
+                    desc .= "`n`t" championsCornerGold.MaxIndex() " x Legendary"
+                if (championsCornerPink) 
+                    desc .= "`n`t" championsCornerPink.MaxIndex() " x Epic" 
+                if (championsCornerBlue) 
+                    desc .= "`n`t" championsCornerBlue.MaxIndex() " x Rare" 
+                if (championsCornerGreen) 
+                    desc .= "`n`t" championsCornerGreen.MaxIndex() " x Uncommon" 
+                if (championsCornerGrey) 
+                    desc .= "`n`t" championsCornerGrey.MaxIndex() " x Common" 
+            }
 
-        ; Extra details about current screen
-        desc2 := ""
-        if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
-            desc .= "`n  " champsCountTotal " x champions:"
-            if (championsCornerGold) 
-                desc .= "`n`t" championsCornerGold.MaxIndex() " x Legendary"
-            if (championsCornerPink) 
-                desc .= "`n`t" championsCornerPink.MaxIndex() " x Epic" 
-            if (championsCornerBlue) 
-                desc .= "`n`t" championsCornerBlue.MaxIndex() " x Rare" 
-            if (championsCornerGreen) 
-                desc .= "`n`t" championsCornerGreen.MaxIndex() " x Uncommon" 
-            if (championsCornerGrey) 
-                desc .= "`n`t" championsCornerGrey.MaxIndex() " x Common" 
+            ; Show debug dialog
+            local dialogOptions := 4096+4
+            MsgBox, % dialogOptions, Detector test, % desc desc2
+                . "`n`n`nTime:`t`t`t`t" (t1) " ms"
+                
+                . "`n`nScreens:"
+                . "`n  WithDialog:`t`t`t" (screenWithDialog ? "Yes, " screenWithDialog.MaxIndex() "!" : "No")
+                . "`n  Home:`t`t`t`t" (screenHome ? "Yes, " screenHome.MaxIndex() "!" : "No")
+                . "`n  Battle Start:`t`t`t" (screenBattleStart ? "Yes, " screenBattleStart.MaxIndex() "!" : "No")
+                . "`n  Battle Result:`t`t`t" (screenBattleResult ? "Yes, " screenBattleResult.MaxIndex() "!" : "No")
+                
+                . "`n`nChampion area:"
+                . "`n  SeparatorChampsStart:`t`t" (separatorChampsStart ? "Yes, " separatorChampsStart.MaxIndex() "!" : "No")
+                . "`n  SeparatorChampsEnd:`t`t" (separatorChampsEnd ? "Yes, " separatorChampsEnd.MaxIndex() "!" : "No")
+                . "`n  Full Area:`t`t" gameArea.x1 "," gameArea.y1 " - " gameArea.x2 "," gameArea.y2
+                . "`n  Champ Area:`t`t" champsArea.x1 "," champsArea.y1 " - " champsArea.x2 "," champsArea.y2
+                
+                . "`n`nChampions:"
+                . "`n  Legendary champions:`t`t" (championsCornerGold ? "Yes, " championsCornerGold.MaxIndex() "!" : "No")
+                . "`n  Epic chapions:`t`t`t" (championsCornerPink ? "Yes, " championsCornerPink.MaxIndex() "!" : "No")
+                . "`n  Rare champions:`t`t`t" (championsCornerBlue ? "Yes, " championsCornerBlue.MaxIndex() "!" : "No")
+                . "`n  Uncommon champions:`t`t" (championsCornerGreen ? "Yes, " championsCornerGreen.MaxIndex() "!" : "No")
+                . "`n  Common champions:`t`t" (championsCornerGrey ? "Yes, " championsCornerGrey.MaxIndex() "!" : "No")
+                
+                . "`n`nOthers:"
+                . "`n  championStarsFull:`t`t" (championStarsFull ? "Yes, " championStarsFull.MaxIndex() "!" : "No")
+                . "`n  championStarsHalf:`t`t" (championStarsHalf ? "Yes, " championStarsHalf.MaxIndex() "!" : "No")
+                . "`n  championStarsInside:`t`t" (championStarsInside ? "Yes, " championStarsInside.MaxIndex() "!" : "No")
+                . "`n  champsCountMaxLvl:`t`t" (champsCountMaxLvl ? "Yes, " champsCountMaxLvl.MaxIndex() "!" : "No")
+                . "`n  rank66:`t`t`t`t" (rank66 ? "Yes, " rank66.MaxIndex() "!" : "No")
+                . "`n  rank5:`t`t`t`t" (rank5 ? "Yes, " rank5.MaxIndex() "!" : "No")
+                . "`n  rank3:`t`t`t`t" (rank3 ? "Yes, " rank3.MaxIndex() "!" : "No")
+
+                . "`n`n  Screenshots:"
+                . "`n`n Do you want to go to the screenshot folder?"
+
+            IfMsgbox, yes 
+            {
+                Run, explore %LocalFolder%
+            }
+
+            this.printResults(championsCornerGold)
         }
-
-        ; Show debug dialog
-        MsgBox, 4096, Area detection, % desc desc2
-            
-            . "`n`n`nTime:`t`t`t`t" (t1) " ms"
-            
-            . "`n`nScreens:"
-            . "`n  WithDialog:`t`t`t" (screenWithDialog ? "Yes, " screenWithDialog.MaxIndex() "!" : "No")
-            . "`n  Home:`t`t`t`t" (screenHome ? "Yes, " screenHome.MaxIndex() "!" : "No")
-            . "`n  Battle Start:`t`t`t" (screenBattleStart ? "Yes, " screenBattleStart.MaxIndex() "!" : "No")
-            . "`n  Battle Result:`t`t`t" (screenBattleResult ? "Yes, " screenBattleResult.MaxIndex() "!" : "No")
-            
-            . "`n`nChampion area:"
-            . "`n  SeparatorChampsStart:`t`t" (separatorChampsStart ? "Yes, " separatorChampsStart.MaxIndex() "!" : "No")
-            . "`n  SeparatorChampsEnd:`t`t" (separatorChampsEnd ? "Yes, " separatorChampsEnd.MaxIndex() "!" : "No")
-            . "`n  Full Area:`t`t" gameArea.x1 "," gameArea.y1 " - " gameArea.x2 "," gameArea.y2
-            . "`n  Champ Area:`t`t" champsArea.x1 "," champsArea.y1 " - " champsArea.x2 "," champsArea.y2
-            
-            . "`n`nChampions:"
-            . "`n  Legendary champions:`t`t" (championsCornerGold ? "Yes, " championsCornerGold.MaxIndex() "!" : "No")
-            . "`n  Epic chapions:`t`t`t" (championsCornerPink ? "Yes, " championsCornerPink.MaxIndex() "!" : "No")
-            . "`n  Rare champions:`t`t`t" (championsCornerBlue ? "Yes, " championsCornerBlue.MaxIndex() "!" : "No")
-            . "`n  Uncommon champions:`t`t" (championsCornerGreen ? "Yes, " championsCornerGreen.MaxIndex() "!" : "No")
-            . "`n  Common champions:`t`t" (championsCornerGrey ? "Yes, " championsCornerGrey.MaxIndex() "!" : "No")
-            
-            . "`n`nOthers:"
-            . "`n  championStarsFull:`t`t" (championStarsFull ? "Yes, " championStarsFull.MaxIndex() "!" : "No")
-            . "`n  championStarsHalf:`t`t" (championStarsHalf ? "Yes, " championStarsHalf.MaxIndex() "!" : "No")
-            . "`n  championStarsInside:`t`t" (championStarsInside ? "Yes, " championStarsInside.MaxIndex() "!" : "No")
-            . "`n  champsCountMaxLvl:`t`t" (champsCountMaxLvl ? "Yes, " champsCountMaxLvl.MaxIndex() "!" : "No")
-            . "`n  rank66:`t`t`t`t" (rank66 ? "Yes, " rank66.MaxIndex() "!" : "No")
-            . "`n  rank5:`t`t`t`t" (rank5 ? "Yes, " rank5.MaxIndex() "!" : "No")
-            . "`n  rank3:`t`t`t`t" (rank3 ? "Yes, " rank3.MaxIndex() "!" : "No")            
-
-        this.printResults(championsCornerGold)
 
         return desc
     }

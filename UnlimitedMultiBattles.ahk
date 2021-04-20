@@ -111,8 +111,8 @@
     NoGameInFolderMessage := "Select a folder with a PlariumPlay.exe file inside or start the game manually."
 
     ; TODO: pending to translate
-    InfoAuto := "Auto detect battle finish and replay.`nExperimental feature, next version could stop at max lvl, auto sell or food swap :)"
-    ButtonAuto := "Start`nAuto"
+    InfoAuto := "Auto detect battle results and replay.`nMore detectors comming soon: stop at max lvl, auto sell or food swap :)"
+    ButtonAuto := "Test`nDetector"
     UnableToAuto := "The game is closed, press 'Yes' to start 'Raid: Shadows Legend' now."
     
 
@@ -152,7 +152,7 @@
     SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
     DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
     WinSet Redraw,, ahk_id %HTab%
-    Gui, Main:Add, Text, w330 h50 Section Center %SS_CENTERIMAGE%, Enter any number of battles
+    Gui, Main:Add, Text, w320 h50 Section Center %SS_CENTERIMAGE%, Enter any number of battles
     Gui, Main:Add, Text, w70 xs Section,
     Gui, Main:Font, s20 
     Gui, Main:Add, Edit, ys+10 w65 h35 Right gOnBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
@@ -200,8 +200,8 @@
     ; Section 3: Duration
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, %DurationTabOptions%
     Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, w270 vAutoText, %InfoAuto%
-    Gui, Main:Add, Button, w50 xp+275 yp Center gStartAuto vAutoButton, %ButtonAuto%
+    Gui, Main:Add, Text, w260 vAutoText, %InfoAuto%
+    Gui, Main:Add, Button, w50 xp+260 yp Center gTestAuto vAutoButton, %ButtonAuto%
     Gui, Main:Font, s2
     
 
@@ -532,6 +532,28 @@ return
 
 
 ;; Core logic labels
+
+TestAuto:
+    ; If game is already open, activate their window
+    if !WinExist(RaidWinTitle){
+        WinActivate, %RaidWinTitle%
+        Msgbox, 20, %ScriptTitle%, % UnableToAuto
+            IfMsgbox, no 
+            {
+                GoSub ShowMain
+                return
+            }
+            GoSub RunScriptAsAdmin
+        
+
+        return
+    }
+
+    ; Detect screens playground
+    screenDetector := new screenDetector()
+    screenDetector.detect(true)
+    
+    return
 
 StartAuto:
     ; If game is already open, activate their window
