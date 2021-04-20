@@ -614,12 +614,12 @@ StartAuto:
         ; Detect replay screen and wait till it appears
         loop{
             result := screenDetector.detect()
-            if (result == "Screen Unknown, a Dialog on top"){
+            if (result == "Hidden by a dialog"){
                 GuiControl, Main:, AutoText, "Cancelled by screen detector, a dialog come up."
                 isRunning := false
                 break
             }
-            else if (result == "Screen Battle Start" OR result == "Screen Battle Result") {
+            else if (result == "Battle Start" OR result == "Battle Result") {
                 GuiControl, Main:, AutoText, "Replay detected!"
                 break
             }
