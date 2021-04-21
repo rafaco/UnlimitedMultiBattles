@@ -536,7 +536,6 @@ return
 TestAuto:
     ; If game is already open, activate their window
     if !WinExist(RaidWinTitle){
-        WinActivate, %RaidWinTitle%
         Msgbox, 20, %ScriptTitle%, % UnableToAuto
             IfMsgbox, no 
             {
@@ -548,6 +547,8 @@ TestAuto:
 
         return
     }
+
+    WinActivate, %RaidWinTitle%
 
     ; Detect screens playground
     screenDetector := new screenDetector()
@@ -558,18 +559,17 @@ TestAuto:
 StartAuto:
     ; If game is already open, activate their window
     if !WinExist(RaidWinTitle){
-        WinActivate, %RaidWinTitle%
         Msgbox, 20, %ScriptTitle%, % UnableToAuto
-            IfMsgbox, no 
-            {
-                GoSub ShowMain
-                return
-            }
-            GoSub RunScriptAsAdmin
-        
-
+        IfMsgbox, no 
+        {
+            GoSub ShowMain
+            return
+        }
+        GoSub RunScriptAsAdmin
         return
     }
+
+    WinActivate, %RaidWinTitle%
 
     ; Detect screens playground
     screenDetector := new screenDetector()

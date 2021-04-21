@@ -22,7 +22,10 @@ Class ScreenDetector {
     static FIXED_WIDTH := 1149
     static FIXED_HEIGHT := 712
 
-    detect(isDebug := false)
+    ; Flag to play with other engines to search, check detectGraphicByPoints for options 
+    searchEngine := "FindText"      
+
+    detect(isTest := false)
 	{
         global
         ; Init
@@ -30,10 +33,10 @@ Class ScreenDetector {
         this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
         gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
 
-        if(isDebug){
+        if(isTest){
             this.saveScreenArea(gameArea, "screenshot_game.jpg")
         }        
-        
+
         ; Screen detection
         screenWithDialog        := this.detectGraphic(Graphic.Screen_With_Dialog, gameArea, Error.2, Error.2)
         screenHome              := this.detectGraphic(Graphic.Screen_Home, gameArea)
@@ -96,14 +99,14 @@ Class ScreenDetector {
             championStarsFull     := this.detectGraphic(Graphic.ChampionStarHalf, champsArea)
             championStarsHalf     := this.detectGraphic(Graphic.ChampionStarInside, champsArea)
 
-            if(isDebug){
+            if(isTest){
                 this.saveScreenArea(champsArea, "screenshot_champs.jpg") 
             }
         }
 
         t1:=A_TickCount-t1
 
-        ; Build overview
+        
         
         if screenWithDialog {
             screenName := "Hidden by a dialog"
@@ -118,13 +121,15 @@ Class ScreenDetector {
             screenName := "Battle Result"
         }
         else if screenBattlePlay {
-            screenName := "Battle Play"
+            screenName := "Playing Battle"
         }
         else {
             screenName := " NOT detected"
         }
 
-        if (isDebug){
+        if (isTest){
+
+            ; Build test dialog
             desc :=   "Screen:`t`t`t`t" (screenName)
                     . "`nTime:`t`t`t`t" (t1) " ms"
 
@@ -184,7 +189,8 @@ Class ScreenDetector {
                 Run, explore %LocalFolder%
             }
 
-            this.printResults(championsCornerGold)
+            ; Show detection positions over the game
+            ;this.printResults(championsCornerGold)
         }
 
         return screenName
@@ -212,47 +218,28 @@ Class ScreenDetector {
         return gameArea
     }
 
-    saveScreenArea(area, fileName) 
-    {
-        this.saveScreenPoints(area.x1, area.y1, area.x2, area.y2, fileName)
-    }
-
-    saveScreenPoints(x1, y1, x2, y2, fileName) 
-    {
-        global
-        local localPath := LocalFolder . "\" . fileName
-        local rect := x1 . ", " . y1  . ", " . x2 . ", " . y2
-        CaptureScreen(rect, False, localPath, "")
-        ;MsgBox, 4096, Screenshot saved, % "File: " fileName "`nPath: " localFolderPath "`nArea: " recta 
-    }
-
     detectGraphic(graphic, area, e1:=0.1, e2:=0.1) 
     {
         return this.detectGraphicByPoints(graphic, area.x1, area.y1, area.x2, area.y2, e1, e2)
     }
 
     detectGraphicByPoints(graphic, x1, y1, x2, y2, e1:=0.1, e2:=0.1)
-	{
-        global
-        ; t1:=A_TickCount
-        if (ok1:=FindText(x1, y1, x2, y2, e1, e2, graphic))
-        {
-            CoordMode, Mouse
-            ;X:=ok.1.x, Y:=ok.1.y, Comment:=ok.1.id
-            ; Click, %X%, %Y%
+	{        
+        if (this.searchEngine == "FindText"){
+            ; Detection with FindText
+            result:=FindText(x1, y1, x2, y2, e1, e2, graphic)
         }
-        ; t1:=A_TickCount-t1
-
-        ; RegExMatch(graphic, "(?<=<)(.*)(?=>)", name)
-        ; MsgBox, 4096, Area detection, % "Found:`t`t`t" Round(ok1.MaxIndex())
-        ;     . "`n" name ":`t`t" (ok1 ? ok1.MaxIndex() : "Failed !")
-        ;     . "`n`nTime:`t`t`t" (t1) " ms"
-        ;     . "`nArea:`t`t" x1 "," y1 " " x2 "," y2
-
-        ; for i,v in ok
-        ; if (i<=5)
-        ;     FindText.MouseTip(ok[i].x, ok[i].y)
-        return ok1
+        else if (this.searchEngine == "GraphicSearch"){
+            ; Detection with GraphicSearch
+            if (!this.oGraphicSearch)
+                this.oGraphicSearch := new graphicsearch()
+            result := this.oGraphicSearch.search(graphic, x1, y1, x2, y2, e1, e2)
+        }
+        else{
+            MsgBox, % dialogOptions, "Develop warning", "Not a valid searchEngine", 
+        }
+        
+        return result
     }
 
     safeSum(params*) 
@@ -270,59 +257,31 @@ Class ScreenDetector {
             FindText.MouseTip(result[i].x, result[i].y)
     }
 
-
-    ; TODO: code to remove
-    ;
-    ; From https://www.autohotkey.com/boards/viewtopic.php?t=67417
-    FindTextAW(text,err1:=0,err0:=0)
-    ; FindText only within the active window.  Much faster if you have a large
-    ; desktop or are searching for multiple images.
-    ; Input parameters x,y,w,h are not needed in this version and err1 and err0
-    ; are optional parameters in case they are needed.
-    ; This outputs the same array of x,y,w,h,Comment that the main function returns.
-    ; Ben Sacherich - 7/17/2019
+    getCommentFromGraphic(graphic) 
     {
-        t1:=A_TickCount
-
-        WinGetPos, X, Y, W, H, A  ; "A" to get the active window's position.
-        
-        ;SoundBeep 423, 100	; Uncomment for debugging.
-        
-        ; Get the coordinates for the center of the window and pass that to the regular FindText function.
-        ; This is needed for FindText versions prior to 6.0
-        ;W:=W//2
-        ;X+=W
-        ;H:=H//2
-        ;Y+=H
-        ;MsgBox, Searching at %X%`, %Y%, %W%`, %H%
-
-        ;if (ok:=FindText(X, Y, W, H, 0, 0, Text,1,0)) ; Take new Screenshot, Find First
-        if (ok:=FindText(X, Y, W, H, 0, 0, Text,1,1)) ; Take new Screenshot, Find All
-        {
-        CoordMode, Mouse
-        X:=ok.1.1, Y:=ok.1.2, W:=ok.1.3, H:=ok.1.4, Comment:=ok.1.5, X+=W//2, Y+=H//2
-        }
-        t1:=A_TickCount-t1
-
-        ; Show a MouseTip on the first two matches. Uncomment for debugging.
-        ;for i,v in ok
-        ;  if i<=2
-        ;    {
-        ;    MouseTip(v.1+v.3//2, v.2+v.4//2)
-        ;    Comment.=v.5 ", "
-        ;    }
-
-        ;if ok	; Uncomment for debugging.
-        ;    MsgBox, 4096, % "FindTextAW", % "Time:`t" (t1) " ms`n`n"
-        ;        . "Pos:`t" X ", " Y "`n`n"
-        ;        . "Found:`t" ok.MaxIndex() "`n`n"
-        ;        . "Result:`t" (ok ? "Success!`n`n" Comment : "Failed!"),5
-        return, ok.MaxIndex() ? ok:0
+        RegExMatch(graphic, "(?<=<)(.*)(?=>)", comment)
+        return comment
     }
 
+    saveScreenArea(area, fileName) 
+    {
+        this.saveScreenPoints(area.x1, area.y1, area.x2, area.y2, fileName)
+    }
+
+    saveScreenPoints(x1, y1, x2, y2, fileName) 
+    {
+        global
+        local localPath := LocalFolder . "\" . fileName
+        local rect := x1 . ", " . y1  . ", " . x2 . ", " . y2
+        CaptureScreen(rect, False, localPath, "")
+        ;MsgBox, 4096, Screenshot saved, % "File: " fileName "`nPath: " localFolderPath "`nArea: " recta 
+    }
+
+    ; TODO: Remove, old GraphicSearch playground
     detect2()
 	{
         global
+        ;MsgBox, 4096, ASCII detector, %RaidWinTitle%
         t1:=A_TickCount
 
         ; Reset screen size
@@ -333,8 +292,7 @@ Class ScreenDetector {
             WinGetPos, X, Y, W, H, % RaidWinTitle
         }
 
-        MsgBox, 4096, ASCII detector, %RaidWinTitle%
-        
+        WinActivate, %RaidWinTitle%
 
         GraphicSearch_query1 := "|<BattleTextGray131>*131$81.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzU7z7k0807Dy0Dw0Tkz01U0tzk1zbly7zXzlzDyTzwyDUTwTyDtznzzblwnzXzlzDyTzwwTaTwTyDtznzzU3slzXzlzDy0Tw0TDDwTyDtzk3zbltszXzlzDyTzwyC07wTyDtznzzbtk0zXzlzDyTzwyATXwTyDtznzzXVXwTXzlz7yDzw0QznwTyDs0k1zUDbyTbznz060DzzzzzzzzzzzzzzzzzzzzzzzzzzzU"
         GraphicSearch_query2 := "|<BattleTextColor100>0xDFDADA@0.81$76.Dw0M3ztzwM0zszs3kDzbzlU3zX1UD03U1k60A0A70w0C070M0k0kQ6M0s0Q1U3031UNU3U1k60A0Dw3b0C070M0zkzkAA0s0Q1U3z31kkk3U1k60A0A37zUC070M0k0kATy0s0Q1U3031lUM3U1k60A0A6A0kC070M0k0zsk30s0Q1znzU0000000000000000000000002"
@@ -342,6 +300,7 @@ Class ScreenDetector {
         GraphicSearch_query4 := "|<BattleIconColor100>0xFFFDDF@1.00$33.00zs0001z0000Dy0001zk0001y0000Dk0DC0Tt1zk3zs1z0Tw0Dy1zU1zkDw07s0zU1z03w0AM0EM1X063000000A0k00NU6003k0000600000U"
         GraphicSearch_query5 := "|<BattleIconColor80>0xFFFDDF@0.81$42.00Dzk00007zs00003zs00001zy000EEzz300ssTz7U1xwDzzU0zy7zz00Tz3zy00DzVzw007zUzs007z0Ts00Dy0Tw00Ty0Ty00yT0yT01wDVwDU3w7Vs7k7s30k3s7k0001w7U0000s300000E0000000U"
         GraphicSearch_query6 := "|<TitleDsGray175>*157$13.zzzTzjzrz33BjinrSNji6Dzz"
+        GraphicSearch_query7 := "|<ResultArrowTopRightSide>0x9C9052@0.68$15.00400k0700s03U0S01s07U0Q03k4D0kw73UwS3lsD71sQTXzSDlsw7U0Ts1z004"
         ASCII_Screen_Home:="|<>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"
 
         ;n:=150000
@@ -353,47 +312,54 @@ Class ScreenDetector {
         myH := Y + 712
         E1 := 0.2
         E2 := 0.2
-        
+
         oGraphicSearch := new graphicsearch()
         collection := GraphicSearch_query1 GraphicSearch_query2 GraphicSearch_query3
-        resultObj1 := oGraphicSearch.search(myX, myY, myW, myH, E1, E2, collection)
+        resultObj1 := oGraphicSearch.search(collection, myX, myY, myW, myH, E1, E2)
         if (resultObj1) {
             MsgBox, 4096, Tip, % "Found BattleTextGray131"
             ;X := resultObj1.1.x, Y := resultObj1.1.y, Comment := resultObj1.1.id
             ; Click, %X%, %Y%
         }
 
-        resultObj2 := oGraphicSearch.search(myX, myY, myW, myH, E1, E2, GraphicSearch_query2)
+        resultObj2 := oGraphicSearch.search(GraphicSearch_query2, myX, myY, myW, myH, E1, E2)
         if (resultObj2) {
             MsgBox, 4096, Tip, % "Found BattleTextColor100"
             ;X := resultObj2.1.x, Y := resultObj2.1.y, Comment := resultObj2.1.id
             ; Click, %X%, %Y%
         }
 
-        resultObj3 := oGraphicSearch.search(myX, myY, myW, myH, E1, E2, GraphicSearch_query3)
+        resultObj3 := oGraphicSearch.search(GraphicSearch_query3, myX, myY, myW, myH, E1, E2)
         if (resultObj3) {
             MsgBox, 4096, Tip, % "Found BattleTextGray130b"
             ;X := resultObj2.1.x, Y := resultObj2.1.y, Comment := resultObj2.1.id
             ; Click, %X%, %Y%
         }
 
-        resultObj4 := oGraphicSearch.search(myX, myY, myW, myH, E1, E2, GraphicSearch_query4)
+        resultObj4 := oGraphicSearch.search(GraphicSearch_query4, myX, myY, myW, myH, E1, E2)
         if (resultObj4) {
             MsgBox, 4096, Tip, % "Found BattleIconColor100"
             ;X := resultObj2.1.x, Y := resultObj2.1.y, Comment := resultObj2.1.id
             ; Click, %X%, %Y%
         }
 
-        resultObj5 := oGraphicSearch.search(myX, myY, myW, myH, E1, E2, GraphicSearch_query5)
+        resultObj5 := oGraphicSearch.search(GraphicSearch_query5, myX, myY, myW, myH, E1, E2)
         if (resultObj5) {
             MsgBox, 4096, Tip, % "Found BattleIconColor80"
             ;X := resultObj2.1.x, Y := resultObj2.1.y, Comment := resultObj2.1.id
             ; Click, %X%, %Y%
         }
         
-        resultObj6 := oGraphicSearch.search(myX, myY, myW, myH, E1, E2, GraphicSearch_query6)
+        resultObj6 := oGraphicSearch.search(GraphicSearch_query6, myX, myY, myW, myH, E1, E2)
         if (resultObj6) {
             MsgBox, 4096, Tip, % "Found TitleDsGray175"
+            ;X := resultObj2.1.x, Y := resultObj2.1.y, Comment := resultObj2.1.id
+            ; Click, %X%, %Y%
+        }
+
+        resultObj7 := oGraphicSearch.search(GraphicSearch_query7, myX, myY, myW, myH, E1, E2)
+        if (resultObj6) {
+            MsgBox, 4096, Tip, % "Found ResultArrowTopRightSide"
             ;X := resultObj2.1.x, Y := resultObj2.1.y, Comment := resultObj2.1.id
             ; Click, %X%, %Y%
         }
@@ -407,6 +373,7 @@ Class ScreenDetector {
             . "`n`BattleIconColor100:`t" (resultObj4 ? resultObj4.MaxIndex() " !" : "Failed")
             . "`n`BattleIconColor80:`t`t" (resultObj5 ? resultObj5.MaxIndex() " !" : "Failed")
             . "`n`TitleDsGray175:`t`t" (resultObj6 ? resultObj6.MaxIndex() " !" : "Failed")
+            . "`n`ResultArrowTopRightSide:`t" (resultObj7 ? resultObj7.MaxIndex() " !" : "Failed")
             . "`n`nPosition rect:`t`t" myX "," myY " " myW "," myH
             . "`nPosition vector:`t`t" X "," Y " " W ","H
 
@@ -416,8 +383,6 @@ Class ScreenDetector {
         for i,v in resultObj2
             if (i<=5)
                 oGraphicSearch.mouseTip(resultObj2[i].x, resultObj2[i].y)
-        
-
         for i,v in resultObj3
             if (i<=5)
                 oGraphicSearch.mouseTip(resultObj3[i].x, resultObj3[i].y)
