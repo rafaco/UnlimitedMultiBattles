@@ -44,6 +44,25 @@ Class ScreenDetector {
         screenBattlePlay        := this.detectGraphic(Graphic.Screen_BattlePlay, gameArea)
         screenBattleResult      := this.detectGraphic(Graphic.Screen_BattleResult, gameArea, Error.3, Error.3)
         
+        if screenWithDialog {
+            screenName := "Hidden by a dialog"
+        }
+        else if screenHome {
+            screenName := "Home"
+        }
+        else if screenBattleStart {
+            screenName := "Battle Start"
+        }
+        else if screenBattleResult {
+            screenName := "Battle Result"
+        }
+        else if screenBattlePlay {
+            screenName := "Playing Battle"
+        }
+        else {
+            screenName := "NOT detected"
+        }
+
         ; Battle screens
         if (!screenWithDialog && (screenBattleStart OR screenBattleResult)) {
             
@@ -80,8 +99,12 @@ Class ScreenDetector {
             
             ; Champions rarity
             championsCornerGold   := this.detectGraphic(Graphic.ChampionCornerTopGold, champsArea, Error.2, Error.1)
-            championsCornerPink   := this.detectGraphic(Graphic.ChampionCornerTopPink, champsArea)
-            championsCornerBlue   := this.detectGraphic(Graphic.ChampionCornerTopBlue, champsArea, 0.19, Error.2)
+            if (screenName == "Battle Start"){
+                championsCornerPink   := this.detectGraphic(Graphic.ChampionCornerTopPink_start, champsArea)
+            }else{
+                championsCornerPink   := this.detectGraphic(Graphic.ChampionCornerTopPink_result, champsArea)
+            }
+            championsCornerBlue   := this.detectGraphic(Graphic.ChampionCornerTopBlue, champsArea, Error.1, Error.2)
             championsCornerGreen  := this.detectGraphic(Graphic.ChampionCornerTopGreen, champsArea, Error.1, Error.0)
             championsCornerGrey   := this.detectGraphic(Graphic.ChampionCornerTopGrey, champsArea, Error.0, Error.0)
             
@@ -105,27 +128,6 @@ Class ScreenDetector {
         }
 
         t1:=A_TickCount-t1
-
-        
-        
-        if screenWithDialog {
-            screenName := "Hidden by a dialog"
-        }
-        else if screenHome {
-            screenName := "Home"
-        }
-        else if screenBattleStart {
-            screenName := "Battle Start"
-        }
-        else if screenBattleResult {
-            screenName := "Battle Result"
-        }
-        else if screenBattlePlay {
-            screenName := "Playing Battle"
-        }
-        else {
-            screenName := " NOT detected"
-        }
 
         if (isTest){
 
@@ -190,7 +192,7 @@ Class ScreenDetector {
             }
 
             ; Show detection positions over the game
-            ;this.printResults(championsCornerGold)
+            this.printResults(championsCornerBlue)
         }
 
         return screenName

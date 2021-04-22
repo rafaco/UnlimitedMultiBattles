@@ -10,8 +10,10 @@ Class Graphic {
     static Separator_BattleResult_ChampsStart:="|<ResultSeparatorThick_Color63>0xE5CC5F@0.63$6.000zz000U"
     static Separator_BattleResult_ChampsEnd:="|<ResultSeparatorBottom_Color63>0x18CE52@0.63$15.000000s0700s070DzVzwDzU700s0700s000004"
     static ChampionCornerTopGold:="|<ChampionCornerTopGold_Color63>0xF5DE07@0.63$10.000007wTlU6wPlg6m"
-    static ChampionCornerTopPink:="|<ChampionCornerTopPink_Color63>0xFE78FF@0.63$7.0Dru1SgKE"
-    static ChampionCornerTopBlue:="|<ChampionCornerTopBlue_Color>0x5EB1F1@0.69$9.000DtUBtjB1cB4"
+    static ChampionCornerTopPink_start:="|<ChampionCornerTopPink_LongHori_Color80>0xF745DE@0.80$32.00000000000zzzzz800002Tzzzwbzzzz900002E0000Y0000900002E0000Y0000900002E0002"
+    static ChampionCornerTopPink_result:="|<ChampionCornerTopPink_Color63>0xFE78FF@0.63$7.0Dru1SgKE"
+    ;static ChampionCornerTopBlue:="|<ChampionCornerTopBlue_Color>0x5EB1F1@0.69$9.000DtUBtjB1cB4"
+    static ChampionCornerTopBlue:="|<ChampionCornerTopBlue_LongHori_Color80>0x5BA8E2@0.69$33.00000000000DzzzztU0000BzzzztjzzzzB00001c0000B00001c0000B00001c0000B00004"
     static ChampionCornerTopGreen:="|<ChampionCornerTopGreen2_Color69>0x00D14F@0.69$8.00007lwT71m"
     static ChampionCornerTopGrey:="|<ChampionCornerTopGrey_Color80>0xAEAEAE@0.81$7.003twkMAE"
 
