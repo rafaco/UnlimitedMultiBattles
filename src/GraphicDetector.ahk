@@ -1,9 +1,7 @@
-; #Include ../lib/FindText.ahk
-; #Include ../lib/GraphicSearch_export.ahk
+#Include lib/FindText.ahk
+#Include lib/GraphicSearch_export.ahk
 #Include src/Graphic.ahk
-#Include src/ImageUrl.ahk
-#Include lib/Gdip_ImageSearch.ahk
-#Include lib/Gdip_All.ahk
+#Include lib/CaptureScreen.ahk
 
 class Area {
     __New(x1:=0, y1:=0, x2:=0, y2:=0){
@@ -12,145 +10,59 @@ class Area {
         this.x2:=x2
         this.y2:=y2
     }
+
+    sliceBottom(percentage:=0) {
+        if (percentage <= 0){
+            return this
+        }
+        result := new Area(this.x1, this.y1, this.x2, this.y2)
+        result.y2 := result.y2 - ((result.y2 - result.y1)*(100 - percentage)/100)
+        return result
+    }
+
+    sliceTop(percentage:=0) {
+        if (percentage <= 0){
+            return this
+        }
+        result := new Area(this.x1, this.y1, this.x2, this.y2)
+        result.y1 := result.y1 + ((result.y2 - result.y1)*(100 - percentage)/100)
+        return result
+    }
+
+    sliceLeft(percentage:=0) {
+        if (percentage <= 0){
+            return this
+        }
+        result := new Area(this.x1, this.y1, this.x2, this.y2)
+        result.x1 := result.x1 + ((result.x2 - result.x1)*(100 - percentage)/100)
+        return result
+    }
+
+    sliceRight(percentage:=0) {
+        if (percentage <= 0){
+            return this
+        }
+        result := new Area(this.x1, this.y1, this.x2, this.y2)
+        result.x2 := result.x2 - ((result.x2 - result.x1)*(100 - percentage)/100)
+        return result
+    }
 }
 
-Class Error {
-    static 0 := 0
-    static 1 := 0.1
-    static 2 := 0.2
-    static 3 := 0.3
-}
-
-Class ScreenDetector {
+Class GraphicDetector {
     static FIXED_WIDTH := 1149
     static FIXED_HEIGHT := 712
 
     ; Flag to play with other engines to search, check detectGraphicByPoints for options 
-    searchEngine := "FindText"      
+    searchEngine := "FindText"
 
-    detectScreenByImage(isTest := false)
+    detectScreen(isTest := false)
 	{
         global
         ; Init
         t1:=A_TickCount
         this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
-        gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
-
-        this.gdipToken := Gdip_Startup()
-        this.gdipTarget := WinExist("Raid: Shadow Legends")
-
-        ; Screen detection
-        ;screenWithDialog        := this.detectGraphic(Graphic.Screen_With_Dialog, gameArea, Error.2, Error.2)
-        screenHome              := this.detectImage(ImageUrl.Screen_Home, gameArea)
-        screenBattleStart       := this.detectImage(ImageUrl.Screen_BattleStart, gameArea)
-        screenBattlePlay        := this.detectImage(ImageUrl.Screen_BattlePlay, gameArea)
-        screenBattleLoading     := this.detectImage(ImageUrl.Screen_BattleLoading, gameArea)
-        screenBattleResult      := this.detectImage(ImageUrl.Screen_BattleResult, gameArea, Error.3, Error.3)
-        screenBattleResultVictory := this.detectImage(ImageUrl.Screen_BattleResultVictory, gameArea, Error.3, Error.3)
-        screenBattleResultDefeat  := this.detectImage(ImageUrl.Screen_BattleResultDefeat, gameArea, Error.3, Error.3)
         
-        if screenWithDialog {
-            screenName := "Hidden by a dialog"
-        }
-        else if screenHome {
-            screenName := "Home"
-        }
-        else if screenBattleStart {
-            screenName := "Battle Start"
-        }
-        else if screenBattleloading {
-            screenName := "Loading Battle"
-        }
-        else if screenBattlePlay {
-            screenName := "Playing Battle"
-        }
-        else if screenBattleResult {
-            screenName := "Battle Result"
-        }
-        else {
-            screenName := "NOT detected"
-        }
-        
-        t1:=A_TickCount-t1
-
-        if (isTest){
-
-            ; Build test dialog
-            desc :=   "Screen:`t`t`t`t" (screenName)
-                    . "`nTime:`t`t`t`t" (t1) " ms"
-
-            if (screenBattleResult) {
-                if (screenBattleResultVictory) {
-                    desc .= "`n`tVICTORY"
-                }
-                else if (screenBattleResultVictory) {
-                    desc .= "`n`tDEFEAT"
-                }
-            }
-            desc .=   "`n`nScreens:"
-                    ;. "`n  WithDialog:`t`t`t" (screenWithDialog ? screenWithDialog : "No")
-                    . "`n  Home:`t`t`t`t" (screenHome ? screenHome : "No")
-                    . "`n  Battle Start:`t`t`t" (screenBattleStart ? screenBattleStart : "No")
-                    . "`n  Battle Play:`t`t`t" (screenBattlePlay ? screenBattlePlay : "No")
-                    . "`n  Battle Result:`t`t`t" (screenBattleResult ? screenBattleResult : "No")
-                    . "`n  Battle Result Victory:`t`t" (screenBattleResultVictory ? screenBattleResultVictory : "No")
-                    . "`n  Battle Result Defeat:`t`t" (screenBattleResultDefeat ? screenBattleResultDefeat : "No")
-
-            desc .= "`n`n Do you want to go to the screenshot folder?" 
-
-            ; Show debug dialog
-            local dialogOptions := 4096+4
-            MsgBox, % dialogOptions, Detector test, % desc
-            IfMsgbox, yes 
-            {
-                Run, explore %LocalFolder%
-            }
-
-            ; Show detection positions over the game
-            this.printResults(championsCornerBlue)
-        }
-
-        Gdip_Shutdown(gdipToken)
-        return screenName
-    }
-
-    detectImage(image, area, e1:=0.1, e2:=0.1) 
-    {
-        return this.detectImageByPoints(image, area.x1, area.y1, area.x2, area.y2, e1, e2)
-    }
-
-    detectImageByPoints(image, x1, y1, x2, y2, e1:=0.1, e2:=0.1)
-	{    
-        bmpHaystack := Gdip_BitmapFromHWND(this.gdipTarget) ;"Fotos: screenshot_game.jpg"
-        bmpNeedle := Gdip_CreateBitmapFromFile(image)
-        resultList := ""
-        resultCount := Gdip_ImageSearch(bmpHaystack,bmpNeedle,resultList,0,0,0,0,50,0,1,10)
-
-        if (resultCount < 0) {
-            if (resultCount == -1001){
-                errorMessage := "invalid haystack and/or needle bitmap pointer"
-            }else if (resultCount == -1002){
-                errorMessage := "invalid variation value"
-            }else if (resultCount == -1003){
-                errorMessage := "X1 and Y1 cannot be negative"
-            }else if (resultCount == -1004){
-                errorMessage := "unable to lock haystack bitmap bits"
-            }else if (resultCount == -1005){
-                errorMessage := "unable to lock needle bitmap bits"
-            }
-            MsgBox, "Gdip_ImageSearch error: " . errorMessage
-        }
-        
-        return resultCount
-    }
-
-    detect(isTest := false)
-	{
-        global
-        ; Init
-        t1:=A_TickCount
-        this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
-        gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        ;gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
 
         if(isTest){
             this.saveScreenArea(gameArea, "screenshot_game.jpg")

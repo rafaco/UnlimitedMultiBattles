@@ -23,6 +23,9 @@
     #MaxThreadsPerHotkey 1          ; Only one thread
     SetTitleMatchMode 3             ; Exact title match
 
+    SetBatchLines, -1               ; Improve performance
+    DllCall("dwmapi\DwmEnableComposition", "uint", 0)
+
     ; SetDefaults()
     ; {
     ;     global
@@ -32,10 +35,8 @@
     
 
     #Include lib/CsvTableFunctions.ahk
-    #Include lib/FindText.ahk
-    #Include lib/CaptureScreen.ahk
-    #Include lib/GraphicSearch_export.ahk
-    #Include src/ScreenDetector.ahk
+    #Include src/GraphicDetector.ahk
+    #Include src/ImageDetector.ahk
     
     ;; Metadata
     ScriptVersion := "v1.0.6"
@@ -534,7 +535,9 @@ return
 ;; Core logic labels
 
 TestAuto:
-    ; If game is already open, activate their window
+    ; Detect screens playground
+
+    ; Check if the game is open
     if !WinExist(RaidWinTitle){
         Msgbox, 20, %ScriptTitle%, % UnableToAuto
             IfMsgbox, no 
@@ -547,10 +550,11 @@ TestAuto:
     }
 
     ;WinActivate, %RaidWinTitle%
+    ;screenDetector := new GraphicDetector()
 
-    ; Detect screens playground
-    screenDetector := new screenDetector()
-    screenDetector.detectScreenByImage(true)
+    ; GDIP ImageDetector dont requiere WinActivate!
+    screenDetector := new ImageDetector()
+    screenDetector.detectScreen(true)
     
     return
 
@@ -570,7 +574,7 @@ StartAuto:
     WinActivate, %RaidWinTitle%
 
     ; Detect screens playground
-    screenDetector := new screenDetector()
+    screenDetector := new GraphicDetector()
     ;screenDetector.detect()
     ;GuiControl, Main:, AutoText, "Detection started"
 
@@ -611,7 +615,7 @@ StartAuto:
         
         ; Detect replay screen and wait till it appears
         loop{
-            result := screenDetector.detect()
+            result := screenDetector.detectScreen()
             if (result == "Hidden by a dialog"){
                 GuiControl, Main:, AutoText, "Cancelled by screen detector, a dialog come up."
                 isRunning := false
