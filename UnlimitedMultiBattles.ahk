@@ -543,16 +543,14 @@ TestAuto:
                 return
             }
             GoSub RunScriptAsAdmin
-        
-
         return
     }
 
-    WinActivate, %RaidWinTitle%
+    ;WinActivate, %RaidWinTitle%
 
     ; Detect screens playground
     screenDetector := new screenDetector()
-    screenDetector.detect(true)
+    screenDetector.detectScreenByImage(true)
     
     return
 

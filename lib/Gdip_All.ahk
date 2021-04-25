@@ -1,3 +1,6 @@
+; Modified version for UnlimitedMultiBattle by rafaco
+;  - Rename CreateDIBSection to Gdip_CreateDIBSection, in conflict with other libraries (FindText and CaptuerScreen)
+
 ; Gdip standard library v1.54 on 11/15/2017
 ; Gdip standard library v1.53 on 6/19/2017
 ; Gdip standard library v1.52 on 6/11/2017
@@ -360,7 +363,7 @@ Gdip_BitmapFromScreen(Screen:=0, Raster:="")
 	if (_x = "") || (_y = "") || (_w = "") || (_h = "")
 		return -1
 
-	chdc := CreateCompatibleDC(), hbm := CreateDIBSection(_w, _h, chdc), obm := SelectObject(chdc, hbm), hhdc := hhdc ? hhdc : GetDC()
+	chdc := CreateCompatibleDC(), hbm := Gdip_CreateDIBSection(_w, _h, chdc), obm := SelectObject(chdc, hbm), hhdc := hhdc ? hhdc : GetDC()
 	BitBlt(chdc, 0, 0, _w, _h, hhdc, _x, _y, Raster)
 	ReleaseDC(hhdc)
 
@@ -387,7 +390,7 @@ Gdip_BitmapFromHWND(hwnd)
 	DllCall( "GetWindowRect", Ptr, hwnd, Ptr, &winRect )
 	Width := NumGet(winRect, 8, "UInt") - NumGet(winRect, 0, "UInt")
 	Height := NumGet(winRect, 12, "UInt") - NumGet(winRect, 4, "UInt")
-	hbm := CreateDIBSection(Width, Height), hdc := CreateCompatibleDC(), obm := SelectObject(hdc, hbm)
+	hbm := Gdip_CreateDIBSection(Width, Height), hdc := CreateCompatibleDC(), obm := SelectObject(hdc, hbm)
 	PrintWindow(hwnd, hdc)
 	pBitmap := Gdip_CreateBitmapFromHBITMAP(hbm)
 	SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc)
@@ -465,8 +468,8 @@ CreatePointF(ByRef PointF, x, y)
 }
 ;#####################################################################################
 
-; Function				CreateDIBSection
-; Description			The CreateDIBSection function creates a DIB (Device Independent Bitmap) that applications can write to directly
+; Function				Gdip_CreateDIBSection
+; Description			The Gdip_CreateDIBSection function creates a DIB (Device Independent Bitmap) that applications can write to directly
 ;
 ; w						width of the bitmap to create
 ; h						height of the bitmap to create
@@ -478,7 +481,7 @@ CreatePointF(ByRef PointF, x, y)
 ;
 ; notes					ppvBits will receive the location of the pixels in the DIB
 
-CreateDIBSection(w, h, hdc:="", bpp:=32, ByRef ppvBits:=0)
+Gdip_CreateDIBSection(w, h, hdc:="", bpp:=32, ByRef ppvBits:=0)
 {
 	Ptr := A_PtrSize ? "UPtr" : "UInt"
 
@@ -622,7 +625,7 @@ CreateCompatibleDC(hdc:=0)
 ; return				If the selected object is not a region and the function succeeds, the return value is a handle to the object being replaced
 ;
 ; notes					The specified object must have been created by using one of the following functions
-;						Bitmap - CreateBitmap, CreateBitmapIndirect, CreateCompatibleBitmap, CreateDIBitmap, CreateDIBSection (A single bitmap cannot be selected into more than one DC at the same time)
+;						Bitmap - CreateBitmap, CreateBitmapIndirect, CreateCompatibleBitmap, CreateDIBitmap, Gdip_CreateDIBSection (A single bitmap cannot be selected into more than one DC at the same time)
 ;						Brush - CreateBrushIndirect, CreateDIBPatternBrush, CreateDIBPatternBrushPt, CreateHatchBrush, CreatePatternBrush, CreateSolidBrush
 ;						Font - CreateFont, CreateFontIndirect
 ;						Pen - CreatePen, CreatePenIndirect
@@ -1867,7 +1870,7 @@ Gdip_CreateBitmapFromFile(sFile, IconNumber:=1, IconSize:="")
 			return -1
 
 		Width := NumGet(buf, 4, "int"), Height := NumGet(buf, 8, "int")
-		hbm := CreateDIBSection(Width, -Height), hdc := CreateCompatibleDC(), obm := SelectObject(hdc, hbm)
+		hbm := Gdip_CreateDIBSection(Width, -Height), hdc := CreateCompatibleDC(), obm := SelectObject(hdc, hbm)
 		if !DllCall("DrawIconEx", Ptr, hdc, "int", 0, "int", 0, Ptr, hIcon, "uint", Width, "uint", Height, "uint", 0, Ptr, 0, "uint", 3)
 		{
 			DestroyIcon(hIcon)

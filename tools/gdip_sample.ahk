@@ -11,7 +11,7 @@ OnExit, EXIT_LABEL
 gdipToken := Gdip_Startup()
 Loop
 {
-    bmpHaystack := Gdip_BitmapFromHWND(WinExist("Raid: Shadow Legends"))"Fotos: screenshot_game.jpg"
+    bmpHaystack := Gdip_BitmapFromHWND(WinExist("Raid: Shadow Legends")) ;"Fotos: screenshot_game.jpg"
     bmpNeedle := Gdip_CreateBitmapFromFile("..\images\queries\Home_BattleIcon.png")
     resultList := ""
     resultCount := Gdip_ImageSearch(bmpHaystack,bmpNeedle,resultList,0,0,0,0,0,0,1,10)
