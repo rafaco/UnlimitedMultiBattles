@@ -1,3 +1,18 @@
+;
+;   Copyright 2021 Rafael Acosta Alvarez
+;    
+;   Licensed under the Apache License, Version 2.0 (the "License");
+;   you may not use this file except in compliance with the License.
+;   You may obtain a copy of the License at
+;    
+;        http://www.apache.org/licenses/LICENSE-2.0
+;    
+;   Unless required by applicable law or agreed to in writing, software
+;   distributed under the License is distributed on an "AS IS" BASIS,
+;   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;   See the License for the specific language governing permissions and
+;   limitations under the License.
+
 Class Graphic {
 
     static Screen_Home:="|<ASCII_Screen_Home>0xFFFDDF@0.45$43.0000000000000030000001w00001szk0007wDy000Dy7zU00Dz3zs00Dz1zy00DzUTzU0DzkDzs0Dzk7zy0Dzs1zzUDzs0TzsDzs07zwDzs01zz7zs00Tznzw007zwzw001zzDw000Tznw0007zww0001zz80000Tzk00007zw00081zz1U0C6Tzls0Djbzxy07ztzzz03zyTzz00zzbzz00Dztzz003zwTz000zw7zU00zw1zs00zy1zy00zzVzzU0zDsz7s0z3wT3y0z0w70zUz0A10DkD00003k300000k000000000000008"

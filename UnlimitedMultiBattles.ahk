@@ -1,5 +1,5 @@
 ;
-;   Copyright 2020 Rafael Acosta Alvarez
+;   Copyright 2021 Rafael Acosta Alvarez
 ;    
 ;   Licensed under the Apache License, Version 2.0 (the "License");
 ;   you may not use this file except in compliance with the License.
@@ -22,17 +22,8 @@
     #SingleInstance Force           ; Only one instance
     #MaxThreadsPerHotkey 1          ; Only one thread
     SetTitleMatchMode 3             ; Exact title match
-
     SetBatchLines, -1               ; Improve performance
     DllCall("dwmapi\DwmEnableComposition", "uint", 0)
-
-    ; SetDefaults()
-    ; {
-    ;     global
-    ;     RaidWinTitle := "Raid: Shadow Legends"
-    ; }
-    ; SetDefaults()
-    
 
     #Include lib/CsvTableFunctions.ahk
     #Include src/MultiBattler.ahk
@@ -43,7 +34,6 @@
     ScriptDescription := "This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows."
     ProjectDescription := "This project is open source project and it's licensed under Apache 2.0. Our source code and additional informations can be found at our Github repository.`n"
     ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
-
 
     ;; Constants
     isDebug := false
