@@ -23,15 +23,8 @@ Class MultiBattler {
         global
         ; Detect screens playground
 
-        ; Check if the game is open
-        if !WinExist(RaidWinTitle){
-            Msgbox, 20, %ScriptTitle%, % UnableToAuto
-                IfMsgbox, no 
-                {
-                    GoSub ShowMain
-                    return
-                }
-                GoSub GoToGame
+        local isGameOpen := this.checkGameOpened()
+        if (!isGameOpen){
             return
         }
 
@@ -46,23 +39,28 @@ Class MultiBattler {
     start() {
         global
 
-        if !isDebug && !WinExist(RaidWinTitle){
-            MsgBox, 48, %ScriptTitle%, %NoRunningGameMessage%
+        local isGameOpen := this.checkGameOpened()
+        if (!isGameOpen){
             return
         }
         
         StartTime := A_TickCount
         Gui, Submit
         GoSub ShowRunning
-
         isRunning := true
+
+        ; Prepare flags
+        replayCounter := 0
+        currentRepetition := 0
         repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? calculatedResults.repetitions : -1
         isInfinite := (repetitions = -1)
-
         waitSeconds := Settings.second + ( Settings.minute * 60 )
         waitSecondsFormatted := FormatSeconds(waitSeconds)
         waitMillis := (waitSeconds * 1000)
+        stepProgress1 := 100 / waitSeconds
+        stepProgress2 := 100 / repetitions 
 
+        ; Initialize Running GUI
         if (isInfinite){
             overview := "Infinited battles, " waitSeconds " seconds each."
             notification := "Starting infinited battles"
@@ -74,11 +72,9 @@ Class MultiBattler {
         }
         GuiControl, Running:, MultiBattleOverview, %overview%
         TrayTip, %ScriptTitle%, %notification%, 20, 17
-
         ; TODO: Hide MultiBattleProgress not working
         GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleProgress
         GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleStatus
-
         If (isInfinite){
             WinSet, Style, +%PBS_MARQUEE%, % "ahk_id " hPB2
             SendMessage, %PBM_SETMARQUEE%, 1, 50,, % "ahk_id " hPB2
@@ -86,21 +82,18 @@ Class MultiBattler {
         else{
             WinSet, Style, -%PBS_MARQUEE%, % "ahk_id " hPB2
         }
-                
-        stepProgress1 := 100 / waitSeconds
-        stepProgress2 := 100 / repetitions 
 
-        replayCounter := 0
-        currentRepetition := 0
-        
+        ; For each battle
         loop{
             currentRepetition++
             If not isRunning 
                 break
-                
+
+            ; Keep battling or finish multi-battle    
             If (!isInfinite && currentRepetition > repetitions)
                 break
             
+            ; Update Running GUI with current battle
             If (isInfinite){
                 GuiControl, Running:, MultiBattleStatus, % currentRepetition . " / Infinite"
             }
@@ -110,30 +103,25 @@ Class MultiBattler {
                 GuiControl, Running:, MultiBattleStatus, % currentRepetition . " / " . repetitions . ""
             }
             
+            ; Start/Replay battle
             WinGetActiveTitle, PreviouslyActive
             WinActivate, %RaidWinTitle%
-            sleep 25
-            
-            isAdminNeeded := !CanSendKeysToWin(RaidWinTitle)
+            sleep 25    ; TODO: improve waiting for activation 
+            local isAdminNeeded := this.checkAdminNeededToSendKeys(RaidWinTitle)
             if (isAdminNeeded){
-                Msgbox, 20, %ScriptTitle%, % UnableToSendKeysToGameMessage
-                IfMsgbox, no 
-                {
-                    GoSub ShowMain
-                    return
-                }
-                GoSub RunScriptAsAdmin
                 return
             }
-            
             ControlSend, , {Enter}, %RaidWinTitle%
             ControlSend, , r, %RaidWinTitle%
-            replayCounter++
             sleep 25
             WinActivate, %PreviouslyActive%
             
+            ; Reset flags
+            replayCounter++
             GuiControl, Running:, CurrentBattleProgress, 0
             currentSecond := 1
+
+            ; For each second between battles
             loop{
                 If not isRunning 
                     break
@@ -144,11 +132,11 @@ Class MultiBattler {
                     break
                 }
                 
+                ; Update Running GUI with battle process
                 currentProgress1 := ((currentSecond) * stepProgress1)
                 GuiControl, Running:, CurrentBattleProgress, %currentProgress1%
                 currentTimeFormatted := FormatSeconds(currentSecond)
                 GuiControl, Running:, CurrentBattleStatus, %currentTimeFormatted% / %waitSecondsFormatted%  
-                
                 if (!isInfinite){
                     totalSeconds := (repetitions * waitSeconds)
                     timeElapsed := (waitSeconds * (currentRepetition-1)) + currentSecond
@@ -159,6 +147,7 @@ Class MultiBattler {
                     GuiControl, Running:, OnFinishMessageValue, % FormatSeconds(timeLeft)
                 }
                 
+                ; Keep waiting or start another battle
                 if (currentSecond > waitSeconds){
                     break
                 }
@@ -167,14 +156,14 @@ Class MultiBattler {
             }
         }
         
-        If isRunning{
+        if isRunning {
             Gosub ShowResultSuccess
         }
     }
 
     showResult(){
         global
-        
+
         MultiBattleDuration := (A_TickCount - StartTime) / 1000
         isRunning := false
         noActivateFlag := ""
@@ -224,5 +213,42 @@ Class MultiBattler {
         }
         Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
         HideAllGuisBut(AllGuis, "Result")
+    }
+
+    checkGameOpened() {
+        global
+        if !WinExist(RaidWinTitle){
+            Msgbox, 20, %ScriptTitle%, % UnableToAuto
+            IfMsgbox, no 
+            {
+                GoSub ShowMain
+                return false
+            }
+            GoSub GoToGame
+            return false
+        }
+        return true
+    }
+
+    checkAdminNeededToSendKeys(WinTitle){
+        global
+        static WM_KEYDOWN=0x100, WM_KEYUP=0x101, vk_to_use=7
+        ; Test whether we can send keystrokes to this window.
+        ; Use a virtual keycode which is unlikely to do anything:
+        PostMessage, WM_KEYDOWN, vk_to_use, 0,, %WinTitle%
+        if !ErrorLevel
+        {   ; Seems best to post key-up, in case the window is keeping track.
+            PostMessage, WM_KEYUP, vk_to_use, 0xC0000000,, %WinTitle%
+            return false
+        }
+
+        Msgbox, 20, %ScriptTitle%, % UnableToSendKeysToGameMessage
+        IfMsgbox, no 
+        {
+            GoSub ShowMain
+            return true
+        }
+        GoSub RunScriptAsAdmin
+        return true
     }
 }

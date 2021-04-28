@@ -79,7 +79,6 @@
     InfoStart := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
     InfoTime := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
 
-    NoRunningGameMessage := "You have to open the game and select your team before start."
     UnableToOpenGameMessage := "Unable to open the game from the default installation folder.`n`nOpen it manually."
     UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
     RunningHeader = Multi-battling
@@ -103,7 +102,7 @@
     ; TODO: pending to translate
     InfoAuto := "Auto detect battle results and replay.`nMore detectors comming soon: stop at max lvl, auto sell or food swap :)"
     ButtonAuto := "Test`nDetector"
-    UnableToAuto := "The game is closed, press 'Yes' to start 'Raid: Shadows Legend' now."
+    UnableToAuto := "The game is closed, press 'Yes' to start the game, select your team and try again."
     
 
     ;; Init LOGIC
@@ -662,7 +661,7 @@ UpdateDuration(){
         FillEstimatedTime(Settings.second, Settings.minute, -1)
     }
 }
-    
+
 FillEstimatedTime(seconds, minutes, repetitions){
     totalSeconds := (seconds + ( minutes * 60 )) * repetitions
     totalMinutes := Floor(totalSeconds / 60)
@@ -720,19 +719,6 @@ FormatSeconds(seconds){
 FormatNumber(num){
     ; Add thousands searators
     return RegExReplace(num, "\G(?:-?)\d+?(?=(\d{3})+(?:\D|$))", "$0.")
-}
-    
-CanSendKeysToWin(WinTitle){
-    static WM_KEYDOWN=0x100, WM_KEYUP=0x101, vk_to_use=7
-    ; Test whether we can send keystrokes to this window.
-    ; Use a virtual keycode which is unlikely to do anything:
-    PostMessage, WM_KEYDOWN, vk_to_use, 0,, %WinTitle%
-    if !ErrorLevel
-    {   ; Seems best to post key-up, in case the window is keeping track.
-        PostMessage, WM_KEYUP, vk_to_use, 0xC0000000,, %WinTitle%
-        return true
-    }
-    return false
 }
 
 HideAllGuisBut(list, excluded){
