@@ -77,7 +77,7 @@ Class GraphicDetector {
         t1:=A_TickCount
         this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
         
-        ;gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
 
         if(isTest){
             this.saveScreenArea(gameArea, "screenshot_game.jpg")
