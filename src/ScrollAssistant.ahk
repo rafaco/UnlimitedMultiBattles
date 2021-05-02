@@ -13,9 +13,6 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
-#Include lib\GDIpHelper.ahk
-#Include src/ImageDetector.ahk
-
 ;TODO: remove all global keywords
 Class ScrollAssistant {
 
@@ -40,49 +37,89 @@ Class ScrollAssistant {
         return screenDetector.detectScroll(isTest, currentPage)
     }
 
-    start() {
-        If !this.pToken := Gdip_Startup()
-        {
-            MsgBox, w, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
-            ExitApp
-        }
-
-        this.loadView()
-
-        ; Prepare tme for mouse moves
-        VarSetCapacity(this.tme, 16, 0)
-        NumPut(16, this.tme, 0)
-        NumPut(2, this.tme, 4)
-        NumPut(this.overlayHwnd, this.tme, 8)
-
-        registerMouseListeners()
+    isRunning() {
+        return this.isScrollRunning
     }
 
-    pause() {
-        Gdip_GraphicsClear(this.pGraphics)
-        UpdateLayeredWindow(this.overlayHwnd, this.hdc, 0, 0, this.layerW, this.layerH)
+    isShowing() {
+        return this.isScrollShowing
+    }
+
+    start() {
+        ; local isGameOpen := this.checkGameOpened()
+        ; if (!isGameOpen){
+        ;     return
+        ; }
+
+        if (this.isScrollRunning) {
+            this.stop()
+        }
+        else if (this.isScrollShowing) {
+            this.hide()
+        }
+
+        this.isScrollRunning := true
+        this.isScrollShowing := false
+        this.screenDetector := new ImageDetector()
+        this.initView()
+
+        fn := ObjBindMethod(scrollAssistant, "whileStarted")
+        SetTimer, %fn%, -0
+
+        return
     }
 
     stop() {
-        this.pause()
-
-        unregisterMouseListeners()
-
+        this.isScrollRunning := false
+        if (this.isScrollShowing) {
+            this.hide()
+        }
         SelectObject(this.hdc, this.obm)
         DeleteObject(this.hbm)
         DeleteDC(this.hdc)
         Gdip_DeleteGraphics(this.pGraphics)
-        Gdip_Shutdown(this.pToken)
     }
+
+    whileStarted() {
+        If not this.isScrollRunning
+            return
+
+        screen := this.screenDetector.detectChampionsScreen()
+        if (screen == ""){
+            if (this.isScrollShowing) {
+                this.hide()
+            }
+        }else{
+            if (not this.isScrollShowing) {
+                this.show()
+            }
+        }
+        fn := ObjBindMethod(scrollAssistant, "whileStarted")
+        SetTimer, %fn%, -1000
+    }
+
+    show() {
+        this.isScrollShowing := true
+        this.updateView()
+        registerMouseListeners()
+    }
+
+    hide() {
+        this.isScrollShowing := false
+        unregisterMouseListeners()
+        Gdip_GraphicsClear(this.pGraphics)
+        UpdateLayeredWindow(this.overlayHwnd, this.hdc, this.layerX, this.layerY, this.layerW, this.layerH)
+    }
+
         
 
-    loadView(){
+    initView(){
         iconFileNames := ["outline_vertical_align_top_black_24dp.png"
                         , "outline_vertical_align_bottom_black_24dp.png"]
 
-        this.iconN := this.ICON_NAMES.MaxIndex()          ; icons number
-        this.iconW := 50                            ; icons width in pixels
-        this.iconH := (this.iconW*3)//4             ; icons height in pixels
+        this.iconN := this.ICON_NAMES.MaxIndex()    ; icon number
+        this.iconW := 50                            ; icon width in pixels
+        this.iconH := (this.iconW*3)//4             ; icon height in pixels
         this.iconPositions:={}                      ; global array with the positions of icons
 
         Gui, 1: -Caption +E0x80000 +LastFound +OwnDialogs +Owner +hwndhwnd +alwaysontop
@@ -97,10 +134,10 @@ Class ScrollAssistant {
         ;toggleWinResizable(this.winTitle) 
 
         ; Calculate layer pos and size
-        this.layerW := this.iconW ;iconN*iconW+(iconN+1)*10
-        this.layerX := winX + ((winW-this.layerW)//4) + 2 ;(a_screenwidth-layerW)//2
-        this.layerY := winY + (20 * winH)//100 ; 2 * winTitleBarH +  ;(a_screenheight-layerH)//2
-        this.layerH := winH - (32 * winH)//100 ; + winH + layerY ;iconW
+        this.layerW := this.iconW
+        this.layerX := winX + ((winW-this.layerW)//4) + 2
+        this.layerY := winY + (20 * winH)//100
+        this.layerH := winH - (32 * winH)//100
 
         ; Create layer
         this.hbm := Gdip_CreateDIBSection(this.layerW,this.layerH)
@@ -110,7 +147,18 @@ Class ScrollAssistant {
         Gdip_SetSmoothingMode(this.pGraphics,4)
         Gdip_SetInterpolationMode(this.pGraphics,7)
         Gdip_GraphicsClear(this.pGraphics) ;, 0xfffff59d) 
-        
+
+        ; Positioning the layer and showing it (empty)
+        UpdateLayeredWindow(this.overlayHwnd, this.hdc, this.layerX, this.layerY, this.layerW, this.layerH)
+
+        ; Prepare tme for mouse moves
+        VarSetCapacity(this.tme, 16, 0)
+        NumPut(16, this.tme, 0)
+        NumPut(2, this.tme, 4)
+        NumPut(this.overlayHwnd, this.tme, 8)
+    }
+
+    updateView(){
         ; Add icons to layer
         loop % this.iconN
         {
@@ -136,13 +184,8 @@ Class ScrollAssistant {
             ; Store each icon position in parent, to detect the clicked item
             this.iconPositions[A_Index] := iconBackY  
         }
-
-        ; Positioning the layer
-        UpdateLayeredWindow(hwnd, this.hdc, this.layerX, this.layerY, this.layerW, this.layerH)
-    }
-
-    handleMouseLeave(wParam, lParam, Msg, hwnd) {
-        tooltip 
+        ; Update the layer
+        UpdateLayeredWindow(this.overlayHwnd, this.hdc, this.layerX, this.layerY, this.layerW, this.layerH)
     }
 
     handleMouseMove(wParam, lParam, Msg, hwnd) {
@@ -155,9 +198,7 @@ Class ScrollAssistant {
         if (hwnd != this.overlayHwnd){
             return
         }
-
-        message := "wParam: " . wParam . "`nlParam: " . lParam . "`nMsg: " . Msg . "`nhwnd: " . hwnd
-        MsgBox,, %title%, % message 
+        
         ; Detect icon clicked
         loop % this.iconN
         {
@@ -173,9 +214,6 @@ Class ScrollAssistant {
 
         if (button) {
             this.onIconClicked(button)
-            ; Temp patch: OnMessage(0x2A3,"OnMouseLeave") is not working
-            fn := ObjBindMethod(scrollAssistant, "handleMouseLeave", wParam, lParam, Msg, hwnd)
-            SetTimer, %fn%, -2000
         }
     }
 
@@ -239,13 +277,8 @@ Class ScrollAssistant {
 ; TODO: global mouse event listeners
 registerMouseListeners(){
     ; Register window listeners (not all working)
-    OnMessage(0x02A3, "onMouseLeave")
     OnMessage(0x0200, "onMouseMove")
     OnMessage(0x0201, "onLeftButtonDown")
-}
-onMouseLeave(wParam, lParam, Msg, hwnd ) {
-    fn := ObjBindMethod(scrollAssistant, "handleMouseLeave", wParam, lParam, Msg, hwnd)
-    SetTimer, %fn%, 1
 }
 onMouseMove(wParam, lParam, Msg, hwnd ) {
     fn := ObjBindMethod(scrollAssistant, "handleMouseMove", wParam, lParam, Msg, hwnd)
@@ -256,7 +289,6 @@ onLeftButtonDown(wParam, lParam, msg, hwnd){
     SetTimer, %fn%, -10
 }
 unregisterMouseListeners(){
-    OnMessage(0x02A3, "onMouseLeave", 0)
     OnMessage(0x0200, "onMouseMove", 0)
     OnMessage(0x0201, "onLeftButtonDown", 0)
 }

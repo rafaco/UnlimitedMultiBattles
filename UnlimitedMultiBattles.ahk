@@ -24,10 +24,17 @@
     SetTitleMatchMode 3             ; Exact title match
     SetBatchLines, -1               ; Improve performance
     DllCall("dwmapi\DwmEnableComposition", "uint", 0)
+    OnExit, Shutdown
 
+    #Include lib/Gdip_All.ahk
+    #Include lib/GDIpHelper.ahk
     #Include lib/CsvTableFunctions.ahk
+    ;#Include src/GraphicDetector.ahk
+    #Include src/ImageDetector.ahk
     #Include src/MultiBattler.ahk
     #Include src/ScrollAssistant.ahk
+
+    
     
     ;; Metadata
     ScriptVersion := "v1.0.6"
@@ -66,7 +73,7 @@
     TimeHeader := "3. Select battle duration"
     StartHeader := "4. Start"
     StartButton := "Start`nMulti-Battle"
-    StartScrollButton := "Stat`nScrollHelper"
+    StartScrollButton := "Start`nScrollHelper"
     StopScrollButton := "Stop`nScrollHelper"
 
     TabOptions = Manual|Calculated|Infinite
@@ -113,7 +120,11 @@
     InitSettings()
     InitCalculator()
 
-    isScrollRunning := false
+    If !pToken := Gdip_Startup()
+    {
+        MsgBox, w, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
+        ExitApp
+    }
     scrollAssistant := new ScrollAssistant()
 
     ;; Load VIEW
@@ -342,8 +353,9 @@ MenuHandler:
     }
 return
 
-MainGuiClose:
-    DestroyAllGuis()  
+Shutdown:
+    DestroyAllGuis()
+    Gdip_Shutdown(pToken)
 ExitApp
 
 ResultGuiClose:
@@ -534,13 +546,11 @@ TestAuto:
 return
 
 StartScroll:
-    if (!isScrollRunning) {
-        isScrollRunning := 1
+    if (!scrollAssistant.isRunning()) {
         scrollAssistant.start()
         GuiControl, , StartScroll, %StopScrollButton%
     }
     else {
-        isScrollRunning := 0
         scrollAssistant.stop()
         GuiControl, , StartScroll, %StartScrollButton%
     }

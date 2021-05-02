@@ -13,28 +13,8 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
-#Include src/GraphicDetector.ahk
-#Include src/ImageDetector.ahk
-
 ;TODO: remove all global keywords
 Class MultiBattler {
-
-    testScroll(isTest := false, currentPage := 0) {
-        global
-        ; Detect screens playground
-
-        local isGameOpen := this.checkGameOpened()
-        if (!isGameOpen){
-            return
-        }
-
-        ;WinActivate, %RaidWinTitle%
-        ;screenDetector := new GraphicDetector()
-
-        ; GDIP ImageDetector dont requiere WinActivate!
-        screenDetector := new ImageDetector()
-        return screenDetector.detectScroll(isTest, currentPage)
-    }
 
     testAuto() {
         global

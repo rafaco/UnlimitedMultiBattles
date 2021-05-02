@@ -16,6 +16,10 @@
 Class Image {
 
     static Screen_Home:="images\queries\Home_BattleIcon.png"
+
+    static Screen_Champs:="images\queries\Screen_Champs.png"
+    static Screen_ChampVault:="images\queries\Screen_ChampVault.png"
+
     static Screen_BattleStart:="images\queries\BattleStart_AffinitySymbol.png"
     static Screen_BattlePlay:="images\queries\BattlePlay_InfoButton.png"
     static Screen_BattleLoading:="images\queries\BattleLoading_Progress.png"

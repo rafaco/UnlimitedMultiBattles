@@ -13,9 +13,8 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
-#Include src\Image.ahk
 #Include lib/Gdip_ImageSearch.ahk
-#Include lib/Gdip_All.ahk
+#Include src/Image.ahk
 
 class ImageArea {
     __New(x1:=0, y1:=0, x2:=0, y2:=0){
@@ -88,16 +87,16 @@ Class ImageDetector {
         ; Init
         t1:=A_TickCount
         this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
-        
-        ;gameArea := this.calculateGameArea(this.FIXED_WIDTH, this.FIXED_HEIGHT)
-        gameArea := new ImageArea(0, 0, this.FIXED_WIDTH, this.FIXED_HEIGHT)
-
-        this.gdipToken := Gdip_Startup()
         this.gdipTarget := WinExist("Raid: Shadow Legends")
+        
+        gameArea := new ImageArea(0, 0, this.FIXED_WIDTH, this.FIXED_HEIGHT)
 
         ; Screen detection
         ;screenWithDialog        := this.detectGraphic(Graphic.Screen_With_Dialog, gameArea, Error.2, Error.2)
         screenHome              := this.detectImage(Image.Screen_Home, gameArea.sliceTop(80))
+        screenChamps            := this.detectImage(Image.Screen_Champs, gameArea.sliceBottom(80), 10, 0xFFFFFF)
+        screenChampVault        := this.detectImage(Image.Screen_ChampVault, gameArea.sliceBottom(80))
+        
         screenBattleStart       := this.detectImage(Image.Screen_BattleStart, gameArea.sliceBottom(60))
         screenBattlePlay        := this.detectImage(Image.Screen_BattlePlay, gameArea.sliceTop(60), 80)
         screenBattleLoading     := this.detectImage(Image.Screen_BattleLoading, gameArea.sliceTop(80))
@@ -110,6 +109,12 @@ Class ImageDetector {
         }
         else if (screenHome>0) {
             screenName := "Home"
+        }
+        else if (screenChamps>0) {
+            screenName := "Champions"
+        }
+        else if (screenChampVault>0) {
+            screenName := "Champion Vault"
         }
         else if (screenBattleStart>0) {
             screenName := "Battle Start"
@@ -146,6 +151,8 @@ Class ImageDetector {
             desc .=   "`n`nScreens:"
                     ;. "`n  WithDialog:`t`t`t" (screenWithDialog ? screenWithDialog : "No")
                     . "`n  Home:`t`t`t`t" (screenHome>0 ? screenHome : "No")
+                    . "`n  Champions:`t`t`t" (screenChamps>0 ? screenChamps : "No")
+                    . "`n  Champion Vault:`t`t`t" (screenChampVault>0 ? screenChampVault : "No")
                     . "`n  Battle Start:`t`t`t" (screenBattleStart>0 ? screenBattleStart : "No")
                     . "`n  Battle Play:`t`t`t" (screenBattlePlay>0 ? screenBattlePlay : "No")
                     . "`n  Battle Result:`t`t`t" (screenBattleResult>0 ? screenBattleResult : "No")
@@ -167,8 +174,37 @@ Class ImageDetector {
         }
 
         Gdip_DisposeImage(this.bmpHaystack)
-        Gdip_Shutdown(gdipToken)
-        this.bmpHaystack := ""
+        this.bmpHaystack := 0
+        return screenName
+    }
+
+    detectChampionsScreen()
+	{
+        global
+        this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        this.gdipTarget := WinExist("Raid: Shadow Legends")
+        
+        gameArea := new ImageArea(0, 0, this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        topArea := gameArea.sliceBottom(80)
+
+        ; Screen detection
+        screenChamps            := this.detectImage(Image.Screen_Champs, topArea, 10, 0xFFFFFF)
+        screenChampVault        := this.detectImage(Image.Screen_ChampVault, topArea)
+
+        this.saveBitmapArea(bmpHaystack, topArea, "Champions_screen.jpg") 
+        
+        if (screenChampVault>0) {
+            screenName := "Champions with Vault"
+        }
+        else if (screenChamps>0) {
+            screenName := "Champions"
+        }
+        else {
+            screenName := ""
+        }
+
+        Gdip_DisposeImage(this.bmpHaystack)
+        this.bmpHaystack := 0
         return screenName
     }
 
@@ -178,7 +214,6 @@ Class ImageDetector {
         ; Init
         t1:=A_TickCount
         this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
-        this.gdipToken := Gdip_Startup()
         this.gdipTarget := WinExist("Raid: Shadow Legends")
         
         gameArea := new ImageArea(0, 0, this.FIXED_WIDTH, this.FIXED_HEIGHT)
@@ -222,27 +257,26 @@ Class ImageDetector {
             ;this.printResults(championsCornerBlue)
         }
         Gdip_DisposeImage(this.bmpHaystack)
-        Gdip_Shutdown(gdipToken)
-        this.bmpHaystack := ""
+        this.bmpHaystack := 0
         
         return scrollStatus
     }
 
 
 
-    detectImage(image, area, e:=0) 
+    detectImage(image, area, e:=0, trans:=0) 
     {
-        return this.detectImageByPoints(image, area.x1, area.y1, area.x2, area.y2, e)
+        return this.detectImageByPoints(image, area.x1, area.y1, area.x2, area.y2, e, trans)
     }
 
-    detectImageByPoints(image, x1, y1, x2, y2, e:=0)
+    detectImageByPoints(image, x1, y1, x2, y2, e:=0, trans:=0)
 	{
         if (!this.bmpHaystack){
             this.bmpHaystack := Gdip_BitmapFromHWND(this.gdipTarget)
         }
         bmpNeedle := Gdip_CreateBitmapFromFile(image)
         resultList := ""
-        resultCount := Gdip_ImageSearch(this.bmpHaystack,bmpNeedle,resultList,x1, y1, x2, y2,e,0,1,10)
+        resultCount := Gdip_ImageSearch(this.bmpHaystack,bmpNeedle,resultList,x1, y1, x2, y2,e,trans,1,10)
         Gdip_DisposeImage(bmpNeedle)
 
         if (resultCount < 0) {
