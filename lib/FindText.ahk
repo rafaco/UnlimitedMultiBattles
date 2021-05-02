@@ -478,6 +478,63 @@ PicFind(arr, in, info, index, err1, err0
   }
 }
 
+
+; Attempt to use GDI+ to read screens on background. 
+; By rafaco for UnlimitedMultyBattles
+GetBitsFromScreen2(ByRef x, ByRef y, ByRef w, ByRef h
+  , ScreenShot:=1, ByRef zx:="", ByRef zy:=""
+  , ByRef zw:="", ByRef zh:="")
+{
+  static Ptr:="Ptr"
+  bits:=this.bits
+  if (!ScreenShot)
+  {
+    zx:=bits.zx, zy:=bits.zy, zw:=bits.zw, zh:=bits.zh
+    if IsByRef(x)
+      w:=Min(x+w,zx+zw), x:=Max(x,zx), w-=x
+      , h:=Min(y+h,zy+zh), y:=Max(y,zy), h-=y
+    return bits
+  }
+  bch:=A_BatchLines, cri:=A_IsCritical
+  Critical
+  WinGetPos, zx, zy, zw, zh, % "Raid: Shadow Legends"
+  bits.zx:=zx, bits.zy:=zy, bits.zw:=zw, bits.zh:=zh
+  , w:=Min(x+w,zx+zw), x:=Max(x,zx), w-=x
+  , h:=Min(y+h,zy+zh), y:=Max(y,zy), h-=y
+  if (zw>bits.oldzw or zh>bits.oldzh or !bits.hBM)
+  {
+    gdipToken := Gdip_Startup()
+    gdipTarget := WinExist("Raid: Shadow Legends")
+    bmpHaystack := Gdip_BitmapFromHWND(gdipTarget)
+
+    ;Gdip_BitmapFromHWND(hwnd)
+    ; Ptr := A_PtrSize ? "UPtr" : "UInt"
+    ; CreateRect( winRect, 0, 0, 0, 0 ) ;is 16 on both 32 and 64
+    ; DllCall( "GetWindowRect", Ptr, gdipTarget, Ptr, &winRect )
+    ; Width := NumGet(winRect, 8, "UInt") - NumGet(winRect, 0, "UInt")
+    ; Height := NumGet(winRect, 12, "UInt") - NumGet(winRect, 4, "UInt")
+    ; Gdip_hbm := Gdip_CreateDIBSection(Width, Height)
+    ; , hdc := CreateCompatibleDC()
+    ; , obm := SelectObject(hdc, hbm)
+    
+    ; PrintWindow(gdipTarget, hdc)
+    ; pBitmap := Gdip_CreateBitmapFromHBITMAP(hbm)
+    ; SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc)
+
+    hBM:=bits.hBM
+    , bits.hBM:=bmpHaystack
+    , bits.Scan0:=(!bits.hBM ? 0:ppvBits)
+    , bits.Stride:=((zw*bpp+31)//32)*4
+    , bits.oldzw:=zw, bits.oldzh:=zh
+    , DllCall("DeleteObject", Ptr, hBM)
+  }
+
+  Critical, %cri%
+  SetBatchLines, %bch%
+  return bits
+}
+
+; Override by previous method with GDIP by RAFACO
 GetBitsFromScreen(ByRef x, ByRef y, ByRef w, ByRef h
   , ScreenShot:=1, ByRef zx:="", ByRef zy:=""
   , ByRef zw:="", ByRef zh:="")
