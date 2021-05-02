@@ -23,5 +23,7 @@ Class Image {
     static Screen_BattleResultVictory:="images\queries\BattleResultVictory_Campaign.png"
     static Screen_BattleResultDefeat:="images\queries\BattleResultDefeat_PartialStars.png"
     static Screen_BattleResult:="images\queries\BattleResult_LittleArrow.png"
+    
+    static Scroll_Champs_Empty:="images\queries\Scroll_Champs_Empty.png"
 
 }

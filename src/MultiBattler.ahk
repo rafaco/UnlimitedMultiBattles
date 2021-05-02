@@ -19,6 +19,23 @@
 ;TODO: remove all global keywords
 Class MultiBattler {
 
+    testScroll(isTest := false, currentPage := 0) {
+        global
+        ; Detect screens playground
+
+        local isGameOpen := this.checkGameOpened()
+        if (!isGameOpen){
+            return
+        }
+
+        ;WinActivate, %RaidWinTitle%
+        ;screenDetector := new GraphicDetector()
+
+        ; GDIP ImageDetector dont requiere WinActivate!
+        screenDetector := new ImageDetector()
+        return screenDetector.detectScroll(isTest, currentPage)
+    }
+
     testAuto() {
         global
         ; Detect screens playground
@@ -55,7 +72,7 @@ Class MultiBattler {
         repetitions := (TabSelector = 1) ? BattlesValue : (TabSelector = 2) ? calculatedResults.repetitions : -1
         isInfinite := (repetitions = -1)
         waitSeconds := Settings.second + ( Settings.minute * 60 )
-        waitSecondsFormatted := FormatSeconds(waitSeconds)
+        waitSecondsFormatted := this.FormatSeconds(waitSeconds)
         waitMillis := (waitSeconds * 1000)
         stepProgress1 := 100 / waitSeconds
         stepProgress2 := 100 / repetitions 
@@ -135,7 +152,7 @@ Class MultiBattler {
                 ; Update Running GUI with battle process
                 currentProgress1 := ((currentSecond) * stepProgress1)
                 GuiControl, Running:, CurrentBattleProgress, %currentProgress1%
-                currentTimeFormatted := FormatSeconds(currentSecond)
+                currentTimeFormatted := this.FormatSeconds(currentSecond)
                 GuiControl, Running:, CurrentBattleStatus, %currentTimeFormatted% / %waitSecondsFormatted%  
                 if (!isInfinite){
                     totalSeconds := (repetitions * waitSeconds)
@@ -144,7 +161,7 @@ Class MultiBattler {
                     if (timeLeft<0){
                         timeLeft := 0
                     }
-                    GuiControl, Running:, OnFinishMessageValue, % FormatSeconds(timeLeft)
+                    GuiControl, Running:, OnFinishMessageValue, % this.FormatSeconds(timeLeft)
                 }
                 
                 ; Keep waiting or start another battle
@@ -203,7 +220,7 @@ Class MultiBattler {
         
         formattedTotal := (repetitions=-1) ? "Infinite" : repetitions
         formattedBattles := (A_ThisLabel = "ShowResultSuccess") ? replayCounter : replayCounter " of " formattedTotal
-        GuiControl, Result:, ResultText, % formattedBattles " battles in " FormatSeconds(MultiBattleDuration)
+        GuiControl, Result:, ResultText, % formattedBattles " battles in " this.FormatSeconds(MultiBattleDuration)
         
         Gui,+LastFound
         WinGetPos,x,y
@@ -250,5 +267,12 @@ Class MultiBattler {
         }
         GoSub RunScriptAsAdmin
         return true
+    }
+
+    FormatSeconds(seconds){
+        date = 2000 ;any year above 1600
+        date += Floor(seconds), SECONDS
+        FormatTime, formattedDate, %date%, mm:ss
+        return formattedDate
     }
 }

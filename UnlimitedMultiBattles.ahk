@@ -27,6 +27,7 @@
 
     #Include lib/CsvTableFunctions.ahk
     #Include src/MultiBattler.ahk
+    #Include src/ScrollAssistant.ahk
     
     ;; Metadata
     ScriptVersion := "v1.0.6"
@@ -65,6 +66,8 @@
     TimeHeader := "3. Select battle duration"
     StartHeader := "4. Start"
     StartButton := "Start`nMulti-Battle"
+    StartScrollButton := "Stat`nScrollHelper"
+    StopScrollButton := "Stop`nScrollHelper"
 
     TabOptions = Manual|Calculated|Infinite
     DurationTabOptions = Auto|Manual
@@ -110,6 +113,8 @@
     InitSettings()
     InitCalculator()
 
+    isScrollRunning := false
+    scrollAssistant := new ScrollAssistant()
 
     ;; Load VIEW
     ;Menu, Tray, Icon, images\icon.ico
@@ -212,8 +217,10 @@
     
     ; Section 4: Start button
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, Text, w230 xs Section Right %SS_CENTERIMAGE% ,
-    Gui, Main:Add, Button, ys+10 w100 %SS_CENTERIMAGE% Center Default gStart, %StartButton%
+    Gui, Main:Add, Text, xs
+    Gui, Main:Add, Button, Section w100 %SS_CENTERIMAGE% Center Default gStartScroll vStartScroll, %StartScrollButton%
+    Gui, Main:Add, Text, w100 ys Section Right %SS_CENTERIMAGE% ,
+    Gui, Main:Add, Button, ys w100 %SS_CENTERIMAGE% Center Default gStartBattles, %StartButton%
 
     ; Load Running GUI
     Gui, Running:Font, s12 bold
@@ -250,7 +257,7 @@
     Gui, Result:Font, s10 bold
     Gui, Result:Add, Text, Section,
     Gui, Result:Add, Button, ys w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Done
-    Gui, Result:Add, Button, ys w100 h30 gStart %SS_CENTERIMAGE% Center, Replay
+    Gui, Result:Add, Button, ys w100 h30 gStartBattles %SS_CENTERIMAGE% Center, Replay
     
 
     ; Load Help GUI
@@ -526,7 +533,20 @@ TestAuto:
     new MultiBattler().testAuto()
 return
 
-Start:
+StartScroll:
+    if (!isScrollRunning) {
+        isScrollRunning := 1
+        scrollAssistant.start()
+        GuiControl, , StartScroll, %StopScrollButton%
+    }
+    else {
+        isScrollRunning := 0
+        scrollAssistant.stop()
+        GuiControl, , StartScroll, %StartScrollButton%
+    }
+return
+
+StartBattles:
     new MultiBattler().start()
 return
 

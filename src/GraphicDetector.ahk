@@ -31,7 +31,7 @@ class Area {
             return this
         }
         result := new Area(this.x1, this.y1, this.x2, this.y2)
-        result.y2 := result.y2 - ((result.y2 - result.y1)*(100 - percentage)/100)
+        result.y2 := result.y2 - ((result.y2 - result.y1)*(100 - percentage)//100)
         return result
     }
 
@@ -40,7 +40,7 @@ class Area {
             return this
         }
         result := new Area(this.x1, this.y1, this.x2, this.y2)
-        result.y1 := result.y1 + ((result.y2 - result.y1)*(100 - percentage)/100)
+        result.y1 := result.y1 + ((result.y2 - result.y1)*(100 - percentage)//100)
         return result
     }
 
@@ -49,7 +49,7 @@ class Area {
             return this
         }
         result := new Area(this.x1, this.y1, this.x2, this.y2)
-        result.x1 := result.x1 + ((result.x2 - result.x1)*(100 - percentage)/100)
+        result.x1 := result.x1 + ((result.x2 - result.x1)*(100 - percentage)//100)
         return result
     }
 
@@ -58,7 +58,7 @@ class Area {
             return this
         }
         result := new Area(this.x1, this.y1, this.x2, this.y2)
-        result.x2 := result.x2 - ((result.x2 - result.x1)*(100 - percentage)/100)
+        result.x2 := result.x2 - ((result.x2 - result.x1)*(100 - percentage)//100)
         return result
     }
 }

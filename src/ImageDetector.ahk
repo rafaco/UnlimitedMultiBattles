@@ -13,7 +13,7 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
-#Include src/Image.ahk
+#Include src\Image.ahk
 #Include lib/Gdip_ImageSearch.ahk
 #Include lib/Gdip_All.ahk
 
@@ -25,12 +25,21 @@ class ImageArea {
         this.y2:=y2
     }
 
+    printSize(title:="ImageArea") {
+        message := "Width: " . this.x2 - this.x1 . "`nHeight: " . this.y2 - this.y1
+        MsgBox,, %title%, % message 
+    }
+
+    contains(x, y){
+        return x>=this.x1 AND x<=this.x2 AND y>=this.y1 AND y<=this.y2
+    }
+
     sliceBottom(percentage:=0) {
         if (percentage <= 0){
             return this
         }
         result := new ImageArea(this.x1, this.y1, this.x2, this.y2)
-        result.y2 := result.y2 - ((result.y2 - result.y1)*(100 - percentage)/100)
+        result.y2 := result.y2 - ((result.y2 - result.y1)*(100 - percentage)//100)
         return result
     }
 
@@ -39,7 +48,7 @@ class ImageArea {
             return this
         }
         result := new ImageArea(this.x1, this.y1, this.x2, this.y2)
-        result.y1 := result.y1 + ((result.y2 - result.y1)*(100 - percentage)/100)
+        result.y1 := result.y1 + ((result.y2 - result.y1)*(100 - percentage)//100)
         return result
     }
 
@@ -48,7 +57,7 @@ class ImageArea {
             return this
         }
         result := new ImageArea(this.x1, this.y1, this.x2, this.y2)
-        result.x1 := result.x1 + ((result.x2 - result.x1)*(100 - percentage)/100)
+        result.x1 := result.x1 + ((result.x2 - result.x1)*(100 - percentage)//100)
         return result
     }
 
@@ -57,7 +66,7 @@ class ImageArea {
             return this
         }
         result := new ImageArea(this.x1, this.y1, this.x2, this.y2)
-        result.x2 := result.x2 - ((result.x2 - result.x1)*(100 - percentage)/100)
+        result.x2 := result.x2 - ((result.x2 - result.x1)*(100 - percentage)//100)
         return result
     }
 }
@@ -163,6 +172,64 @@ Class ImageDetector {
         return screenName
     }
 
+    detectScroll(isTest := false, currentPage := 0)
+	{
+        global
+        ; Init
+        t1:=A_TickCount
+        this.fixGameScale(this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        this.gdipToken := Gdip_Startup()
+        this.gdipTarget := WinExist("Raid: Shadow Legends")
+        
+        gameArea := new ImageArea(0, 0, this.FIXED_WIDTH, this.FIXED_HEIGHT)
+        scrollArea := gameArea.sliceRight(24).sliceLeft(98).sliceTop(82).sliceBottom(89)
+        
+        scrollEnds              := this.detectImage(Image.Scroll_Champs_Empty, scrollArea, 15)
+        
+        isPageBorder := Mod(currentPage, 100) == 0
+        if (isPageBorder){
+            this.saveBitmapArea(this.bmpHaystack, scrollArea, "scrollArea_" . currentPage . ".jpg")
+        }
+
+        if (scrollEnds>0) {
+            scrollStatus := "End"
+        }
+        else if (screenHome>0) {
+            scrollStatus := "Middle"
+        }
+        
+        t1:=A_TickCount-t1
+
+        if (isTest){
+
+            ; Build test dialog
+            desc :=   "Scroll:`t`t`t`t" (scrollStatus)
+                    . "`nTime:`t`t`t`t" (t1) " ms"
+
+            desc .=   "`n`Scroll:"
+                    . "`n  scrollEnds:`t`t`t`t" (scrollEnds>0 ? scrollEnds : "No")
+            desc .= "`n`n Do you want to go to the screenshot folder?" 
+
+            ; Show debug dialog
+            local dialogOptions := 4096+4
+            MsgBox, % dialogOptions, Detector test, % desc
+            IfMsgbox, yes 
+            {
+                Run, explore %LocalFolder%
+            }
+
+            ; Show detection positions over the game
+            ;this.printResults(championsCornerBlue)
+        }
+        Gdip_DisposeImage(this.bmpHaystack)
+        Gdip_Shutdown(gdipToken)
+        this.bmpHaystack := ""
+        
+        return scrollStatus
+    }
+
+
+
     detectImage(image, area, e:=0) 
     {
         return this.detectImageByPoints(image, area.x1, area.y1, area.x2, area.y2, e)
@@ -218,18 +285,20 @@ Class ImageDetector {
         return gameArea
     }
 
-    saveScreenArea(area, fileName) 
+    saveBitmapArea(bitmap, area, fileName) 
     {
-        this.saveScreenPoints(area.x1, area.y1, area.x2, area.y2, fileName)
+        global LocalFolder
+        localPath := LocalFolder . "\" . fileName
+        bitmap2 := this.Gdip_CropImage(bitmap, area.x1, area.y1, area.x2-area.x1, area.y2-area.y1)
+        Gdip_SaveBitmapToFile(bitmap2, localPath)
     }
 
-    saveScreenPoints(x1, y1, x2, y2, fileName) 
+    Gdip_CropImage(pBitmap, x, y, w, h)
     {
-        global
-        local localPath := LocalFolder . "\" . fileName
-        local rect := x1 . ", " . y1  . ", " . x2 . ", " . y2
-        CaptureScreen(rect, False, localPath, "")
-        ;MsgBox, 4096, Screenshot saved, % "File: " fileName "`nPath: " localFolderPath "`nArea: " recta 
+        pBitmap2 := Gdip_CreateBitmap(w, h), G2 := Gdip_GraphicsFromImage(pBitmap2)
+        Gdip_DrawImage(G2, pBitmap, 0, 0, w, h, x, y, w, h)
+        Gdip_DeleteGraphics(G2)
+        return pBitmap2
     }
 
 }
