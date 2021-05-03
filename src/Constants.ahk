@@ -46,7 +46,7 @@ Class Constants {
     }
     
     ; Characters
-    static FolderSeparator := "\"
+    static FolderSeparator := Constants.FolderSeparator
     static InfiniteSymbol := Chr(0x221E)
     static StarSymbol := Chr(0x2605)
     static COLOR_GRAY := "c808080"

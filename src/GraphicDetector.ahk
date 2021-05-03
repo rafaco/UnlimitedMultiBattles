@@ -320,7 +320,7 @@ Class GraphicDetector {
     saveScreenPoints(x1, y1, x2, y2, fileName) 
     {
         global
-        local localPath := Constants.LocalFolder() . "\" . fileName
+        local localPath := Constants.LocalFolder() . Constants.FolderSeparator . fileName
         local rect := x1 . ", " . y1  . ", " . x2 . ", " . y2
         CaptureScreen(rect, False, localPath, "")
         ;MsgBox, 4096, Screenshot saved, % "File: " fileName "`nPath: " localFolderPath "`nArea: " recta 

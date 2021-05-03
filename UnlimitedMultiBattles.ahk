@@ -39,24 +39,6 @@
     #Include lib/i18n.ahk
     #Include src/LanguageDetector.ahk
 
-    
-    ; TODO: extract from view after MVC
-    SS_CENTERIMAGE := 0x200
-
-    ;; Texts
-    RunningHeader = Multi-battling
-    RunningTimeLeftMessage := "Time left: " 
-    RunningOnFinishMessage = On finish:
-    RunningOnFinishOptions = Bring game to front|Bring this window to front|Don't disturb me
-    RunningOnFinishCheckbox = Sleep computer
-    StopButton = Cancel
-
-    ResultHeaderSuccess = Completed!
-    ResultHeaderCanceled = Cancelled
-    ResultHeaderInterrupted = Interrupted
-    ResultMessageSuccess = Multi-Battle finished successfuly
-    ResultMessageCanceled = Multi-Battle canceled by user
-    ResultMessageInterrupted = Multi-Battle interrupted, game closed
 
     ; Init translations
     language := new LanguageDetector().getLanguage(WinExist(Constants.RaidWinTitle))
@@ -74,7 +56,9 @@
     }
     scrollAssistant := new ScrollAssistant()
 
+
     ;; Load VIEW
+    SS_CENTERIMAGE := 0x200 ; TODO: extract from view after MVC
     ;Menu, Tray, Icon, images\icon.ico
     Menu, InfoMenu, Add, Help, MenuHandler
     Menu, InfoMenu, Add, About, MenuHandler
@@ -87,7 +71,7 @@
 
     ; Section 1: Prepare your team
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox,  w350 h65 Section, % Translate("TeamHeader")
+    Gui, Main:Add, GroupBox,  w350 h72 Section, % Translate("TeamHeader")
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Text, xp+10 yp+20 w270, % Translate("InfoTeam")
     Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
@@ -99,44 +83,44 @@
     Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("BattlesHeader")
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h157 vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, % Options.BattleAmount()
-    Gui, Main:Add, Text, w320 h50 Section Center %SS_CENTERIMAGE%, Enter any number of battles
+    Gui, Main:Add, Text, w320 h50 Section Center %SS_CENTERIMAGE%, % Translate("BattlesAmountManual")
     Gui, Main:Add, Text, w70 xs Section,
     Gui, Main:Font, s20 
     Gui, Main:Add, Edit, ys+10 w65 h35 Right gOnBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
     Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gOnBattleChangedByUpDown, % Settings.battles
     Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, xp+80 ys+20, battles
+    Gui, Main:Add, Text, xp+80 ys+20, % " " . Translate("BattlesAmountTail")
 
     Gui, Main:Tab, 2
     Gui, Main:Font, s1
     Gui, Main:Add, Text, 
     Gui, Main:Font, s10 normal
     Gui, Main:Add, DropDownList, Section w80 vRankSelector gOnCalculatorChanged Choose%selectedRank% AltSubmit, % Options.Rank()
-    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, champion from lvl
+    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, % Translate("BattlesAmountCalculatedRankTail")
     Gui, Main:Add, DropDownList, ys w40 vLevelSelector gOnCalculatorChanged Choose%selectedLevel% AltSubmit, %initialLevelOptions%
-    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, to Max.
+    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, % Translate("BattlesAmountCalculatedLevelTail")
     Gui, Main:Add, DropDownList, xs Section w65 vDifficultySelector gOnCalculatorChanged Choose%selectedDifficulty% AltSubmit, % Options.Difficulty()
     Gui, Main:Add, DropDownList, ys w40 vMapSelector gOnCalculatorChanged Choose%selectedMap% AltSubmit, % Options.Map()
     Gui, Main:Add, DropDownList, ys w35 vStageSelector gOnCalculatorChanged Choose%selectedStage% AltSubmit, % Options.Stage()
-    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, with
+    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, % Translate("BattlesAmountCalculatedStageTail")
     Gui, Main:Add, DropDownList, ys w97 vBoostSelector gOnCalculatorChanged Choose%selectedBoost% AltSubmit, % Options.Boost()
     Gui, Main:Add, Text, xs Section w70,
     Gui, Main:Font, s20 
     Gui, Main:Add, Text, w58 right ys vCalculatedRepetitions, % calculatedResults.repetitions
     Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, w100 ys+7, battles
+    Gui, Main:Add, Text, w100 ys+7, % " " . Translate("BattlesAmountTail")
     Gui, Main:Font, "s10 "Constants.COLOR_GRAY" normal"
     Gui, Main:Add, Text, w330 xs yp+25 Section Center vCalculatedExtra,
 
     Gui, Main:Tab, 3
     Gui, Main:Font
     Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, w330 h60 Section Center %SS_CENTERIMAGE%, Run infinetly till your stop us.
+    Gui, Main:Add, Text, w330 h60 Section Center %SS_CENTERIMAGE%, % Translate("BattlesAmountInfinite")
     Gui, Main:Add, Text, w75 xs Section,
     Gui, Main:Font, s45 
     Gui, Main:Add, Text, w50 h35 ys Right %SS_CENTERIMAGE%, % Constants.InfiniteSymbol
     Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, w100 ys+7, % " battles"
+    Gui, Main:Add, Text, w100 ys+7, % " " . Translate("BattlesAmountTail")
     Gui, Main:Tab
 
     Gui, Main:Font, s2 bold
@@ -145,25 +129,24 @@
     Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("TimeHeader")
    
     ; Section 3: Duration
-    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, % Options.BattleDuration()
     Gui, Main:Font, s10 norm
+    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, % Options.BattleDuration()
     Gui, Main:Add, Text, w260 vAutoText, % Translate("InfoAuto")
     Gui, Main:Add, Button, w50 xp+260 yp Center gTestAuto vAutoButton, % Translate("ButtonTestDetector")
     Gui, Main:Font, s2
     
-
     Gui, Main:Tab, 2
     Gui, Main:Add, Text, Section BackgroundTrans w60 Right,
     Gui, Main:Font, s20 normal
     Gui, Main:Add, Edit, ys w52 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
     Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown,
     Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, ys+7 BackgroundTrans, min.
+    Gui, Main:Add, Text, ys+7 BackgroundTrans, % Translate("BattlesDurationMinTail")
     Gui, Main:Font, s20 normal
     Gui, Main:Add, Edit, ys w52 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
     Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown,
     Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, ys+15 BackgroundTrans, sec.
+    Gui, Main:Add, Text, ys+15 BackgroundTrans, % Translate("BattlesDurationSecTail")
     Gui, Main:Font, "s10 "Constants.COLOR_GRAY" normal"
     Gui, Main:Add, Text, h20 w330 xs yp+30 Section Center vCalculatedDuration,
     Gui, Main:Tab
@@ -177,7 +160,7 @@
 
     ; Load Running GUI
     Gui, Running:Font, s12 bold
-    Gui, Running:Add, Text, w250 Center vMultiBattleHeader, % RunningHeader
+    Gui, Running:Add, Text, w250 Center vMultiBattleHeader, % Translate("RunningHeader")
     Gui, Running:Font, s10 normal
     Gui, Running:Add, Text, w115 Section, Current battle:
     Gui, Running:Add, Text, ys w120 Right vCurrentBattleStatus,
@@ -185,20 +168,20 @@
     Gui, Running:Add, Text, w115 xs Section, All battles:
     Gui, Running:Add, Text, ys w120 Right vMultiBattleStatus,
     Gui, Running:Add, Progress, xs yp+18 w250 h20 HwndhPB2 -Smooth vMultiBattleProgress, 0
-    Gui, Running:Add, Text, w117 xs Section vOnFinishMessage, % RunningTimeLeftMessage
+    Gui, Running:Add, Text, w117 xs Section vOnFinishMessage, % Translate("RunningTimeLeftMessage")
     Gui, Running:Add, Text, w117 ys Right vOnFinishMessageValue, -
     Gui, Running:Font, s3 normal
     Gui, Running:Add, Text, xs Section,
     Gui, Running:Font, s10 normal
     Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w60 h23 xs Section Left %SS_CENTERIMAGE%, % RunningOnFinishMessage
-    Gui, Running:Add, DropDownList, ys w175 vOnFinishSelector gOnFinishChanged Choose%selectedOnFinish% AltSubmit, %RunningOnFinishOptions%
-    Gui, Running:Add, Checkbox, vOnFinishCheckbox gOnFinishCheckboxChanged, % RunningOnFinishCheckbox
+    Gui, Running:Add, Text, w60 h23 xs Section Left %SS_CENTERIMAGE%, % Translate("RunningOnFinishMessage")
+    Gui, Running:Add, DropDownList, ys w175 vOnFinishSelector gOnFinishChanged Choose%selectedOnFinish% AltSubmit, % Options.OnFinish()
+    Gui, Running:Add, Checkbox, vOnFinishCheckbox gOnFinishCheckboxChanged, % Translate("RunningOnFinishCheckbox")
     Gui, Running:Font, s3 normal
     Gui, Running:Add, Text, xs Section,
     Gui, Running:Font, s10 bold
     Gui, Running:Add, Text, xs Section,
-    Gui, Running:Add, Button, ys w200 h30 gShowResultCanceled %SS_CENTERIMAGE% Center Default, %StopButton%
+    Gui, Running:Add, Button, ys w200 h30 gShowResultCanceled %SS_CENTERIMAGE% Center Default, % Translate("RunningStopButton")
 
     ; Load Result GUI 
     Gui, Result:Font, s12 bold
@@ -345,7 +328,7 @@ GoToGame:
     
     ; If game not in default folder, ask for installation folder 
     fileFolder := Settings.customGameFolder != "" ? Settings.customGameFolder : Constants.DefaultGameFolder
-    filePath := fileFolder . "\" . Constants.RaidFileName
+    filePath := fileFolder . Constants.FolderSeparator . Constants.RaidFileName
     if (!FileExist(filePath)){
         ; Show select folder dialog
         FileSelectFolder, OutputVar, , 0, % Translate("UnableToFindGameMessage")
@@ -353,7 +336,7 @@ GoToGame:
             MsgBox, % Translate("NoFolderSelectedMessage")
             return
         }
-        newFilePath := OutputVar . "\" . Constants.RaidFileName
+        newFilePath := OutputVar . Constants.FolderSeparator . Constants.RaidFileName
         if (!FileExist(newFilePath)){
             MsgBox, % Translate("NoGameInFolderMessage")
             return

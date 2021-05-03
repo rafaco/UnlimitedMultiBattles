@@ -44,6 +44,11 @@ Class Options {
     Rank() { 
         return this.GenerateRankOptions()
     }
+    OnFinish() { 
+        return this.TranslatedOptions("OptionRunningOnFinishGame"
+                                     ,"OptionRunningOnFinishThis"
+                                     ,"OptionRunningOnFinishNothing")
+    }
 
 
     TranslatedOptions(params*) {

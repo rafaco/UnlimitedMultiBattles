@@ -167,9 +167,11 @@ Class MultiBattler {
         noActivateFlag := ""
         
         if (A_ThisLabel = "ShowResultSuccess"){
-            TrayTip, Constants.ScriptTitle, %ResultMessageSuccess%, 20, 17
-            GuiControl, Result:, ResultHeader, %ResultHeaderSuccess%
-            GuiControl, Result:, ResultMessage, %ResultMessageSuccess%
+            local header := Translate("ResultHeaderSuccess")
+            local message := Translate("ResultMessageSuccess")
+            GuiControl, Result:, ResultHeader, %header%
+            GuiControl, Result:, ResultMessage, %message%
+            TrayTip, Constants.ScriptTitle, %message%, 20, 17
             
             if (Settings.onFinish = 1){
                 WinActivate, % Constants.RaidWinTitle
@@ -189,14 +191,18 @@ Class MultiBattler {
             }
         }
         else if (A_ThisLabel = "ShowResultCanceled"){
-            TrayTip, Constants.ScriptTitle, %ResultMessageCanceled%, 20, 17
-            GuiControl, Result:, ResultHeader, %ResultHeaderCanceled%
-            GuiControl, Result:, ResultMessage, %ResultMessageCanceled%
+            local header := Translate("ResultHeaderCanceled")
+            local message := Translate("ResultMessageCanceled")
+            GuiControl, Result:, ResultHeader, %header%
+            GuiControl, Result:, ResultMessage, %message%
+            TrayTip, Constants.ScriptTitle, %message%, 20, 17
         }
         else{
-            TrayTip, Constants.ScriptTitle, %ResultMessageInterrupted%, 20, 17
-            GuiControl, Result:, ResultHeader, %ResultHeaderInterrupted%
-            GuiControl, Result:, ResultMessage, %ResultMessageInterrupted%
+            local header := Translate("ResultHeaderInterrupted")
+            local message := Translate("ResultMessageInterrupted")
+            GuiControl, Result:, ResultHeader, %header%
+            GuiControl, Result:, ResultMessage, %message%
+            TrayTip, Constants.ScriptTitle, %message%, 20, 17
         }
         
         formattedTotal := (repetitions=-1) ? "Infinite" : repetitions
