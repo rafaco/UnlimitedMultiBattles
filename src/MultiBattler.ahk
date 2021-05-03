@@ -215,7 +215,7 @@ Class MultiBattler {
     checkGameOpened() {
         global
         if !WinExist(RaidWinTitle){
-            Msgbox, 20, %ScriptTitle%, % UnableToAuto
+            Msgbox, 20, %ScriptTitle%, % Translate("UnableToAuto")
             IfMsgbox, no 
             {
                 GoSub ShowMain
@@ -239,7 +239,7 @@ Class MultiBattler {
             return false
         }
 
-        Msgbox, 20, %ScriptTitle%, % UnableToSendKeysToGameMessage
+        Msgbox, 20, %ScriptTitle%, % Translate("UnableToSendKeysToGameMessage")
         IfMsgbox, no 
         {
             GoSub ShowMain

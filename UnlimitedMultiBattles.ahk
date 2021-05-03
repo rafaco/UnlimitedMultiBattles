@@ -68,13 +68,6 @@
     PBM_SETMARQUEE := 0x40A
 
     ;; Texts
-    TeamHeader := "1. Prepare your team"
-    BattlesHeader := "2. Select number of battles"
-    TimeHeader := "3. Select battle duration"
-    StartHeader := "4. Start"
-    StartButton := "Start`nMulti-Battle"
-    StartScrollButton := "Start`nScrollHelper"
-    StopScrollButton := "Stop`nScrollHelper"
 
     TabOptions = Manual|Calculated|Infinite
     DurationTabOptions = Auto|Manual
@@ -84,8 +77,6 @@
     StageOptions := GenerateNumericOptions(7)
     RankOptions := GenerateRankOptions()
 
-    UnableToOpenGameMessage := "Unable to open the game from the default installation folder.`n`nOpen it manually."
-    UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
     RunningHeader = Multi-battling
     RunningTimeLeftMessage := "Time left: " 
     RunningOnFinishMessage = On finish:
@@ -99,15 +90,6 @@
     ResultMessageSuccess = Multi-Battle finished successfuly
     ResultMessageCanceled = Multi-Battle canceled by user
     ResultMessageInterrupted = Multi-Battle interrupted, game closed
-    
-    UnableToFindGameMessage := "Unable to find PlariumPlay on the default installation folder.`n`nChoose the folder where your PlariumPlay.exe is:"
-    NoFolderSelectedMessage := "You didn't select a folder. You can also start the game manually."
-    NoGameInFolderMessage := "Select a folder with a PlariumPlay.exe file inside or start the game manually."
-
-    ; TODO: pending to translate
-    InfoAuto := "Auto detect battle results and replay.`nMore detectors comming soon: stop at max lvl, auto sell or food swap :)"
-    ButtonAuto := "Test`nDetector"
-    UnableToAuto := "The game is closed, press 'Yes' to start the game, select your team and try again."
     
 
     ;; Init LOGIC
@@ -205,8 +187,8 @@
     ; Section 3: Duration
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, %DurationTabOptions%
     Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, w260 vAutoText, %InfoAuto%
-    Gui, Main:Add, Button, w50 xp+260 yp Center gTestAuto vAutoButton, %ButtonAuto%
+    Gui, Main:Add, Text, w260 vAutoText, % Translate("InfoAuto")
+    Gui, Main:Add, Button, w50 xp+260 yp Center gTestAuto vAutoButton, % Translate("ButtonTestDetector")
     Gui, Main:Font, s2
     
 
@@ -229,9 +211,9 @@
     ; Section 4: Start button
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, xs
-    Gui, Main:Add, Button, Section w100 %SS_CENTERIMAGE% Center Default gStartScroll vStartScroll, %StartScrollButton%
+    Gui, Main:Add, Button, Section w100 %SS_CENTERIMAGE% Center Default gStartScroll vStartScroll, % Translate("ButtonScrollStart")
     Gui, Main:Add, Text, w100 ys Section Right %SS_CENTERIMAGE% ,
-    Gui, Main:Add, Button, ys w100 %SS_CENTERIMAGE% Center Default gStartBattles, % Translate("StartButton")
+    Gui, Main:Add, Button, ys w100 %SS_CENTERIMAGE% Center Default gStartBattles, % Translate("ButtonMultiBattle")
 
     ; Load Running GUI
     Gui, Running:Font, s12 bold
@@ -384,14 +366,14 @@ GoToGame:
     filePath := fileFolder . "\" . RaidFileName
     if (!FileExist(filePath)){
         ; Show select folder dialog
-        FileSelectFolder, OutputVar, , 0, %UnableToFindGameMessage%
+        FileSelectFolder, OutputVar, , 0, % Translate("UnableToFindGameMessage")
         if (!OutputVar || OutputVar == ""){
-            MsgBox, % NoFolderSelectedMessage
+            MsgBox, % Translate("NoFolderSelectedMessage")
             return
         }
         newFilePath := OutputVar . "\" . RaidFileName
         if (!FileExist(newFilePath)){
-            MsgBox, % NoGameInFolderMessage
+            MsgBox, % Translate("NoGameInFolderMessage")
             return
         }
            
@@ -548,11 +530,11 @@ return
 StartScroll:
     if (!scrollAssistant.isRunning()) {
         scrollAssistant.start()
-        GuiControl, , StartScroll, %StopScrollButton%
+        GuiControl, , StartScroll, % Translate("ButtonScrollStop")
     }
     else {
         scrollAssistant.stop()
-        GuiControl, , StartScroll, %StartScrollButton%
+        GuiControl, , StartScroll, % Translate("ButtonScrollStart")
     }
 return
 
