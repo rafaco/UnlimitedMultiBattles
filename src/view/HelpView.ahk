@@ -56,4 +56,9 @@ Class HelpView extends CGui {
         GoSub ShowMain
         this.Hide()
     }
+
+    AddListener(controller)
+    {
+        this.controller := controller
+    }
 }

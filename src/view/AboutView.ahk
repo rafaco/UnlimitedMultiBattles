@@ -43,4 +43,9 @@ Class AboutView extends CGui {
     GithubButtonPressed(){
         GoSub GoToSite
     }
+
+    AddListener(controller)
+    {
+        this.controller := controller
+    }
 }

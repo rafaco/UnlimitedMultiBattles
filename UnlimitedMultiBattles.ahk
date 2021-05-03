@@ -165,10 +165,10 @@
     Gui, Running:Font, s12 bold
     Gui, Running:Add, Text, w250 Center vMultiBattleHeader, % Translate("RunningHeader")
     Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w115 Section, Current battle:
+    Gui, Running:Add, Text, w115 Section, % Translate("RunningCurrentBattleMessage")%
     Gui, Running:Add, Text, ys w120 Right vCurrentBattleStatus,
     Gui, Running:Add, Progress, xs yp+18 w250 h20 -Smooth vCurrentBattleProgress, 0
-    Gui, Running:Add, Text, w115 xs Section, All battles:
+    Gui, Running:Add, Text, w115 xs Section, Translate("RunningMultiBattleMessage")
     Gui, Running:Add, Text, ys w120 Right vMultiBattleStatus,
     Gui, Running:Add, Progress, xs yp+18 w250 h20 HwndhPB2 -Smooth vMultiBattleProgress, 0
     Gui, Running:Add, Text, w117 xs Section vOnFinishMessage, % Translate("RunningTimeLeftMessage")
