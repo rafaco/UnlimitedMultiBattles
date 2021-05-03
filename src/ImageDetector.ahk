@@ -166,7 +166,8 @@ Class ImageDetector {
             MsgBox, % dialogOptions, Detector test, % desc
             IfMsgbox, yes 
             {
-                Run, explore %LocalFolder%
+                local targetUrl := Constants.LocalFolder()
+                Run, explore %targetUrl%
             }
 
             ; Show detection positions over the game
@@ -250,7 +251,8 @@ Class ImageDetector {
             MsgBox, % dialogOptions, Detector test, % desc
             IfMsgbox, yes 
             {
-                Run, explore %LocalFolder%
+                local targetUrl := Constants.LocalFolder()
+                Run, explore %targetUrl%
             }
 
             ; Show detection positions over the game
@@ -303,9 +305,9 @@ Class ImageDetector {
         ;MsgBox, 4096, ASCII detector, % RaidWinTitle
         
         ; Reset screen size
-        WinGetPos, X, Y, W, H, % RaidWinTitle
+        WinGetPos, X, Y, W, H, % Constants.RaidWinTitle
         if (W != width OR H != height){
-            WinMove, %RaidWinTitle%,, X, Y, width, height
+            WinMove, Constants.RaidWinTitle,, X, Y, width, height
             ;MsgBox, Fixed scale, Game rescaled at %X%,%Y% to 1149x712, it was %W%x%H%.
         }
 
@@ -314,15 +316,14 @@ Class ImageDetector {
 
     calculateGameArea(width, height) 
     {
-        WinGetPos, X, Y, W, H, % RaidWinTitle
+        WinGetPos, X, Y, W, H, % Constants.RaidWinTitle
         gameArea := new ImageArea(X, Y, X + width, Y + height)
         return gameArea
     }
 
     saveBitmapArea(bitmap, area, fileName) 
     {
-        global LocalFolder
-        localPath := LocalFolder . "\" . fileName
+        localPath := Constants.LocalFolder() . Constants.FolderSeparator . fileName
         bitmap2 := this.Gdip_CropImage(bitmap, area.x1, area.y1, area.x2-area.x1, area.y2-area.y1)
         Gdip_SaveBitmapToFile(bitmap2, localPath)
     }

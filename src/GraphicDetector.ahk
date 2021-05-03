@@ -234,7 +234,8 @@ Class GraphicDetector {
             MsgBox, % dialogOptions, Detector test, % desc
             IfMsgbox, yes 
             {
-                Run, explore %LocalFolder%
+                local targetUrl := Constants.LocalFolder()
+                Run, explore %targetUrl%
             }
 
             ; Show detection positions over the game
@@ -250,9 +251,9 @@ Class GraphicDetector {
         ;MsgBox, 4096, ASCII detector, % RaidWinTitle
         
         ; Reset screen size
-        WinGetPos, X, Y, W, H, % RaidWinTitle
+        WinGetPos, X, Y, W, H, % Constants.RaidWinTitle
         if (W != width OR H != height){
-            WinMove, %RaidWinTitle%,, X, Y, width, height
+            WinMove, %Constants.RaidWinTitle%,, X, Y, width, height
             ;MsgBox, Fixed scale, Game rescaled at %X%,%Y% to 1149x712, it was %W%x%H%.
         }
 
@@ -261,7 +262,7 @@ Class GraphicDetector {
 
     calculateGameArea(width, height) 
     {
-        WinGetPos, X, Y, W, H, % RaidWinTitle
+        WinGetPos, X, Y, W, H, % Constants.RaidWinTitle
         gameArea := new Area(X, Y, X + width, Y + height)
         return gameArea
     }
@@ -319,7 +320,7 @@ Class GraphicDetector {
     saveScreenPoints(x1, y1, x2, y2, fileName) 
     {
         global
-        local localPath := LocalFolder . "\" . fileName
+        local localPath := Constants.LocalFolder() . "\" . fileName
         local rect := x1 . ", " . y1  . ", " . x2 . ", " . y2
         CaptureScreen(rect, False, localPath, "")
         ;MsgBox, 4096, Screenshot saved, % "File: " fileName "`nPath: " localFolderPath "`nArea: " recta 
@@ -333,14 +334,14 @@ Class GraphicDetector {
         t1:=A_TickCount
 
         ; Reset screen size
-        WinGetPos, X, Y, W, H, % RaidWinTitle
+        WinGetPos, X, Y, W, H, % Constants.RaidWinTitle
         if (W!=1149 or H!=712){
-            WinMove, %RaidWinTitle%,, X, Y, 1149, 712
+            WinMove, %Constants.RaidWinTitle%,, X, Y, 1149, 712
             MsgBox, Game rescaled at %X%,%Y% to 1149x712, it was %W%x%H%.
-            WinGetPos, X, Y, W, H, % RaidWinTitle
+            WinGetPos, X, Y, W, H, % Constants.RaidWinTitle
         }
 
-        WinActivate, %RaidWinTitle%
+        WinActivate, %Constants.RaidWinTitle%
 
         GraphicSearch_query1 := "|<BattleTextGray131>*131$81.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzU7z7k0807Dy0Dw0Tkz01U0tzk1zbly7zXzlzDyTzwyDUTwTyDtznzzblwnzXzlzDyTzwwTaTwTyDtznzzU3slzXzlzDy0Tw0TDDwTyDtzk3zbltszXzlzDyTzwyC07wTyDtznzzbtk0zXzlzDyTzwyATXwTyDtznzzXVXwTXzlz7yDzw0QznwTyDs0k1zUDbyTbznz060DzzzzzzzzzzzzzzzzzzzzzzzzzzzU"
         GraphicSearch_query2 := "|<BattleTextColor100>0xDFDADA@0.81$76.Dw0M3ztzwM0zszs3kDzbzlU3zX1UD03U1k60A0A70w0C070M0k0kQ6M0s0Q1U3031UNU3U1k60A0Dw3b0C070M0zkzkAA0s0Q1U3z31kkk3U1k60A0A37zUC070M0k0kATy0s0Q1U3031lUM3U1k60A0A6A0kC070M0k0zsk30s0Q1znzU0000000000000000000000002"

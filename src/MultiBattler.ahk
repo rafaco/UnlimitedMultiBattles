@@ -25,7 +25,7 @@ Class MultiBattler {
             return
         }
 
-        ;WinActivate, %RaidWinTitle%
+        ;WinActivate, %Constants.RaidWinTitle%
         ;screenDetector := new GraphicDetector()
 
         ; GDIP ImageDetector dont requiere WinActivate!
@@ -68,10 +68,11 @@ Class MultiBattler {
             notification := "Starting " repetitions " multi-battles (" totalMinutes " min)"
         }
         GuiControl, Running:, MultiBattleOverview, %overview%
-        TrayTip, %ScriptTitle%, %notification%, 20, 17
+        TrayTip, Constants.ScriptTitle, %notification%, 20, 17
         ; TODO: Hide MultiBattleProgress not working
         GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleProgress
         GuiControl, Running:, % (isInfinite) ? "Hide" : "Show", MultiBattleStatus
+        local PBS_MARQUEE := 0x8, PBM_SETMARQUEE := 0x40A
         If (isInfinite){
             WinSet, Style, +%PBS_MARQUEE%, % "ahk_id " hPB2
             SendMessage, %PBM_SETMARQUEE%, 1, 50,, % "ahk_id " hPB2
@@ -102,14 +103,14 @@ Class MultiBattler {
             
             ; Start/Replay battle
             WinGetActiveTitle, PreviouslyActive
-            WinActivate, %RaidWinTitle%
+            WinActivate, % Constants.RaidWinTitle
             sleep 25    ; TODO: improve waiting for activation 
-            local isAdminNeeded := this.checkAdminNeededToSendKeys(RaidWinTitle)
+            local isAdminNeeded := this.checkAdminNeededToSendKeys(Constants.RaidWinTitle)
             if (isAdminNeeded){
                 return
             }
-            ControlSend, , {Enter}, %RaidWinTitle%
-            ControlSend, , r, %RaidWinTitle%
+            ControlSend, , {Enter}, % Constants.RaidWinTitle
+            ControlSend, , r, % Constants.RaidWinTitle
             sleep 25
             WinActivate, %PreviouslyActive%
             
@@ -123,7 +124,7 @@ Class MultiBattler {
                 If not isRunning 
                     break
                     
-                If !isDebug && !WinExist(RaidWinTitle) {
+                If !isDebug && !WinExist(Constants.RaidWinTitle) {
                     isRunning := false
                     Gosub ShowResultInterrupted
                     break
@@ -166,16 +167,16 @@ Class MultiBattler {
         noActivateFlag := ""
         
         if (A_ThisLabel = "ShowResultSuccess"){
-            TrayTip, %ScriptTitle%, %ResultMessageSuccess%, 20, 17
+            TrayTip, Constants.ScriptTitle, %ResultMessageSuccess%, 20, 17
             GuiControl, Result:, ResultHeader, %ResultHeaderSuccess%
             GuiControl, Result:, ResultMessage, %ResultMessageSuccess%
             
             if (Settings.onFinish = 1){
-                WinActivate, %RaidWinTitle%
+                WinActivate, % Constants.RaidWinTitle
             }
             else if (Settings.onFinish = 3){
                 WinGetActiveTitle, CurrentlyActive
-                noActivateFlag := CurrentlyActive != ScriptTitle ? "NoActivate" : ""
+                noActivateFlag := CurrentlyActive != Constants.ScriptTitle ? "NoActivate" : ""
             }
             
             if (OnFinishCheckbox = 1){
@@ -188,12 +189,12 @@ Class MultiBattler {
             }
         }
         else if (A_ThisLabel = "ShowResultCanceled"){
-            TrayTip, %ScriptTitle%, %ResultMessageCanceled%, 20, 17
+            TrayTip, Constants.ScriptTitle, %ResultMessageCanceled%, 20, 17
             GuiControl, Result:, ResultHeader, %ResultHeaderCanceled%
             GuiControl, Result:, ResultMessage, %ResultMessageCanceled%
         }
         else{
-            TrayTip, %ScriptTitle%, %ResultMessageInterrupted%, 20, 17
+            TrayTip, Constants.ScriptTitle, %ResultMessageInterrupted%, 20, 17
             GuiControl, Result:, ResultHeader, %ResultHeaderInterrupted%
             GuiControl, Result:, ResultMessage, %ResultMessageInterrupted%
         }
@@ -208,14 +209,14 @@ Class MultiBattler {
             x += 50
             y += 200
         }
-        Gui, Result:Show, x%x% y%y% %noActivateFlag%, %ScriptTitle%
+        Gui, Result:Show, x%x% y%y% %noActivateFlag%, % Constants.ScriptTitle
         HideAllGuisBut(AllGuis, "Result")
     }
 
     checkGameOpened() {
         global
-        if !WinExist(RaidWinTitle){
-            Msgbox, 20, %ScriptTitle%, % Translate("UnableToAuto")
+        if !WinExist(Constants.RaidWinTitle){
+            Msgbox, 20, Constants.ScriptTitle, % Translate("UnableToAuto")
             IfMsgbox, no 
             {
                 GoSub ShowMain
@@ -239,7 +240,7 @@ Class MultiBattler {
             return false
         }
 
-        Msgbox, 20, %ScriptTitle%, % Translate("UnableToSendKeysToGameMessage")
+        Msgbox, 20, Constants.ScriptTitle, % Translate("UnableToSendKeysToGameMessage")
         IfMsgbox, no 
         {
             GoSub ShowMain

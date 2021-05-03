@@ -16,8 +16,6 @@
 ;TODO: remove all global keywords
 Class ScrollAssistant {
 
-    winTitle := "Raid: Shadow Legends"
-    LocalFolder := A_AppData . "/" . "UnlimitedMultiBattles"
     ICON_NAMES := ["TOP", " UP", "DWN", "END"]
 
     testScroll(isTest := false, currentPage := 0) {
@@ -29,7 +27,7 @@ Class ScrollAssistant {
             return
         }
 
-        ;WinActivate, %RaidWinTitle%
+        ;WinActivate, %Constants.RaidWinTitle%
         ;screenDetector := new GraphicDetector()
 
         ; GDIP ImageDetector dont requiere WinActivate!
@@ -127,11 +125,11 @@ Class ScrollAssistant {
         this.overlayHwnd := hwnd
         
         ; Get game pos and size
-        WinGetPos, winX, winY, winW, winH, % this.winTitle
+        WinGetPos, winX, winY, winW, winH, % Constants.RaidWinTitle
         SysGet, winTitleBarH, 43 ; The height of a button in a window's caption or title bar, in pixels.
 
         ; Disable Resize
-        ;toggleWinResizable(this.winTitle) 
+        ;toggleWinResizable(Constants.RaidWinTitle) 
 
         ; Calculate layer pos and size
         this.layerW := this.iconW
@@ -220,10 +218,10 @@ Class ScrollAssistant {
     onIconClicked( position ) {
         iconPressed := this.ICON_NAMES[position]
 
-        WinActivate, % this.winTitle
-        WinWaitActive, % this.winTitle
-        WinGet, winID, ID, % this.winTitle
-        WinGetPos, winX, winY, winW, winH, % this.winTitle
+        WinActivate, % Constants.RaidWinTitle
+        WinWaitActive, % Constants.RaidWinTitle
+        WinGet, winID, ID, % Constants.RaidWinTitle
+        WinGetPos, winX, winY, winW, winH, % Constants.RaidWinTitle
 
         scrollX := winX + (this.layerX - winX)//2
         scrollY := this.layerY + this.yg ; + 50

@@ -18,6 +18,7 @@
     #NoEnv                          ; Recommended for performance and compatibility with future AutoHotkey releases.
     ;#Warn                          ; Enable warnings to assist with detecting common errors.
     SendMode Input                  ; Recommended for new scripts due to its superior speed and reliability.
+    StringCaseSense On              ; Make string comparisons case sensitive, not sensitives b default
     SetWorkingDir %A_ScriptDir%     ; Ensures a consistent starting directory.
     #SingleInstance Force           ; Only one instance
     #MaxThreadsPerHotkey 1          ; Only one thread
@@ -30,6 +31,8 @@
     #Include lib/GDIpHelper.ahk
     #Include lib/CsvTableFunctions.ahk
     ;#Include src/GraphicDetector.ahk
+    #Include src/Constants.ahk
+    #Include src/Options.ahk
     #Include src/ImageDetector.ahk
     #Include src/MultiBattler.ahk
     #Include src/ScrollAssistant.ahk
@@ -37,46 +40,10 @@
     #Include src/LanguageDetector.ahk
 
     
-    
-    ;; Metadata
-    ScriptVersion := "v1.0.6"
-    ScriptTitle := "UnlimitedMultiBattles"
-    ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
-
-    ;; Constants
-    isDebug := false
-    AllGuis = Main|Running|Result|Help|About
-    RaidWinTitle := "Raid: Shadow Legends"
-    LocalFolder := A_AppData . "/" . ScriptTitle
-    SettingsFileName := ScriptTitle . ".ini"
-    XpDataFileName := "XpData.csv"
-    CampaignDataFileName := "CampaignData.csv"
-    SettingsFilePath := LocalFolder . "/" . SettingsFileName
-    SettingsFilePathOld := A_ScriptDir . "/" . ScriptTitle . ".ini"
-    SettingsFilePathOld2 := A_AppData . "/" . ScriptTitle . ".ini"
-    RaidFileName := "PlariumPlay.exe"
-    DefaultGameFolder := A_AppData . "\..\Local" . "\Plarium\PlariumPlay"
-    SettingsSection := "SettingsSection"
-    DefaultSettings := { minute: 00, second: 25, battles: 10, tab: 2, boost: 3, difficulty: 3, map: 12, stage: 3, rank: 2, level: 1, onFinish: 1, customGameFolder: "", durationTab: 1}
-    InfiniteSymbol := Chr(0x221E)
-    StarSymbol := Chr(0x2605)
-    COLOR_GRAY := "c808080"
+    ; TODO: extract from view after MVC
     SS_CENTERIMAGE := 0x200
-    TCS_FIXEDWIDTH := 0x0800
-    TCM_SETITEMSIZE := 0x1329
-    PBS_MARQUEE := 0x8
-    PBM_SETMARQUEE := 0x40A
 
     ;; Texts
-
-    TabOptions = Manual|Calculated|Infinite
-    DurationTabOptions = Auto|Manual
-    BoostOptions := "No Boost|Raid Boost|XP Boost|Both Boosts"
-    DifficultyOptions := "Normal|Hard|Brutal"
-    MapOptions := GenerateNumericOptions(12)
-    StageOptions := GenerateNumericOptions(7)
-    RankOptions := GenerateRankOptions()
-
     RunningHeader = Multi-battling
     RunningTimeLeftMessage := "Time left: " 
     RunningOnFinishMessage = On finish:
@@ -90,16 +57,15 @@
     ResultMessageSuccess = Multi-Battle finished successfuly
     ResultMessageCanceled = Multi-Battle canceled by user
     ResultMessageInterrupted = Multi-Battle interrupted, game closed
-    
-
-    ;; Init LOGIC
-    filecreatedir, %LocalFolder%
-    InitSettings()
-    InitCalculator()
 
     ; Init translations
-    language := new LanguageDetector().getLanguage(WinExist(RaidWinTitle))
+    language := new LanguageDetector().getLanguage(WinExist(Constants.RaidWinTitle))
     Global i18n := New i18n("i18n", language)
+
+    ;; Init LOGIC
+    filecreatedir, % Constants.LocalFolder()
+    InitSettings()
+    InitCalculator()
 
     If !pToken := Gdip_Startup()
     {
@@ -132,13 +98,7 @@
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("BattlesHeader")
     Gui, Main:Font, s10 norm
-    groupBoxHeight := 187
-    tabContentHeight := groupBoxHeight - 30
-    
-    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h%tabContentHeight% +%TCS_FIXEDWIDTH% vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
-    SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
-    DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
-    WinSet Redraw,, ahk_id %HTab%
+    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h157 vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, % Options.BattleAmount()
     Gui, Main:Add, Text, w320 h50 Section Center %SS_CENTERIMAGE%, Enter any number of battles
     Gui, Main:Add, Text, w70 xs Section,
     Gui, Main:Font, s20 
@@ -151,21 +111,21 @@
     Gui, Main:Font, s1
     Gui, Main:Add, Text, 
     Gui, Main:Font, s10 normal
-    Gui, Main:Add, DropDownList, Section w80 vRankSelector gOnCalculatorChanged Choose%selectedRank% AltSubmit, %RankOptions%
+    Gui, Main:Add, DropDownList, Section w80 vRankSelector gOnCalculatorChanged Choose%selectedRank% AltSubmit, % Options.Rank()
     Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, champion from lvl
     Gui, Main:Add, DropDownList, ys w40 vLevelSelector gOnCalculatorChanged Choose%selectedLevel% AltSubmit, %initialLevelOptions%
     Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, to Max.
-    Gui, Main:Add, DropDownList, xs Section w65 vDifficultySelector gOnCalculatorChanged Choose%selectedDifficulty% AltSubmit, %DifficultyOptions%
-    Gui, Main:Add, DropDownList, ys w40 vMapSelector gOnCalculatorChanged Choose%selectedMap% AltSubmit, %MapOptions%
-    Gui, Main:Add, DropDownList, ys w35 vStageSelector gOnCalculatorChanged Choose%selectedStage% AltSubmit, %StageOptions%
+    Gui, Main:Add, DropDownList, xs Section w65 vDifficultySelector gOnCalculatorChanged Choose%selectedDifficulty% AltSubmit, % Options.Difficulty()
+    Gui, Main:Add, DropDownList, ys w40 vMapSelector gOnCalculatorChanged Choose%selectedMap% AltSubmit, % Options.Map()
+    Gui, Main:Add, DropDownList, ys w35 vStageSelector gOnCalculatorChanged Choose%selectedStage% AltSubmit, % Options.Stage()
     Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, with
-    Gui, Main:Add, DropDownList, ys w97 vBoostSelector gOnCalculatorChanged Choose%selectedBoost% AltSubmit, %BoostOptions%
+    Gui, Main:Add, DropDownList, ys w97 vBoostSelector gOnCalculatorChanged Choose%selectedBoost% AltSubmit, % Options.Boost()
     Gui, Main:Add, Text, xs Section w70,
     Gui, Main:Font, s20 
     Gui, Main:Add, Text, w58 right ys vCalculatedRepetitions, % calculatedResults.repetitions
     Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, w100 ys+7, battles
-    Gui, Main:Font, s10 %COLOR_GRAY% normal
+    Gui, Main:Font, "s10 "Constants.COLOR_GRAY" normal"
     Gui, Main:Add, Text, w330 xs yp+25 Section Center vCalculatedExtra,
 
     Gui, Main:Tab, 3
@@ -174,7 +134,7 @@
     Gui, Main:Add, Text, w330 h60 Section Center %SS_CENTERIMAGE%, Run infinetly till your stop us.
     Gui, Main:Add, Text, w75 xs Section,
     Gui, Main:Font, s45 
-    Gui, Main:Add, Text, w50 h35 ys Right %SS_CENTERIMAGE%, % InfiniteSymbol
+    Gui, Main:Add, Text, w50 h35 ys Right %SS_CENTERIMAGE%, % Constants.InfiniteSymbol
     Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, w100 ys+7, % " battles"
     Gui, Main:Tab
@@ -185,7 +145,7 @@
     Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("TimeHeader")
    
     ; Section 3: Duration
-    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, %DurationTabOptions%
+    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, % Options.BattleDuration()
     Gui, Main:Font, s10 norm
     Gui, Main:Add, Text, w260 vAutoText, % Translate("InfoAuto")
     Gui, Main:Add, Button, w50 xp+260 yp Center gTestAuto vAutoButton, % Translate("ButtonTestDetector")
@@ -204,7 +164,7 @@
     Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown,
     Gui, Main:Font, s14 bold
     Gui, Main:Add, Text, ys+15 BackgroundTrans, sec.
-    Gui, Main:Font, s10 %COLOR_GRAY% normal
+    Gui, Main:Font, "s10 "Constants.COLOR_GRAY" normal"
     Gui, Main:Add, Text, h20 w330 xs yp+30 Section Center vCalculatedDuration,
     Gui, Main:Tab
     
@@ -279,7 +239,7 @@
 
     ; Load About GUI
     Gui, About:Font, s10 bold
-    Gui, About:Add, Text, w350 h35 xp yp %SS_CENTERIMAGE% BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
+    Gui, About:Add, Text, w350 h35 xp yp %SS_CENTERIMAGE% BackgroundTrans Section Center, % Constants.ScriptTitle " " Constants.ScriptVersion
     Gui, About:Font, s10 norm
     Gui, About:Add, Text, w350 xs Section, % Translate("ProjectDescription")
     Gui, About:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Back
@@ -291,13 +251,35 @@
     InitTimeComponents()    
     FillCalculatedResults(calculatedResults)
     UpdateDuration()
+
+    Prog := new Program()
+    Prog.Main()
     
     
     ; Show initial UI (Main)
-    Gui, Main:Show, xCenter y100 AutoSize, %ScriptTitle%
+    Gui, Main:Show, xCenter y100 AutoSize, % Constants.ScriptTitle
     mainGuiShown := true
     
 return ; End of auto-execute section
+
+class Program
+{
+    Initialize()
+    {
+        SetWorkingDir,% A_ScriptDir
+		this.View := new View()
+		this.Model := new Model()
+		this.Controller := new Controller(this.Model, this.View)
+		this.View.showGui()
+    }
+	
+	Main()
+	{
+        this.Initialize()
+        this.Controller.OpenSettingsView()
+	}
+}
+
 
 
 ;;; Labels
@@ -320,8 +302,8 @@ ShowRunning:
         }
     }
     targetGui := StrReplace(A_ThisLabel, "Show")
-    Gui, %targetGui%:Show, x%x% y%y%, %ScriptTitle%
-    HideAllGuisBut(AllGuis, targetGui)
+    Gui, %targetGui%:Show, x%x% y%y%, % Constants.ScriptTitle
+    HideAllGuisBut(Constants.ViewNames, targetGui)
 return
 
 MenuHandler:
@@ -351,19 +333,19 @@ RunningGuiClose:
 return
 
 GoToSite:
-    Run %ScriptSite%
+    Run % Constants.ScriptSite
 return
     
 GoToGame:
     ; If game is already open, activate their window
-    if WinExist(RaidWinTitle){
-        WinActivate, %RaidWinTitle%
+    if WinExist(Constants.RaidWinTitle){
+        WinActivate, % Constants.RaidWinTitle
         return
     }
     
     ; If game not in default folder, ask for installation folder 
-    fileFolder := Settings.customGameFolder != "" ? Settings.customGameFolder : DefaultGameFolder
-    filePath := fileFolder . "\" . RaidFileName
+    fileFolder := Settings.customGameFolder != "" ? Settings.customGameFolder : Constants.DefaultGameFolder
+    filePath := fileFolder . "\" . Constants.RaidFileName
     if (!FileExist(filePath)){
         ; Show select folder dialog
         FileSelectFolder, OutputVar, , 0, % Translate("UnableToFindGameMessage")
@@ -371,14 +353,16 @@ GoToGame:
             MsgBox, % Translate("NoFolderSelectedMessage")
             return
         }
-        newFilePath := OutputVar . "\" . RaidFileName
+        newFilePath := OutputVar . "\" . Constants.RaidFileName
         if (!FileExist(newFilePath)){
             MsgBox, % Translate("NoGameInFolderMessage")
             return
         }
            
         ; Save custom raid folder
-        IniWrite, %OutputVar%, %SettingsFilePath%, %SettingsSection%, customGameFolder
+        settingsPath := Constants.SettingsFilePath()
+        settingsSection := Constants.SettingsSection
+        IniWrite, %OutputVar%, %settingsPath%, %settingsSection%, customGameFolder
         Settings.customGameFolder := OutputVar
         filePath := newFilePath
     }
@@ -404,7 +388,9 @@ return
 
 OnTabChanged:
 	GuiControlGet,TabValue,,TabSelector
-    IniWrite, %TabValue%, %SettingsFilePath%, %SettingsSection%, tab
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %TabValue%, %settingsPath%, %settingsSection%, tab
     Settings.tab := TabValue
     
     UpdateDuration()
@@ -412,7 +398,9 @@ return
 
 OnDurationTabChanged:
 	GuiControlGet,TabValue,,DurationTabSelector
-    IniWrite, %TabValue%, %SettingsFilePath%, %SettingsSection%, durationTab
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %TabValue%, %settingsPath%, %settingsSection%, durationTab
     Settings.durationTab := TabValue
     
     ;UpdateDuration()
@@ -421,7 +409,9 @@ return
 OnBattleChangedByEdit:
     Gui, Submit, NoHide
     GuiControlGet,BattlesValue,,EditBattles
-    IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %BattlesValue%, %settingsPath%, %settingsSection%, battles
     Settings.battles := BattlesValue
     GuiControl,,UpDownBattles,%BattlesValue%
     FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
@@ -429,7 +419,9 @@ return
 
 OnBattleChangedByUpDown:
     GuiControlGet,BattlesValue,,UpDownBattles
-    IniWrite, %BattlesValue%, %SettingsFilePath%, %SettingsSection%, battles
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %BattlesValue%, %settingsPath%, %settingsSection%, battles
     Settings.battles := BattlesValue
     GuiControl,,EditBattles,%BattlesValue%
     FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
@@ -444,19 +436,21 @@ OnCalculatorChanged:
     GuiControlGet,LevelValue,,LevelSelector
     
     maxLvlValue := (RankValue*10)-1
-    rankedLevelOptions := GenerateNumericOptions(maxLvlValue)
+    rankedLevelOptions := Options.GenerateNumericOptions(maxLvlValue)
     GuiControl,,LevelSelector, |%rankedLevelOptions%
     if (LevelValue > maxLvlValue){
         LevelValue := 1
     }
     GuiControl, ChooseString, LevelSelector, %LevelValue%
     
-    IniWrite, %DifficultyValue%, %SettingsFilePath%, %SettingsSection%, difficulty
-    IniWrite, %StageValue%, %SettingsFilePath%, %SettingsSection%, stage
-    IniWrite, %MapValue%, %SettingsFilePath%, %SettingsSection%, map
-    IniWrite, %BoostValue%, %SettingsFilePath%, %SettingsSection%, boost
-    IniWrite, %RankValue%, %SettingsFilePath%, %SettingsSection%, rank
-    IniWrite, %LevelValue%, %SettingsFilePath%, %SettingsSection%, level
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %DifficultyValue%, %settingsPath%, %settingsSection%, difficulty
+    IniWrite, %StageValue%, %settingsPath%, %settingsSection%, stage
+    IniWrite, %MapValue%, %settingsPath%, %settingsSection%, map
+    IniWrite, %BoostValue%, %settingsPath%, %settingsSection%, boost
+    IniWrite, %RankValue%, %settingsPath%, %settingsSection%, rank
+    IniWrite, %LevelValue%, %settingsPath%, %settingsSection%, level
     Settings.difficulty := DifficultyValue
     Settings.stage := StageValue
     Settings.map := MapValue
@@ -478,8 +472,10 @@ OnTimeChangedByUpDown:
     SetFormat, Float, 02.0
     MinuteValue += 0.0
     SecondValue += 0.0
-    IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %MinuteValue%, %settingsPath%, %settingsSection%, minute
+    IniWrite, %SecondValue%, %settingsPath%, %settingsSection%, second
     Settings.minute := MinuteValue
     Settings.second := SecondValue
     GuiControl, , EditMinute, %MinuteValue%
@@ -498,8 +494,10 @@ OnTimeChangedByEdit:
     SetFormat, Float, 02.0
     MinuteValue += 0.0
     SecondValue += 0.0
-    IniWrite, %MinuteValue%, %SettingsFilePath%, %SettingsSection%, minute
-    IniWrite, %SecondValue%, %SettingsFilePath%, %SettingsSection%, second
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %MinuteValue%, %settingsPath%, %settingsSection%, minute
+    IniWrite, %SecondValue%, %settingsPath%, %settingsSection%, second
     Settings.minute := MinuteValue
     Settings.second := SecondValue
     GuiControl,,UpDownMinute,%MinuteValue%
@@ -511,7 +509,9 @@ return
 OnFinishChanged:
     Gui, submit, nohide
     GuiControlGet, OnFinishValue,,OnFinishSelector
-    IniWrite, %OnFinishValue%, %SettingsFilePath%, %SettingsSection%, onFinish
+    settingsPath := Constants.SettingsFilePath()
+    settingsSection := Constants.SettingsSection
+    IniWrite, %OnFinishValue%, %settingsPath%, %settingsSection%, onFinish
     Settings.onFinish := OnFinishValue
 return
 
@@ -553,34 +553,38 @@ return
 
 InitSettings(){
     global
-    If (!FileExist(SettingsFilePath)){
-        Settings := DefaultSettings
+    local settingsPath := Constants.SettingsFilePath()
+    local settingsSection := Constants.SettingsSection
+    If (!FileExist(settingsPath)){
+        Settings := Constants.DefaultSettings
         for key, value in Settings{
             if (key="minute" || key="second"){
                 SetFormat, Float, 02.0
                 value += 0.0
                 Settings[key] := value
             }        
-            IniWrite, %value%, %SettingsFilePath%, %SettingsSection%, %key%
+            IniWrite, %value%, %settingsPath%, %settingsSection%, %key%
         }
     }else{
         Settings := {}
-        for key, defaultValue in DefaultSettings{
-            IniRead, storedValue, %SettingsFilePath%, %SettingsSection%, %key%
+        for key, defaultValue in Constants.DefaultSettings{
+            IniRead, storedValue, %settingsPath%, %settingsSection%, %key%
             if (storedValue="ERROR"){
                 ; Key never included or corrupted at setting file. Restore defaultValue.
-                IniWrite, %defaultValue%, %SettingsFilePath%, %SettingsSection%, %key%
+                IniWrite, %defaultValue%, %settingsPath%, %settingsSection%, %key%
                 Settings[key] := defaultValue
             }else{
                 Settings[key] := storedValue
             }
         }
     }
-    If (FileExist(SettingsFilePathOld)){
-        FileDelete, %SettingsFilePathOld%   ;used on versions 1.0.1
+    local settingsPathOld := Constants.SettingsFilePathOld()    ;used on versions 1.0.1
+    If (FileExist(settingsPathOld)){
+        FileDelete, % settingsPathOld  
     }
-    If (FileExist(SettingsFilePathOld2)){
-        FileDelete, %SettingsFilePathOld2%  ;used on versions 1.0.2
+    settingsPathOld := Constants.SettingsFilePathOld2()         ;used on versions 1.0.2
+    If (FileExist(settingsPathOld)){
+        FileDelete, % settingsPathOld  
     }
     selectedTab := Settings.tab
     selectedBoost := Settings.boost
@@ -598,11 +602,11 @@ InitSettings(){
 
 InitCalculator(){
     global
-    FileInstall, data\XpData.csv, %LocalFolder%\%XpDataFileName%
-    FileInstall, data\CampaignData.csv, %LocalFolder%\%CampaignDataFileName%
-    XpData := ReadTable(LocalFolder . "\" . XpDataFileName, {"Headers" : True}, xpColumnNames)
-    CampaignData := ReadTable(LocalFolder . "\" . CampaignDataFileName, {"Headers" : True}, campaignColumnNames)
-    initialLevelOptions := GenerateNumericOptions((selectedRank*10)-1)
+    FileInstall, data\XpData.csv, % Constants.LocalFolder() Constants.FolderSeparator Constants.XpDataFileName
+    FileInstall, data\CampaignData.csv, % Constants.LocalFolder() Constants.FolderSeparator Constants.CampaignDataFileName
+    XpData := ReadTable(Constants.LocalFolder() . Constants.FolderSeparator . Constants.XpDataFileName, {"Headers" : True}, xpColumnNames)
+    CampaignData := ReadTable(Constants.LocalFolder() . Constants.FolderSeparator . Constants.CampaignDataFileName, {"Headers" : True}, campaignColumnNames)
+    initialLevelOptions := Options.GenerateNumericOptions((selectedRank*10)-1)
     calculatedResults := CalculateResults(Settings, CampaignData, XpData)
 }
 
@@ -625,8 +629,6 @@ UpdateCalculator(){
 }
 
 CalculateResults(Settings, campaignData, xpData){
-    rank := Settings.rank
-    level := Settings.level
     levelsToMax := ((Settings.rank) * 10) - (Settings.level)
     Loop,%levelsToMax%{
         currentLevel := Settings.level + A_Index - 1
@@ -677,8 +679,8 @@ UpdateDuration(){
 FillEstimatedTime(seconds, minutes, repetitions){
     totalSeconds := (seconds + ( minutes * 60 )) * repetitions
     totalMinutes := Floor(totalSeconds / 60)
-    isInfinite := (repetitions=-1)
-    if (isInfinite){
+    infiniteMode := (repetitions=-1)
+    if (infiniteMode){
         text := "Infinite" 
     }
     else if (totalMinutes=0){
@@ -692,34 +694,13 @@ FillEstimatedTime(seconds, minutes, repetitions){
         additionalMinutes := totalMinutes - (totalHours*60)
         text := totalHours . " hours and " . additionalMinutes . " minutes"
     }
-    if (!isInfinite){
+    if (!infiniteMode){
         text .= " aprox."
     }
     GuiControl,, CalculatedDuration, %text%
 }
 
-GenerateNumericOptions(items){
-    Loop,%items%{
-        List .= A_Index
-        if (A_Index!=items){
-            List .= "|"
-        }
-    }
-    return List
-}
 
-GenerateRankOptions(){
-    StarSymbol := Chr(0x2605)
-    ranks := 6
-    Loop,%ranks%{
-        currentItem := currentItem . StarSymbol
-        List .= currentItem
-        if (A_Index!=ranks){
-            List .= "|"
-        }
-    }
-    return List
-}
 
 FormatSeconds(seconds){
     date = 2000 ;any year above 1600
@@ -742,7 +723,8 @@ HideAllGuisBut(list, excluded){
 }
 
 DestroyAllGuis(){
-    Loop, Parse, AllGuis, |
+    names := Constants.ViewNames
+    Loop, Parse, names, |
         Gui, %A_LoopField%:Destroy
     return
 }
