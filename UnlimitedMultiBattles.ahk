@@ -33,14 +33,14 @@
     #Include src/ImageDetector.ahk
     #Include src/MultiBattler.ahk
     #Include src/ScrollAssistant.ahk
+    #Include lib/i18n.ahk
+    #Include src/LanguageDetector.ahk
 
     
     
     ;; Metadata
     ScriptVersion := "v1.0.6"
     ScriptTitle := "UnlimitedMultiBattles"
-    ScriptDescription := "This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows."
-    ProjectDescription := "This project is open source project and it's licensed under Apache 2.0. Our source code and additional informations can be found at our Github repository.`n"
     ScriptSite := "https://github.com/rafaco/UnlimitedMultiBattles"
 
     ;; Constants
@@ -84,11 +84,6 @@
     StageOptions := GenerateNumericOptions(7)
     RankOptions := GenerateRankOptions()
 
-    InfoTeam := "Open the game, select a stage and prepare your team. Don't press 'Play' and come back."
-    InfoBattles := "Select how many times you want to play the stage. In order to avoid wasting your precious energy, you have three available modes: you can run it INFINITELY, enter a MANUAL number or use our handy CALCULATOR to know how many runs to max out your champions in a campaign stage."
-    InfoStart := "When ready, just press 'Start Multi-Battle' and lay back while we farm for you. Cancel it at any time by pressing 'Stop'."
-    InfoTime := "Enter how many seconds you want us to wait between each replay. It depends on your current team speed for the stage you are in. Use your longer run time plus a small margin for the loading screens."
-
     UnableToOpenGameMessage := "Unable to open the game from the default installation folder.`n`nOpen it manually."
     UnableToSendKeysToGameMessage := "Unable to Multi-Battle: The game is running as admin and this script isn't.`n`nYou can close the game and re-opening it without admin. You can also run this script as admin.`n`nDo you want to run this script as Administrator now?"
     RunningHeader = Multi-battling
@@ -120,6 +115,10 @@
     InitSettings()
     InitCalculator()
 
+    ; Init translations
+    language := new LanguageDetector().getLanguage(WinExist(RaidWinTitle))
+    Global i18n := New i18n("i18n", language)
+
     If !pToken := Gdip_Startup()
     {
         MsgBox, w, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
@@ -140,19 +139,20 @@
 
     ; Section 1: Prepare your team
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox, w350 h65 Section, %TeamHeader%
+    Gui, Main:Add, GroupBox,  w350 h65 Section, % Translate("TeamHeader")
     Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, xp+10 yp+20 w270, %InfoTeam%
+    Gui, Main:Add, Text, xp+10 yp+20 w270, % Translate("InfoTeam")
     Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
     Gui, Main:Font, s2
     Gui, Main:Add, Text, xs,
 
     ; Section 2: Number of battles
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, Text, w350 xs Section, % "  " . BattlesHeader
+    Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("BattlesHeader")
     Gui, Main:Font, s10 norm
     groupBoxHeight := 187
     tabContentHeight := groupBoxHeight - 30
+    
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h%tabContentHeight% +%TCS_FIXEDWIDTH% vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, %TabOptions%
     SendMessage, TCM_SETITEMSIZE, 0, (350/3)+20, , ahk_id %HTAB%
     DllCall("SetWindowPos", "Ptr", hGrp, "Ptr", HTab, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x3)
@@ -200,7 +200,7 @@
     Gui, Main:Font, s2 bold
     Gui, Main:Add, Text, x10 Section,
     Gui, Main:Font, s10 bold
-    Gui, Main:Add, Text, w350 xs Section, % "  " . TimeHeader
+    Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("TimeHeader")
    
     ; Section 3: Duration
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, %DurationTabOptions%
@@ -231,7 +231,7 @@
     Gui, Main:Add, Text, xs
     Gui, Main:Add, Button, Section w100 %SS_CENTERIMAGE% Center Default gStartScroll vStartScroll, %StartScrollButton%
     Gui, Main:Add, Text, w100 ys Section Right %SS_CENTERIMAGE% ,
-    Gui, Main:Add, Button, ys w100 %SS_CENTERIMAGE% Center Default gStartBattles, %StartButton%
+    Gui, Main:Add, Button, ys w100 %SS_CENTERIMAGE% Center Default gStartBattles, % Translate("StartButton")
 
     ; Load Running GUI
     Gui, Running:Font, s12 bold
@@ -275,23 +275,23 @@
     Gui, Help:Font, s11 bold
     Gui, Help:Add, Text, w350 Center Section, Help
     Gui, Help:Font, s10 normal
-    Gui, Help:Add, Text, w350 xs, %ScriptDescription%
+    Gui, Help:Add, Text, w350 xs, % Translate("ScriptDescription")
     Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, %TeamHeader%
+    Gui, Help:Add, Text, xs, % Translate("TeamHeader")
     Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, %InfoTeam%
+    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoTeam")
     Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, %BattlesHeader%
+    Gui, Help:Add, Text, xs, % Translate("BattlesHeader")
     Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, %InfoBattles%
+    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoBattles")
     Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, %TimeHeader%
+    Gui, Help:Add, Text, xs, % Translate("TimeHeader")
     Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, %InfoTime%
+    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoTime")
     Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, %StartHeader%
+    Gui, Help:Add, Text, xs, % Translate("StartHeader")
     Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, %InfoStart%
+    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoStart")
     Gui, Help:Add, Text, w350 xs Section,
     Gui, Help:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Back
 
@@ -299,7 +299,7 @@
     Gui, About:Font, s10 bold
     Gui, About:Add, Text, w350 h35 xp yp %SS_CENTERIMAGE% BackgroundTrans Section Center, %ScriptTitle% %ScriptVersion%
     Gui, About:Font, s10 norm
-    Gui, About:Add, Text, w350 xs Section, %ProjectDescription%
+    Gui, About:Add, Text, w350 xs Section, % Translate("ProjectDescription")
     Gui, About:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Back
     Gui, About:Add, Text, w120 ys Section,
     Gui, About:Add, Button, ys w100 h30 gGoToSite %SS_CENTERIMAGE% Center, Go to GitHub
