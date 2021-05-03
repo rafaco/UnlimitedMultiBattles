@@ -27,17 +27,17 @@
     DllCall("dwmapi\DwmEnableComposition", "uint", 0)
     OnExit, Shutdown
 
-    #Include lib/Gdip_All.ahk
-    #Include lib/GDIpHelper.ahk
-    #Include lib/CsvTableFunctions.ahk
-    ;#Include src/GraphicDetector.ahk
-    #Include src/Constants.ahk
-    #Include src/Options.ahk
-    #Include src/ImageDetector.ahk
-    #Include src/MultiBattler.ahk
-    #Include src/ScrollAssistant.ahk
-    #Include lib/i18n.ahk
-    #Include src/LanguageDetector.ahk
+    #Include lib\Gdip_All.ahk
+    #Include lib\GDIpHelper.ahk
+    #Include lib\CsvTableFunctions.ahk
+    ;#Include src\GraphicDetector.ahk
+    #Include src\Constants.ahk
+    #Include src\Options.ahk
+    #Include src\ImageDetector.ahk
+    #Include src\MultiBattler.ahk
+    #Include src\ScrollAssistant.ahk
+    #Include lib\i18n.ahk
+    #Include src\LanguageDetector.ahk
 
 
     ; Init translations
@@ -60,8 +60,10 @@
     ;; Load VIEW
     SS_CENTERIMAGE := 0x200 ; TODO: extract from view after MVC
     ;Menu, Tray, Icon, images\icon.ico
-    Menu, InfoMenu, Add, Help, MenuHandler
-    Menu, InfoMenu, Add, About, MenuHandler
+    menu1 := % Translate("HelpHeader")
+    menu2 := % Translate("AboutHeader")
+    Menu, InfoMenu, Add, %menu1%, MenuHandler
+    Menu, InfoMenu, Add, %menu2%, MenuHandler
     infoLabel := "&Info    "
     Menu, MainMenuBar, Add, %infoLabel%, :InfoMenu, Right
     
@@ -174,7 +176,7 @@
     Gui, Running:Add, Text, xs Section,
     Gui, Running:Font, s10 normal
     Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w60 h23 xs Section Left %SS_CENTERIMAGE%, % Translate("RunningOnFinishMessage")
+    Gui, Running:Add, Text, w70 h23 xs Section Left %SS_CENTERIMAGE%, % Translate("RunningOnFinishMessage")
     Gui, Running:Add, DropDownList, ys w175 vOnFinishSelector gOnFinishChanged Choose%selectedOnFinish% AltSubmit, % Options.OnFinish()
     Gui, Running:Add, Checkbox, vOnFinishCheckbox gOnFinishCheckboxChanged, % Translate("RunningOnFinishCheckbox")
     Gui, Running:Font, s3 normal
@@ -242,6 +244,15 @@
     ; Show initial UI (Main)
     Gui, Main:Show, xCenter y100 AutoSize, % Constants.ScriptTitle
     mainGuiShown := true
+
+
+    
+    #include lib\CGui.ahk
+    ;#Include src\view\ResultView.ahk
+    #Include src\view\AboutView.ahk
+    #Include src\view\HelpView.ahk
+    aboutView := new AboutView()
+    helpView := new HelpView()
     
 return ; End of auto-execute section
 
@@ -290,10 +301,10 @@ ShowRunning:
 return
 
 MenuHandler:
-    if (A_ThisMenuItem = "Help"){
+    if (A_ThisMenuItem == Translate("HelpHeader")){
         GoSub ShowHelp
     }
-    else if (A_ThisMenuItem = "About"){
+    else if (A_ThisMenuItem == Translate("AboutHeader")){
         GoSub ShowAbout
     }else{
         MsgBox, No action for "%A_ThisMenuItem%" in menu "%A_ThisMenu%".
@@ -514,10 +525,12 @@ StartScroll:
     if (!scrollAssistant.isRunning()) {
         scrollAssistant.start()
         GuiControl, , StartScroll, % Translate("ButtonScrollStop")
+        helpView.Show()
     }
     else {
         scrollAssistant.stop()
         GuiControl, , StartScroll, % Translate("ButtonScrollStart")
+        helpView.Hide()
     }
 return
 
