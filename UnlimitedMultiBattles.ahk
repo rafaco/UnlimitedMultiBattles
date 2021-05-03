@@ -27,6 +27,7 @@
     DllCall("dwmapi\DwmEnableComposition", "uint", 0)
     OnExit, Shutdown
 
+    #Include lib\CGui.ahk
     #Include lib\Gdip_All.ahk
     #Include lib\GDIpHelper.ahk
     #Include lib\CsvTableFunctions.ahk
@@ -237,40 +238,34 @@
     FillCalculatedResults(calculatedResults)
     UpdateDuration()
 
-    Prog := new Program()
-    Prog.Main()
+    UMB_Prog := new UMB_Program()
+    UMB_Prog.Main()
     
     
     ; Show initial UI (Main)
     Gui, Main:Show, xCenter y100 AutoSize, % Constants.ScriptTitle
     mainGuiShown := true
-
-
-    
-    #include lib\CGui.ahk
-    ;#Include src\view\ResultView.ahk
-    #Include src\view\AboutView.ahk
-    #Include src\view\HelpView.ahk
-    aboutView := new AboutView()
-    helpView := new HelpView()
     
 return ; End of auto-execute section
 
-class Program
+#Include src\controller\UMB_Controller.ahk
+#Include src\model\UMB_Model.ahk
+#Include src\view\UMB_View.ahk
+
+class UMB_Program
 {
     Initialize()
     {
-        SetWorkingDir,% A_ScriptDir
-		this.View := new View()
-		this.Model := new Model()
-		this.Controller := new Controller(this.Model, this.View)
-		this.View.showGui()
+		this.View := new UMB_View()
+		this.Model := new UMB_Model()
+		this.Controller := new UMB_Controller(this.Model, this.View)
+		this.View.ShowGui()
     }
 	
 	Main()
 	{
         this.Initialize()
-        this.Controller.OpenSettingsView()
+        ;this.Controller.OpenSettingsView()
 	}
 }
 
