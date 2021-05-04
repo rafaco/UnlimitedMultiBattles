@@ -44,8 +44,8 @@ Class RunningView extends CGui {
         this.Gui("Add", "Text", "xs Section")
         this.Font("s10 normal")
         this.Gui("Add", "Text", "w70 h23 xs Section Left " Constants.SS_CENTERIMAGE, Translate("RunningOnFinishMessage"))
-        ; TODO Choose%%
-        this.OnFinishSelector := this.Gui("Add", "DropDownList", "ys w175 AltSubmit Choose" selectedOnFinish, Options.OnFinish())
+        ; TODO Choose%selectedOnFinish%
+        this.OnFinishSelector := this.Gui("Add", "DropDownList", "ys w175 AltSubmit", Options.OnFinish())
         this.GuiControl("+g", this.OnFinishSelector, this.OnFinishSelectorChanged)
         this.OnFinishCheckbox := this.Gui("Add", "Checkbox", "", Translate("RunningOnFinishCheckbox"))
         this.GuiControl("+g", this.OnFinishCheckbox, this.OnFinishCheckboxChanged)

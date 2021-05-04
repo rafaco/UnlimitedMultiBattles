@@ -13,6 +13,7 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
+#Include src\view\MainView.ahk
 #Include src\view\RunningView.ahk
 #Include src\view\ResultView.ahk
 #Include src\view\AboutView.ahk
@@ -21,6 +22,7 @@
 class UMB_View  {
 
 	__New(){
+        this.mainView := new MainView()
         this.runningView := new RunningView()
         this.resultView := new ResultView()
         this.aboutView := new AboutView()
@@ -34,6 +36,7 @@ class UMB_View  {
     AddListener(controller)
     {
         this.controller := controller
+        this.mainView.AddListener(controller)
         this.runningView.AddListener(controller)
         this.resultView.AddListener(controller)
         this.aboutView.AddListener(controller)

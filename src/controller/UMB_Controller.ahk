@@ -25,6 +25,10 @@ class UMB_Controller
         this.view.AddListener(this)
     }
 
+    ShowInitialView() {
+        this.view.ShowGui()
+    }
+
     ; TODO...
     button1Listener()
     {

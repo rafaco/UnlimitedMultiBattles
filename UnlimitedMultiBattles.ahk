@@ -61,7 +61,6 @@
 
     ;; Load VIEW
     SS_CENTERIMAGE := 0x200 ; TODO: extract from view after MVC
-    ;Menu, Tray, Icon, images\icon.ico
     menu1 := % Translate("HelpHeader")
     menu2 := % Translate("AboutHeader")
     Menu, InfoMenu, Add, %menu1%, MenuHandler
@@ -127,13 +126,13 @@
     Gui, Main:Add, Text, w100 ys+7, % " " . Translate("BattlesAmountTail")
     Gui, Main:Tab
 
+    ; Section 3: Duration
     Gui, Main:Font, s2 bold
     Gui, Main:Add, Text, x10 Section,
     Gui, Main:Font, s10 bold
     Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("TimeHeader")
-   
-    ; Section 3: Duration
     Gui, Main:Font, s10 norm
+    
     Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, % Options.BattleDuration()
     Gui, Main:Add, Text, w260 vAutoText, % Translate("InfoAuto")
     Gui, Main:Add, Button, w50 xp+260 yp Center gTestAuto vAutoButton, % Translate("ButtonTestDetector")
@@ -239,8 +238,8 @@
     FillCalculatedResults(calculatedResults)
     UpdateDuration()
 
-    UMB_Prog := new UMB_Program()
-    UMB_Prog.Main()
+    Program := new UnlimitedMultiBattles()
+    Program.Main()
     
     
     ; Show initial UI (Main)
@@ -253,20 +252,19 @@ return ; End of auto-execute section
 #Include src\model\UMB_Model.ahk
 #Include src\view\UMB_View.ahk
 
-class UMB_Program
+class UnlimitedMultiBattles
 {
     Initialize()
     {
 		this.Model := new UMB_Model()
 		this.View := new UMB_View()
 		this.Controller := new UMB_Controller(this.Model, this.View)
-		this.View.ShowGui()
     }
 	
 	Main()
 	{
         this.Initialize()
-        ;this.Controller.OpenSettingsView()
+        this.Controller.ShowInitialView()
 	}
 }
 
