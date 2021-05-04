@@ -45,6 +45,7 @@
     language := new LanguageDetector().getLanguage(WinExist(Constants.RaidWinTitle))
     Global i18n := New i18n("i18n", language)
 
+
     ;; Init LOGIC
     filecreatedir, % Constants.LocalFolder()
     InitSettings()
@@ -256,8 +257,8 @@ class UMB_Program
 {
     Initialize()
     {
-		this.View := new UMB_View()
 		this.Model := new UMB_Model()
+		this.View := new UMB_View()
 		this.Controller := new UMB_Controller(this.Model, this.View)
 		this.View.ShowGui()
     }

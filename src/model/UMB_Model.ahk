@@ -13,12 +13,17 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
+#Include src\model\SettingsModel.ahk
+#Include src\model\LanguageModel.ahk
+#Include src\model\CalculatorModel.ahk
+
 class UMB_Model
-{    
-    aTextVariable := ""
+{
 
     __New(){
-
+        this.Settings   := new SettingsModel()
+        this.Language   := new LanguageModel(this.Settings)
+        this.Calculator := new CalculatorModel(this.Settings)
     }
     
     aSimpleFunction()

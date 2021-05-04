@@ -15,16 +15,17 @@
 
 class UMB_Controller
 {
-    model := "" ;
-    view := "" ;
+    model := ""
+    view := ""
 
-    __new(  model,  view)
+    __new(model,  view)
     {
-        this.model := model ;
-        this.view  := view ;
-        this.view.AddListener(this) ;
+        this.model := model
+        this.view  := view
+        this.view.AddListener(this)
     }
 
+    ; TODO...
     button1Listener()
     {
         this.model.aSimpleFunction()
