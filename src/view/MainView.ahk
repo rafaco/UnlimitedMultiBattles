@@ -20,6 +20,8 @@ Class MainView extends CGui {
 		global BorderState
 		base.__New(aParams*)
 
+        ;Gui, Color, 0xfffde7
+
         this.addMenu()
         this.addSectionPrepareTeam()
         this.addSectionAmmount()
@@ -38,7 +40,7 @@ Class MainView extends CGui {
         infoLabel := "&" . menu1 . "    "
         Menu, MainMenuBar, Add, %infoLabel%, :InfoMenu, Right
 
-        this.Gui("Menu", MainMenuBar)
+        Gui, Menu, MainMenuBar
     }
 
     
@@ -64,11 +66,11 @@ Class MainView extends CGui {
         this.addTabAmmountManual()
         this.addTabAmmountCalculated(tabSelector)
         this.addTabAmmountInfinite()
-        this.Gui("Tab")
+        Gui, Tab
     }
 
     addTabAmmountManual() {
-        ;this.Gui("Tab", , 1)
+        ;Gui, Tab, 1
         this.Gui("Add", "Text", "w320 h50 Section Center " Constants.SS_CENTERIMAGE, Translate("BattlesAmountManual"))
         this.Gui("Add", "Text", "w70 xs Section")
         this.Font("s20")
@@ -81,10 +83,10 @@ Class MainView extends CGui {
     }
 
     addTabAmmountCalculated() {
-        this.Gui("Tab", 2)
+        Gui, Tab, 2
         this.Font("s1")
-        this.Gui("Add", "Text", ,"Prueba1")
-        this.Gui("Add", "Text", ,"Prueba2")
+        this.Gui("Add", "Text")
+        this.Gui("Add", "Text")
         this.Font("s10 normal")
 
         ;TODO: Choose%selectedRank%
@@ -118,12 +120,14 @@ Class MainView extends CGui {
         this.calculatedRepetitions := this.Gui("Add", "Text", "w58 right ys", calculatedResults.repetitions)
         this.Font("s14 bold")
         this.Gui("Add", "Text", "w100 ys+7", " " . Translate("BattlesAmountTail"))
-        this.Font("s10 " Constants.COLOR_GRAY " normal")
+        
+        ;this.Font("s10 " Constants.COLOR_GRAY " normal")
         this.calculatedExtra := this.Gui("Add", "Text", "w330 xs yp+25 Section Center")
+        this.calculatedExtra.Font("s10 " Constants.COLOR_GRAY " normal")
     }
 
     addTabAmmountInfinite() {
-        this.Gui("Tab", 3)
+        Gui, Tab, 3
         this.Font("s10 normal")
         this.Gui("Add", "Text", "w330 h60 Section Center " Constants.SS_CENTERIMAGE, Translate("BattlesAmountInfinite"))
         this.Gui("Add", "Text", "w75 xs Section")
@@ -145,11 +149,11 @@ Class MainView extends CGui {
         this.GuiControl("+g", this.durationTabSelector, this.DurationTabSelectorChanged)
         this.addTabDurationAuto()
         this.addTabDurationManual()
-        this.Gui("Tab")
+        Gui, Tab
     }
 
     addTabDurationAuto(){
-        ;this.Gui("Tab", 1)
+        ;Gui, Tab, 1
         this.autoText := this.Gui("Add", "Text", "w260", Translate("InfoAuto"))
         this.autoButton := this.Gui("Add", "Button", "w50 xp+260 yp Center", Translate("ButtonTestDetector"))
         this.GuiControl("+g", this.autoButton, this.AutoButtonPressed)
@@ -157,7 +161,7 @@ Class MainView extends CGui {
     }
 
     addTabDurationManual(){
-        this.Gui("Tab", 2)
+        Gui, Tab, 2
         this.Gui("Add", "Text", "Section BackgroundTrans w60 Right")
         this.Font("s20 normal")
 
