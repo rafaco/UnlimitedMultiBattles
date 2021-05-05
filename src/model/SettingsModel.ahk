@@ -44,18 +44,21 @@ class SettingsModel
             this.InitFromStorage(this.settingsPath, this.settingsSection)
         }
 
-        ; TODO: REMOVE: seems not needed, can be access by this.values
+        ; TODO: VERIFY and REMOVE: 
+        ; Seems not needed, can be access by this.values
         ; Usefull to get the naming mapping
-        selectedTab             := this.values.tab
-        selectedBoost           := this.values.boost
-        selectedDifficulty      := this.values.difficulty
-        selectedMap             := this.values.map
-        selectedStage           := this.values.stage
-        selectedRank            := this.values.rank
-        selectedLevel           := this.values.level
-        selectedOnFinish        := this.values.onFinish
-        selectedRaidFilePath    := this.values.customGameFolder
-        selectedDurationTab     := this.values.durationTab
+        ; selectedTab             := this.values.tab
+        ; selectedBoost           := this.values.boost
+        ; selectedDifficulty      := this.values.difficulty
+        ; selectedMap             := this.values.map
+        ; selectedStage           := this.values.stage
+        ; selectedRank            := this.values.rank
+        ; selectedLevel           := this.values.level
+        ; selectedOnFinish        := this.values.onFinish
+        ; selectedRaidFilePath    := this.values.customGameFolder
+        ; selectedDurationTab     := this.values.durationTab
+        
+        ; TODO: VERIFY and REMOVE: IMPORTANT! not really in settings
         OnFinishCheckboxValue   := 0
     }
     

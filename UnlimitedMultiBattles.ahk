@@ -47,9 +47,6 @@
 
 
     ;; Init LOGIC
-    filecreatedir, % Constants.LocalFolder()
-    InitSettings()
-    InitCalculator()
 
     If !pToken := Gdip_Startup()
     {
@@ -234,17 +231,15 @@
     
     
     ; Init loaded UIs
-    InitTimeComponents()    
-    FillCalculatedResults(calculatedResults)
-    UpdateDuration()
+    InitTimeComponents()
 
     Program := new UnlimitedMultiBattles()
     Program.Main()
     
     
     ; Show initial UI (Main)
-    Gui, Main:Show, xCenter y100 AutoSize, % Constants.ScriptTitle
-    mainGuiShown := true
+    ;Gui, Main:Show, xCenter y100 AutoSize, % Constants.ScriptTitle
+    ;mainGuiShown := true
     
 return ; End of auto-execute section
 
@@ -381,7 +376,7 @@ OnTabChanged:
     IniWrite, %TabValue%, %settingsPath%, %settingsSection%, tab
     Settings.tab := TabValue
     
-    UpdateDuration()
+    ;UpdateDuration()
 return
 
 OnDurationTabChanged:
@@ -402,7 +397,7 @@ OnBattleChangedByEdit:
     IniWrite, %BattlesValue%, %settingsPath%, %settingsSection%, battles
     Settings.battles := BattlesValue
     GuiControl,,UpDownBattles,%BattlesValue%
-    FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
+    ;FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
 return
 
 OnBattleChangedByUpDown:
@@ -412,7 +407,7 @@ OnBattleChangedByUpDown:
     IniWrite, %BattlesValue%, %settingsPath%, %settingsSection%, battles
     Settings.battles := BattlesValue
     GuiControl,,EditBattles,%BattlesValue%
-    FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
+    ;FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
 return  
 
 OnCalculatorChanged:
@@ -446,8 +441,8 @@ OnCalculatorChanged:
     Settings.rank := RankValue
     Settings.level := LevelValue
     
-    UpdateCalculator()
-    UpdateDuration()
+    ;UpdateCalculator()
+    ;UpdateDuration()
 return
 
 OnTimeChangedByUpDown:
@@ -469,7 +464,7 @@ OnTimeChangedByUpDown:
     GuiControl, , EditMinute, %MinuteValue%
     GuiControl, , EditSecond, %SecondValue%
     
-    UpdateDuration()
+    ;UpdateDuration()
 Return
 
 OnTimeChangedByEdit:
@@ -491,7 +486,7 @@ OnTimeChangedByEdit:
     GuiControl,,UpDownMinute,%MinuteValue%
     GuiControl,,UpDownSecond,%SecondValue%
     
-    UpdateDuration()
+    ;UpdateDuration()
 return
 
 OnFinishChanged:
@@ -541,65 +536,6 @@ return
 
 ;;; Functions
 
-InitSettings(){
-    global
-    local settingsPath := Constants.SettingsFilePath()
-    local settingsSection := Constants.SettingsSection
-    If (!FileExist(settingsPath)){
-        Settings := Constants.DefaultSettings
-        for key, value in Settings{
-            if (key="minute" || key="second"){
-                SetFormat, Float, 02.0
-                value += 0.0
-                Settings[key] := value
-            }        
-            IniWrite, %value%, %settingsPath%, %settingsSection%, %key%
-        }
-    }else{
-        Settings := {}
-        for key, defaultValue in Constants.DefaultSettings{
-            IniRead, storedValue, %settingsPath%, %settingsSection%, %key%
-            if (storedValue="ERROR"){
-                ; Key never included or corrupted at setting file. Restore defaultValue.
-                IniWrite, %defaultValue%, %settingsPath%, %settingsSection%, %key%
-                Settings[key] := defaultValue
-            }else{
-                Settings[key] := storedValue
-            }
-        }
-    }
-    local settingsPathOld := Constants.SettingsFilePathOld()    ;used on versions 1.0.1
-    If (FileExist(settingsPathOld)){
-        FileDelete, % settingsPathOld  
-    }
-    settingsPathOld := Constants.SettingsFilePathOld2()         ;used on versions 1.0.2
-    If (FileExist(settingsPathOld)){
-        FileDelete, % settingsPathOld  
-    }
-    selectedTab := Settings.tab
-    selectedBoost := Settings.boost
-    selectedDifficulty := Settings.difficulty
-    selectedMap := Settings.map
-    selectedStage := Settings.stage
-    selectedRank := Settings.rank
-    selectedLevel := Settings.level
-    selectedOnFinish := Settings.onFinish
-    selectedRaidFilePath := Settings.customGameFolder
-    selectedDurationTab := Settings.durationTab
-    
-    OnFinishCheckboxValue := 0
-}
-
-InitCalculator(){
-    global
-    FileInstall, data\XpData.csv, % Constants.LocalFolder() Constants.FolderSeparator Constants.XpDataFileName
-    FileInstall, data\CampaignData.csv, % Constants.LocalFolder() Constants.FolderSeparator Constants.CampaignDataFileName
-    XpData := ReadTable(Constants.LocalFolder() . Constants.FolderSeparator . Constants.XpDataFileName, {"Headers" : True}, xpColumnNames)
-    CampaignData := ReadTable(Constants.LocalFolder() . Constants.FolderSeparator . Constants.CampaignDataFileName, {"Headers" : True}, campaignColumnNames)
-    initialLevelOptions := Options.GenerateNumericOptions((selectedRank*10)-1)
-    calculatedResults := CalculateResults(Settings, CampaignData, XpData)
-}
-
 InitTimeComponents(){
     global
     GuiControl, , UpDownMinute, % Settings.minute
@@ -608,101 +544,7 @@ InitTimeComponents(){
     GuiControl, , EditSecond, % Settings.second
 }
 
-UpdateCalculator(){
-    global Settings
-    global campaignData
-    global xpData
-    global calculatedResults
-    
-    calculatedResults := CalculateResults(Settings, campaignData, xpData)
-    FillCalculatedResults(calculatedResults)
-}
 
-CalculateResults(Settings, campaignData, xpData){
-    levelsToMax := ((Settings.rank) * 10) - (Settings.level)
-    Loop,%levelsToMax%{
-        currentLevel := Settings.level + A_Index - 1
-        currentXp := xpData[currentLevel][Settings.rank]
-        requiredXP += currentXp
-    }
-    map := Settings.map
-    difficulty := Settings.difficulty
-    stage := Settings.stage
-    campaignLine := ((Settings.map-1) * 21) + ((Settings.difficulty-1) * 7) + Settings.stage
-    stageXp := campaignData[campaignLine]["XP"]
-    stageEnergy := campaignData[campaignLine]["Energie"]
-    stageSilver := campaignData[campaignLine]["Silver"]
-    boost := Settings.boost
-    boostOptionsMultiplier := [1, 1.2, 2, 2.4]
-    boostedXp := stageXp * boostOptionsMultiplier[Settings.boost]
-    championXp := boostedXp/4
-    
-    repetitions := Floor(requiredXP / championXp) + 1
-    energySpent := stageEnergy * repetitions
-    silverEarned := stageSilver * repetitions
-    result := { repetitions: repetitions, energy: energySpent, silver: silverEarned }
-    
-    return result
-}
-
-FillCalculatedResults(calculatedResults){
-    reps := calculatedResults.repetitions        
-    GuiControl,, CalculatedRepetitions, %reps%
-    extratext := FormatNumber(calculatedResults.energy) . " energy" . "  -->  " . FormatNumber(calculatedResults.silver) . " silver"
-    GuiControl,, CalculatedExtra, %extratext%
-}
-
-UpdateDuration(){
-    global Settings
-    global calculatedResults
-    if (Settings.tab=1){        ;Manual
-        FillEstimatedTime(Settings.second, Settings.minute, Settings.battles)
-    } 
-    else if (Settings.tab=2){   ;Calculated
-        FillEstimatedTime(Settings.second, Settings.minute, calculatedResults.repetitions)
-    }
-    else {                      ;Infinite
-        FillEstimatedTime(Settings.second, Settings.minute, -1)
-    }
-}
-
-FillEstimatedTime(seconds, minutes, repetitions){
-    totalSeconds := (seconds + ( minutes * 60 )) * repetitions
-    totalMinutes := Floor(totalSeconds / 60)
-    infiniteMode := (repetitions=-1)
-    if (infiniteMode){
-        text := "Infinite" 
-    }
-    else if (totalMinutes=0){
-        text := "Less than a minute" 
-    }
-    else if (totalMinutes<60){
-        text := totalMinutes . " minutes"
-    }
-    else{
-        totalHours := Floor(totalMinutes / 60)
-        additionalMinutes := totalMinutes - (totalHours*60)
-        text := totalHours . " hours and " . additionalMinutes . " minutes"
-    }
-    if (!infiniteMode){
-        text .= " aprox."
-    }
-    GuiControl,, CalculatedDuration, %text%
-}
-
-
-
-FormatSeconds(seconds){
-    date = 2000 ;any year above 1600
-    date += Floor(seconds), SECONDS
-    FormatTime, formattedDate, %date%, mm:ss
-    return formattedDate
-}
-
-FormatNumber(num){
-    ; Add thousands searators
-    return RegExReplace(num, "\G(?:-?)\d+?(?=(\d{3})+(?:\D|$))", "$0.")
-}
 
 HideAllGuisBut(list, excluded){
     Loop, Parse, list, |

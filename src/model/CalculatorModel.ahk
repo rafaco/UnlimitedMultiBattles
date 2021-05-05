@@ -97,13 +97,6 @@ class CalculatorModel
         return text
     }
 
-    FormatSeconds(seconds){
-        date = 2000 ;any year above 1600
-        date += Floor(seconds), SECONDS
-        FormatTime, formattedDate, %date%, mm:ss
-        return formattedDate
-    }
-
     FormatNumber(num){
         ; Add thousands searators
         return RegExReplace(num, "\G(?:-?)\d+?(?=(\d{3})+(?:\D|$))", "$0.")
