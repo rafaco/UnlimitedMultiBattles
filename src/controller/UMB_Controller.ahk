@@ -29,9 +29,17 @@ class UMB_Controller
         this.view.ShowGui()
     }
 
-    GoTo(viewName) {
+    GoTo(viewName) 
+    {
+        viewModel := this.model.GetViewModel(viewName)
+        this.view.Show(viewName, viewModel)
+    }
 
-        this.view.show(viewName, this.model.GetViewModel(viewName))
+    OnSettingChanged(key, value) 
+    {
+        this.model.Save(key, value)
+        viewModel := this.model.GetViewModel(viewName)
+        this.view.Update(viewModel)
     }
 
     ; TODO...

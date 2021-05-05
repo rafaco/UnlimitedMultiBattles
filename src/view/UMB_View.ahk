@@ -32,22 +32,30 @@ class UMB_View  {
 
     Show(viewName, data) {
         Gui,+LastFound
-        WinGetPos,x,y
-        if (viewName == "Running" && A_Gui != "Result"){
-            x += 50
-            y += 200
+        if (not A_Gui) {
+            options := "xCenter y100 AutoSize"
         }
-        else if (viewName == "ShowMain"){
-            if (A_Gui="Running" || A_Gui="Result"){
-                x -= 50
-                y -= 200
+        else{
+            WinGetPos,x,y
+            if (viewName == "Running" && A_Gui != "Result"){
+                x += 50
+                y += 200
             }
+            else if (viewName == "ShowMain"){
+                if (A_Gui="Running" || A_Gui="Result"){
+                    x -= 50
+                    y -= 200
+                }
+            }
+            options := "x" x " y" y
         }
+        
 
-        if (viewName = "Main"){
+        if (viewName = "Main") {
             this.secondarView.Hide()
             this.mainView.LoadData(data)
-            this.mainView.Show("x" x " y" y, Constants.ScriptTitle)
+            this.mainView.Show(options, Constants.ScriptTitle)
+            this.isMainView := true
         }
         else{
             this.mainView.Hide()
@@ -64,7 +72,17 @@ class UMB_View  {
                 this.secondarView := new HelpView()
             }
             this.secondarView.AddListener(this.controller)   
-            this.secondarView.Show("x" x " y" y, Constants.ScriptTitle)
+            this.secondarView.Show(options, Constants.ScriptTitle)
+            this.isMainView := false
+        }
+    }
+
+    Update(data) {
+        if (isMainView) {
+            this.mainView.LoadData(data)
+        }
+        else{
+            this.secondaryView.LoadData(data)
         }
     }
 

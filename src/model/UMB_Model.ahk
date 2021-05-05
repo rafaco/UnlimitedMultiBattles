@@ -25,10 +25,22 @@ class UMB_Model
         this.Language   := new LanguageModel(this.Settings)
         this.Calculator := new CalculatorModel(this.Settings)
     }
-    
-    aSimpleFunction()
+
+    GetValue(key)
     {
-        this.aTextVariable := "text"
+        if (key in this.Calculator.values) {
+            return this.Calculator.values[key]
+        }
+        return this.Settings.GetValue(key)
+    }
+
+    Save(key, value)
+    {
+        this.Settings.Save(key, value)
+        if (key == "lang") {
+            ;Save to language 
+        }
+        Calculator.Update()
     }
 
     GetViewModel(viewName)
@@ -36,7 +48,7 @@ class UMB_Model
         if (viewName = "Main")
         {
             return { settings   : this.Settings.values
-                   , results    : this.Calculator.results}
+                   , results    : this.Calculator.values}
         }
     }
 }

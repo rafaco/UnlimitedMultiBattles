@@ -17,18 +17,18 @@ class SettingsModel
 {
     values := {}
 
-    __New(){
+    __New() {
         filecreatedir, % Constants.LocalFolder()
         this.settingsPath := Constants.SettingsFilePath()
         this.settingsSection := Constants.SettingsSection
         this.InitStoredValues()
     }
 
-    get(key){
+    GetValue(key) {
         return this.values[key]
     }
 
-    set(key, value){
+    Set(key, value){
         IniWrite, %value%, this.settingsPath, this.settingsSection, %key%
         this.values[key] := value
     }

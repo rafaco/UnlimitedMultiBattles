@@ -19,8 +19,8 @@ Class MainView extends CGui {
 
 		global BorderState
 		base.__New(aParams*)
-
-        ;Gui, Color, 0xfffde7
+        
+        Gui, Color, 0xe1f5fe
 
         this.addMenu()
         this.addSectionPrepareTeam()
@@ -52,6 +52,8 @@ Class MainView extends CGui {
         this.Gui("Add", "Text", "xp+10 yp+20 w270", Translate("InfoTeam"))
         this.teamButton := this.Gui("Add", "Button", "w50 xp+280 yp-5 Center", Translate("ButtonOpenGame"))
         this.GuiControl("+g", this.teamButton, this.TeamButtonPressed)
+        this.Font("s2")
+        this.Gui("Add", "Text", "xs")
     }
 
     addSectionAmmount() {
@@ -84,7 +86,6 @@ Class MainView extends CGui {
     addTabAmmountCalculated() {
         Gui, Tab, 2
         this.Font("s1")
-        this.Gui("Add", "Text")
         this.Gui("Add", "Text")
         this.Font("s10 normal")
 
@@ -132,13 +133,12 @@ Class MainView extends CGui {
     }
         
      addSectionDuration() {
-        this.Font("s10 normal")
+        this.Font("s2 bold")
         this.Gui("Add", "Text", "x10 Section")
         this.Font("s10 bold")
         this.Gui("Add", "Text", "w350 xs Section", "  " . Translate("TimeHeader"))
         this.Font("s10 normal")
         
-        ; TODO: vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab%
         this.durationTabSelector := this.Gui("Add", "Tab3", "xs yp+20 w350 h100 AltSubmit", Options.BattleDuration())
         this.GuiControl("+g", this.durationTabSelector, this.DurationTabSelectorChanged)
         this.addTabDurationAuto()
@@ -183,7 +183,6 @@ Class MainView extends CGui {
         this.Gui("Add", "Text", "ys+15 BackgroundTrans", Translate("BattlesDurationSecTail"))
         this.Font("s10 " Constants.COLOR_GRAY " normal")
 
-        ;vCalculatedDuration
         this.calculatedDuration := this.Gui("Add", "Text", "h20 w330 xs yp+30 Section Center")
     }
 
@@ -208,7 +207,7 @@ Class MainView extends CGui {
     }
 
     TabSelectorChanged(){
-        GoSub OnTabChanged
+        this.controller.OnSettingChanged(tab, this.tabSelector)
     }
     
     EditBattlesChanged(){
@@ -296,6 +295,22 @@ Class MainView extends CGui {
         extratext := FormatNumber(data.results.energy) . " energy  -->  " 
                    . FormatNumber(data.results.silver) . " silver"
         this.GuiControl(        , this.calculatedExtra,     extratext)
+
+        this.GuiControl("Choose", this.durationTabSelector, data.settings.durationTab)
+        
+
+        ; TODO: durations
+
+
+        if (data.settings.tab=1){
+            this.GuiControl(    , this.calculatedDuration,  data.results.manualTime)
+        } 
+        else if (data.settings.tab=2){
+            this.GuiControl(    , this.calculatedDuration,  data.results.calculatedTime)
+        }
+        else {
+            this.GuiControl(    , this.calculatedDuration,  data.results.infiniteTime)
+        }
     }
 
 
