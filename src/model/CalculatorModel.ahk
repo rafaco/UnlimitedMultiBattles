@@ -18,13 +18,13 @@ class CalculatorModel
     ;this.settings := {}
     ;this.XpData := {}
     ;this.CampaignData := {}
-    ;this.results := {}
+    ;this.values := {}
 
     __New(ByRef settingsModel){
         this.settings := settingsModel.values
         this.XpData := this.ReadXpData()
         this.CampaignData := this.ReadCampaignData()
-        this.results := this.CalculateResults()
+        this.Update()
     }
 
     ReadXpData()
@@ -41,27 +41,71 @@ class CalculatorModel
         return ReadTable(campaignDataFullPath, {"Headers" : True}, campaignColumnNames)
     }
 
-    CalculateResults()
+    Update()
     {
         levelsToMax := ((this.settings.rank) * 10) - (this.settings.level)
         Loop,%levelsToMax%{
-            currentLevel := this.settings.level + A_Index - 1
-            currentXp := xpData[currentLevel][this.settings.rank]
-            requiredXP += currentXp
+            currentLevel    := this.settings.level + A_Index - 1
+            currentXp       := this.XpData[currentLevel][this.settings.rank]
+            requiredXP      += currentXp
         }
-        campaignLine := ((this.settings.map-1) * 21) + ((this.settings.difficulty-1) * 7) + this.settings.stage
-        stageXp := campaignData[campaignLine]["XP"]
-        stageEnergy := campaignData[campaignLine]["Energie"]
-        stageSilver := campaignData[campaignLine]["Silver"]
+        campaignLine    := ((this.settings.map-1) * 21) + ((this.settings.difficulty-1) * 7) + this.settings.stage
+        stageXp         := this.CampaignData[campaignLine]["XP"]
+        stageEnergy     := this.CampaignData[campaignLine]["Energie"]
+        stageSilver     := this.CampaignData[campaignLine]["Silver"]
         boostOptionsMultiplier := [1, 1.2, 2, 2.4]
-        boostedXp := stageXp * boostOptionsMultiplier[this.settings.boost]
-        championXp := boostedXp/4
+        boostedXp       := stageXp * boostOptionsMultiplier[this.settings.boost]
+        championXp      := boostedXp/4
         
-        repetitions := Floor(requiredXP / championXp) + 1
-        energySpent := stageEnergy * repetitions
-        silverEarned := stageSilver * repetitions
+        repetitions     := Floor(requiredXP / championXp) + 1
+        energySpent     := stageEnergy * repetitions
+        silverEarned    := stageSilver * repetitions
 
-        this.results := { repetitions: repetitions, energy: energySpent, silver: silverEarned }
-        return this.results
+        manualTime      := this.PrettyFormatDuration(Settings.second, Settings.minute, Settings.battles)
+        calculatedTime  := this.PrettyFormatDuration(Settings.second, Settings.minute, calculatedResults.repetitions)
+        infiniteTime    := this.PrettyFormatDuration(Settings.second, Settings.minute, -1)
+
+        this.values     := { repetitions: repetitions
+                           , energy: energySpent
+                           , silver: silverEarned
+                           , manualTime: manualTime
+                           , calculatedTime: calculatedTime
+                           , infiniteTime: infiniteTime }
+    }
+
+    PrettyFormatDuration(seconds, minutes, repetitions){
+        totalSeconds := (seconds + ( minutes * 60 )) * repetitions
+        totalMinutes := Floor(totalSeconds / 60)
+        infiniteMode := (repetitions=-1)
+        if (infiniteMode){
+            text := "Infinite" 
+        }
+        else if (totalMinutes=0){
+            text := "Less than a minute" 
+        }
+        else if (totalMinutes<60){
+            text := totalMinutes . " minutes"
+        }
+        else{
+            totalHours := Floor(totalMinutes / 60)
+            additionalMinutes := totalMinutes - (totalHours*60)
+            text := totalHours . " hours and " . additionalMinutes . " minutes"
+        }
+        if (!infiniteMode){
+            text .= " aprox."
+        }
+        return text
+    }
+
+    FormatSeconds(seconds){
+        date = 2000 ;any year above 1600
+        date += Floor(seconds), SECONDS
+        FormatTime, formattedDate, %date%, mm:ss
+        return formattedDate
+    }
+
+    FormatNumber(num){
+        ; Add thousands searators
+        return RegExReplace(num, "\G(?:-?)\d+?(?=(\d{3})+(?:\D|$))", "$0.")
     }
 }
