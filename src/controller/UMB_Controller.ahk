@@ -29,6 +29,11 @@ class UMB_Controller
         this.view.ShowGui()
     }
 
+    GoTo(viewName) {
+
+        this.view.show(viewName, this.model.GetViewModel(viewName))
+    }
+
     ; TODO...
     button1Listener()
     {

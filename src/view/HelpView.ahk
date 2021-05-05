@@ -49,7 +49,7 @@ Class HelpView extends CGui {
         this.backButton := this.Gui("Add", "Button", "Section w100 h30 " Constants.SS_CENTERIMAGE " Center Default", Translate("ButtonAboutBack"))
         this.GuiControl("+g", this.backButton, this.BackButtonPressed)
 		
-        this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)		
+        ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)		
 	}
 
     BackButtonPressed(){

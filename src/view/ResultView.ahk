@@ -37,7 +37,7 @@ Class ResultView extends CGui {
         this.GuiControl("+g", this.doneButton, this.DoneButtonPressed)
         this.GuiControl("+g", this.replayButton, this.ReplayButtonPressed)
 		
-        this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
+        ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
 	}
 
     loadData(header, message, text){
@@ -47,8 +47,9 @@ Class ResultView extends CGui {
     }
 
     DoneButtonPressed(){
-        this.Hide()
-        GoSub ShowMain
+        this.controller.GoTo("Main")
+        ;this.Hide()
+        ;GoSub ShowMain
     }
 
     ReplayButtonPressed(){

@@ -28,7 +28,7 @@ Class MainView extends CGui {
         this.addSectionDuration()
         this.addSectionStart()
 		
-        this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)		
+        ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)		
 	}
 
     addMenu() {

@@ -30,4 +30,13 @@ class UMB_Model
     {
         this.aTextVariable := "text"
     }
+
+    GetViewModel(viewName)
+    {
+        if (viewName = "Main")
+        {
+            return { settings   : this.Settings.values
+                   , results    : this.Calculator.results}
+        }
+    }
 }

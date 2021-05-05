@@ -23,23 +23,60 @@ class UMB_View  {
 
 	__New(){
         this.mainView := new MainView()
-        this.runningView := new RunningView()
-        this.resultView := new ResultView()
-        this.aboutView := new AboutView()
-        this.helpView := new HelpView()
+        this.secondarView := ""
+        ;this.runningView := new RunningView()
+        ;this.resultView := new ResultView()
+        ;this.aboutView := new AboutView()
+        ;this.helpView := new HelpView()
+    }
+
+    Show(viewName, data) {
+        Gui,+LastFound
+        WinGetPos,x,y
+        if (viewName == "Running" && A_Gui != "Result"){
+            x += 50
+            y += 200
+        }
+        else if (viewName == "ShowMain"){
+            if (A_Gui="Running" || A_Gui="Result"){
+                x -= 50
+                y -= 200
+            }
+        }
+
+        if (viewName = "Main"){
+            this.secondarView.Hide()
+            this.mainView.LoadData(data)
+            this.mainView.Show("x" x " y" y, Constants.ScriptTitle)
+        }
+        else{
+            this.mainView.Hide()
+            if (viewName = "Result"){
+                this.secondarView := new ResultView()
+            }
+            else if (viewName = "Running"){
+                this.secondarView := new RunningView()
+            }
+            else if (viewName = "About"){
+                this.secondarView := new AboutView()
+            }
+            else if (viewName = "Help"){
+                this.secondarView := new HelpView()
+            }
+            this.secondarView.AddListener(this.controller)   
+            this.secondarView.Show("x" x " y" y, Constants.ScriptTitle)
+        }
     }
 
     ShowGui() {
-        this.helpView.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
+        this.mainView := new MainView()
+        this.mainView.AddListener(controller)
+        this.mainView.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
     }
 
     AddListener(controller)
     {
         this.controller := controller
         this.mainView.AddListener(controller)
-        this.runningView.AddListener(controller)
-        this.resultView.AddListener(controller)
-        this.aboutView.AddListener(controller)
-        this.helpView.AddListener(controller)
     }
 }

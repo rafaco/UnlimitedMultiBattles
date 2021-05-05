@@ -59,7 +59,7 @@ Class RunningView extends CGui {
         this.CancelButton := this.Gui("Add", "Button", "ys w200 h30 " Constants.SS_CENTERIMAGE " Center Default", Translate("RunningStopButton"))
         this.GuiControl("+g", this.CancelButton, this.OnCancelButtonPressed)
 		
-        this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
+        ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
 	}
 
     OnFinishSelectorChanged(){

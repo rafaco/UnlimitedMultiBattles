@@ -32,7 +32,7 @@ Class AboutView extends CGui {
         this.githubButton := this.Gui("Add", "Button", "ys w100 h30 gGoToSite " Constants.SS_CENTERIMAGE " Center", Translate("ButtonAboutRepo"))
         this.GuiControl("+g", this.githubButton, this.GithubButtonPressed)
 		
-        this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)		
+        ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)		
 	}
 
     BackButtonPressed(){

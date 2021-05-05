@@ -264,7 +264,7 @@ class UnlimitedMultiBattles
 	Main()
 	{
         this.Initialize()
-        this.Controller.ShowInitialView()
+        this.Controller.GoTo("Main")
 	}
 }
 
