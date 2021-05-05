@@ -60,7 +60,6 @@ Class MainView extends CGui {
         this.Gui("Add", "Text", "w350 xs Section", "  " . Translate("BattlesHeader"))
         this.Font("s10 normal")
         
-        ; TODO: Choose%selectedTab%
         this.tabSelector := this.Gui("Add", "Tab3", "xs yp+20 w350 h157 AltSubmit", Options.BattleAmount())
         this.GuiControl("+g", this.tabSelector, this.TabSelectorChanged)
         this.addTabAmmountManual()
@@ -74,7 +73,7 @@ Class MainView extends CGui {
         this.Gui("Add", "Text", "w320 h50 Section Center " Constants.SS_CENTERIMAGE, Translate("BattlesAmountManual"))
         this.Gui("Add", "Text", "w70 xs Section")
         this.Font("s20")
-        this.editBattles := this.Gui("Add", "Edit", "ys+10 w65 h35 Right +Limit3 +Number", Settings.battles)
+        this.editBattles := this.Gui("Add", "Edit", "ys+10 w65 h35 Right +Limit3 +Number")
         this.GuiControl("+g", this.editBattles, this.EditBattlesChanged)
         this.upDownBattles := this.Gui("Add", "UpDown", "ys Range1-999", Settings.battles)
         this.GuiControl("+g", this.upDownBattles, this.UpDownBattlesChanged)
@@ -89,41 +88,36 @@ Class MainView extends CGui {
         this.Gui("Add", "Text")
         this.Font("s10 normal")
 
-        ;TODO: Choose%selectedRank%
         this.rankSelector := this.Gui("Add", "DropDownList", "Section w80 AltSubmit", Options.Rank())
         this.GuiControl("+g", this.rankSelector, this.RankSelectorChanged)
         this.Gui("Add", "Text", "ys h25 Center " Constants.SS_CENTERIMAGE, Translate("BattlesAmountCalculatedRankTail"))
         
-        ;TODO: Choose%selectedLevel%
-        ;TODO: initialLevelOptions
-        this.levelSelector := this.Gui("Add", "DropDownList", "ys w40 AltSubmit", initialLevelOptions)
+        this.levelSelector := this.Gui("Add", "DropDownList", "ys w40 AltSubmit")
         this.GuiControl("+g", this.levelSelector, this.LevelSelectorChanged)
         this.Gui("Add", "Text", "ys h25 Center " Constants.SS_CENTERIMAGE, Translate("BattlesAmountCalculatedLevelTail"))
 
-        ;TODO: vDifficultySelector gOnCalculatorChanged Choose%selectedDifficulty% 
         this.difficultySelector := this.Gui("Add", "DropDownList", "xs Section w65 AltSubmit", Options.Difficulty())
         this.GuiControl("+g", this.difficultySelector, this.DifficultySelectorChanged) 
-        ;TODO: vMapSelector gOnCalculatorChanged Choose%selectedMap% 
+        
         this.mapSelector := this.Gui("Add", "DropDownList", "ys w40 AltSubmit", Options.Map())
         this.GuiControl("+g", this.mapSelector, this.MapSelectorChanged)
-        ;TODO: vStageSelector gOnCalculatorChanged Choose%selectedStage%
+        
         this.stageSelector := this.Gui("Add", "DropDownList", "ys w35 AltSubmit", Options.Stage())
         this.GuiControl("+g", this.stageSelector, this.StageSelectorChanged)
         this.Gui("Add", "Text", "ys h25 Center " Constants.SS_CENTERIMAGE, Translate("BattlesAmountCalculatedStageTail"))
-        ;TODO: vBoostSelector gOnCalculatorChanged Choose%selectedBoost% 
+        
         this.boostSelector := this.Gui("Add", "DropDownList", "ys w97 AltSubmit", Options.Boost())
         this.GuiControl("+g", this.boostSelector, this.BoostSelectorChanged)
 
         this.Gui("Add", "Text", "xs Section w70")
         this.Font("s20")
-        ;TODO: calculatedResults
-        this.calculatedRepetitions := this.Gui("Add", "Text", "w58 right ys", calculatedResults.repetitions)
+        this.calculatedRepetitions := this.Gui("Add", "Text", "w58 right ys")
         this.Font("s14 bold")
         this.Gui("Add", "Text", "w100 ys+7", " " . Translate("BattlesAmountTail"))
         
-        ;this.Font("s10 " Constants.COLOR_GRAY " normal")
+        this.Font("s10 " Constants.COLOR_GRAY " normal")
         this.calculatedExtra := this.Gui("Add", "Text", "w330 xs yp+25 Section Center")
-        this.calculatedExtra.Font("s10 " Constants.COLOR_GRAY " normal")
+        this.Font()
     }
 
     addTabAmmountInfinite() {
@@ -274,12 +268,34 @@ Class MainView extends CGui {
     }
 
     StartScrollButtonPressed(){
-        GoSub StartScroll
+        this.controller.GoTo("Result")
+        ;GoSub StartScroll
     }
     
     StartBattleButtonPressed(){
         GoSub StartBattles
         this.Hide()
+    }
+
+
+    LoadData(data) {
+        this.GuiControl("Choose", this.tabSelector,         data.settings.tab)
+        this.GuiControl(        , this.editBattles,         data.settings.battles)
+        this.GuiControl(        , this.upDownBattles,       data.settings.battles)
+        this.GuiControl("Choose", this.rankSelector,        data.settings.rank)
+        this.GuiControl("Choose", this.difficultySelector,  data.settings.difficulty)
+        this.GuiControl("Choose", this.mapSelector,         data.settings.map)
+        this.GuiControl("Choose", this.stageSelector,       data.settings.stage)
+        this.GuiControl("Choose", this.boostSelector,       data.settings.boost)
+
+        levelOptions := Options.GenerateNumericOptions((    data.settings.rank*10)-1)
+        this.GuiControl(        , this.levelSelector,       levelOptions)
+        this.GuiControl("Choose", this.levelSelector,       data.settings.level)
+        
+        this.GuiControl(        , this.calculatedRepetitions,data.results.repetitions)
+        extratext := FormatNumber(data.results.energy) . " energy  -->  " 
+                   . FormatNumber(data.results.silver) . " silver"
+        this.GuiControl(        , this.calculatedExtra,     extratext)
     }
 
 

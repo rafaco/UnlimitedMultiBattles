@@ -22,27 +22,27 @@ class CalculatorModel
 
     __New(ByRef settingsModel){
         this.settings := settingsModel.values
-        InitCalculator()
+        this.XpData := this.ReadXpData()
+        this.CampaignData := this.ReadCampaignData()
+        this.results := this.CalculateResults()
     }
 
-    InitCalculator()
+    ReadXpData()
     {
         xpDataFullPath := Constants.LocalFolder() . Constants.FolderSeparator . Constants.XpDataFileName
         FileInstall, data\XpData.csv, % xpDataFullPath
-        this.XpData := ReadTable(xpDataFullPath, {"Headers" : True}, xpColumnNames)
-
+        return ReadTable(xpDataFullPath, {"Headers" : True}, xpColumnNames)
+    }
+    
+    ReadCampaignData()
+    {
         campaignDataFullPath := Constants.LocalFolder() . Constants.FolderSeparator . Constants.CampaignDataFileName
         FileInstall, data\CampaignData.csv, % campaignDataFullPath
-        this.CampaignData := ReadTable(campaignDataFullPath, {"Headers" : True}, campaignColumnNames)
-        
-        this.results := this.CalculateResults()
-
-        ;TODO: RELOCATE: this dont belong here
-        initialLevelOptions := Options.GenerateNumericOptions((selectedRank*10)-1)
+        return ReadTable(campaignDataFullPath, {"Headers" : True}, campaignColumnNames)
     }
 
-    CalculateResults(){
-
+    CalculateResults()
+    {
         levelsToMax := ((this.settings.rank) * 10) - (this.settings.level)
         Loop,%levelsToMax%{
             currentLevel := this.settings.level + A_Index - 1
@@ -60,8 +60,8 @@ class CalculatorModel
         repetitions := Floor(requiredXP / championXp) + 1
         energySpent := stageEnergy * repetitions
         silverEarned := stageSilver * repetitions
-        result := { repetitions: repetitions, energy: energySpent, silver: silverEarned }
-        
-        return result
+
+        this.results := { repetitions: repetitions, energy: energySpent, silver: silverEarned }
+        return this.results
     }
 }
