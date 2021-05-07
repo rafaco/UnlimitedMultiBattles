@@ -20,7 +20,7 @@ Class MainView extends CGui {
 		global BorderState
 		base.__New(aParams*)
         
-        Gui, Color, 0xe1f5fe
+        ;Gui, Color, 0xe1f5fe
 
         this.addMenu()
         this.addSectionPrepareTeam()
@@ -77,7 +77,7 @@ Class MainView extends CGui {
         this.Font("s20")
         this.editBattles := this.Gui("Add", "Edit", "ys+10 w65 h35 Right +Limit3 +Number")
         this.GuiControl("+g", this.editBattles, this.EditBattlesChanged)
-        this.upDownBattles := this.Gui("Add", "UpDown", "ys Range1-999", Settings.battles)
+        this.upDownBattles := this.Gui("Add", "UpDown", "ys Range1-999")
         this.GuiControl("+g", this.upDownBattles, this.UpDownBattlesChanged)
         this.Font("s14 bold")
         this.Gui("Add", "Text", "xp+80 ys+20", " " . Translate("BattlesAmountTail"))
@@ -207,63 +207,74 @@ Class MainView extends CGui {
     }
 
     TabSelectorChanged(){
-        this.controller.OnSettingChanged(tab, this.tabSelector)
+        this.controller.OnSettingChanged("tab", this.tabSelector.value)
     }
     
     EditBattlesChanged(){
-        GoSub OnBattleChangedByEdit
+        this.controller.OnSettingChanged("battles", this.editBattles.value)
+        this.GuiControl("Focus", this.startBattlesButton)
     }
     
     UpDownBattlesChanged(){
-        GoSub OnBattleChangedByUpDown
+        this.controller.OnSettingChanged("battles", this.upDownBattles.value)
+        this.GuiControl("Focus", this.startBattlesButton)
     }
 
     RankSelectorChanged(){
-        GoSub OnCalculatorChanged
+        this.controller.OnSettingChanged("rank", this.rankSelector.value)
     }
 
     LevelSelectorChanged(){
-        GoSub OnCalculatorChanged 
+        this.controller.OnSettingChanged("level", this.levelSelector.value)
     }
 
     DifficultySelectorChanged(){
-        GoSub OnCalculatorChanged 
+        this.controller.OnSettingChanged("difficulty", this.difficultySelector.value)
     }
 
     MapSelectorChanged(){
-        GoSub OnCalculatorChanged 
+        this.controller.OnSettingChanged("map", this.mapSelector.value)
     }
 
     StageSelectorChanged(){
-        GoSub OnCalculatorChanged 
+       this.controller.OnSettingChanged("stage", this.stageSelector.value)
     }
 
     BoostSelectorChanged(){
-        GoSub OnCalculatorChanged 
+        this.controller.OnSettingChanged("boost", this.boostSelector.value)
     }
 
     DurationTabSelectorChanged(){
-        GoSub OnDurationTabChanged
-    }
-
-    AutoButtonPressed(){
-        GoSub TestAuto
+        this.controller.OnSettingChanged("durationTab", this.durationTabSelector.value)
     }
 
     EditMinuteChanged(){
-        GoSub OnTimeChangedByEdit
+        value := this.FormatTwoDigits(this.editMinute.value)
+        this.controller.OnSettingChanged("minute", value)
+        this.GuiControl("Focus", this.startBattlesButton)
     }
     
     UpDownMinuteChanged(){
-        GoSub OnTimeChangedByUpDown
+        value := this.FormatTwoDigits(this.upDownMinute.value)
+        this.controller.OnSettingChanged("minute", value)
+        this.GuiControl("Focus", this.startBattlesButton)
     }
 
     EditSecondChanged(){
-        GoSub OnTimeChangedByEdit
+        value := this.FormatTwoDigits(this.editSecond.value)
+        this.controller.OnSettingChanged("second", value)
+        this.GuiControl("Focus", this.startBattlesButton)
     }
     
     UpDownSecondChanged(){
-        GoSub OnTimeChangedByUpDown
+        value := this.FormatTwoDigits(this.upDownSecond.value)
+        this.controller.OnSettingChanged("second", value)
+        this.GuiControl("Focus", this.startBattlesButton)
+    }
+
+    
+    AutoButtonPressed(){
+        GoSub TestAuto
     }
 
     StartScrollButtonPressed(){
@@ -277,40 +288,73 @@ Class MainView extends CGui {
     }
 
 
-    LoadData(data) {
+    LoadData(data, changed:="") 
+    {
+        this.RemoveBuggyListeners()
+
+        ; Ammount selectors
         this.GuiControl("Choose", this.tabSelector,         data.settings.tab)
-        this.GuiControl(        , this.editBattles,         data.settings.battles)
+        ;this.GuiControl(        , this.editBattles,         data.settings.battles)
+        this.editBattles.value := data.settings.battles
         this.GuiControl(        , this.upDownBattles,       data.settings.battles)
         this.GuiControl("Choose", this.rankSelector,        data.settings.rank)
+        this.GuiControl(        , this.levelSelector,       data.results.levelOptions)
+        this.GuiControl("Choose", this.levelSelector,       data.results.levelValue) ;TODO: ChooseString??
         this.GuiControl("Choose", this.difficultySelector,  data.settings.difficulty)
         this.GuiControl("Choose", this.mapSelector,         data.settings.map)
         this.GuiControl("Choose", this.stageSelector,       data.settings.stage)
         this.GuiControl("Choose", this.boostSelector,       data.settings.boost)
 
-        levelOptions := Options.GenerateNumericOptions((    data.settings.rank*10)-1)
-        this.GuiControl(        , this.levelSelector,       levelOptions)
-        this.GuiControl("Choose", this.levelSelector,       data.settings.level)
-        
+        ; Duration selectors
+        this.GuiControl("Choose", this.durationTabSelector,data.settings.durationTab)
+        ;this.GuiControl(        , this.editMinute,         data.settings.minute)
+        ;this.GuiControl(        , this.editSecond,         data.settings.second)
+        this.editMinute.value := data.settings.minute
+        this.editSecond.value := data.settings.second
+        this.GuiControl(        , this.upDownMinute,       data.settings.minute)
+        this.GuiControl(        , this.upDownSecond,       data.settings.second)
+
+        ; Calculator output
         this.GuiControl(        , this.calculatedRepetitions,data.results.repetitions)
-        extratext := FormatNumber(data.results.energy) . " energy  -->  " 
-                   . FormatNumber(data.results.silver) . " silver"
-        this.GuiControl(        , this.calculatedExtra,     extratext)
+        this.GuiControl(        , this.calculatedExtra,     data.results.extratext)
+        calculatedDuration    := (data.settings.tab=1)    ? data.results.manualTime
+                               : (data.settings.tab=2)    ? data.results.calculatedTime
+                                                          : data.results.infiniteTime
+        this.GuiControl(        , this.calculatedDuration,  calculatedDuration)
 
-        this.GuiControl("Choose", this.durationTabSelector, data.settings.durationTab)
-        
+        fn := ObjBindMethod(this, "RestoreBuggyListeners")
+        SetTimer, %fn%, -1
+    }
 
-        ; TODO: durations
+    RemoveBuggyListeners()
+    {
+        ; Special treatment for Edit and UpDown controls.
+        ; The listener need to be removed before updating the value or it will be fired
+        this.GuiControl("-g", this.editBattles)
+        this.GuiControl("-g", this.editMinute)
+        this.GuiControl("-g", this.editSecond)
+        this.GuiControl("-g", this.upDownBattles)
+        this.GuiControl("-g", this.upDownMinute)
+        this.GuiControl("-g", this.upDownSecond)
+    }
+     
+    RestoreBuggyListeners()
+    {
+        ; Special treatment for Edit and UpDown controls.
+        ; Restoring the listeners after the update of the value
+        this.GuiControl("+g", this.editBattles, this.EditBattlesChanged)
+        this.GuiControl("+g", this.upDownBattles, this.UpDownBattlesChanged)
+        this.GuiControl("+g", this.editMinute, this.EditMinuteChanged)
+        this.GuiControl("+g", this.upDownMinute, this.UpDownMinuteChanged)
+        this.GuiControl("+g", this.editSecond, this.EditSecondChanged)
+        this.GuiControl("+g", this.upDownSecond, this.UpDownSecondChanged)
+    }
 
-
-        if (data.settings.tab=1){
-            this.GuiControl(    , this.calculatedDuration,  data.results.manualTime)
-        } 
-        else if (data.settings.tab=2){
-            this.GuiControl(    , this.calculatedDuration,  data.results.calculatedTime)
-        }
-        else {
-            this.GuiControl(    , this.calculatedDuration,  data.results.infiniteTime)
-        }
+    FormatTwoDigits(value)
+    {
+        SetFormat, Float, 02.0
+        value += 0.0
+        return value
     }
 
 

@@ -43,9 +43,15 @@ class CalculatorModel
 
     Update()
     {
-        levelsToMax := ((this.settings.rank) * 10) - (this.settings.level)
+        ; Level and level options
+        maxLvl          := (this.settings.rank*10)-1
+        levelValue      := (this.settings.level > maxLvl) ? 1 : this.settings.level
+        levelOptions    := "|" . this.GenerateNumericOptions(maxLvl)
+
+        ; Calculator
+        levelsToMax := ((this.settings.rank) * 10) - (levelValue)
         Loop,%levelsToMax%{
-            currentLevel    := this.settings.level + A_Index - 1
+            currentLevel    := levelValue + A_Index - 1
             currentXp       := this.XpData[currentLevel][this.settings.rank]
             requiredXP      += currentXp
         }
@@ -57,20 +63,30 @@ class CalculatorModel
         boostedXp       := stageXp * boostOptionsMultiplier[this.settings.boost]
         championXp      := boostedXp/4
         
+        ; Results
         repetitions     := Floor(requiredXP / championXp) + 1
         energySpent     := stageEnergy * repetitions
         silverEarned    := stageSilver * repetitions
 
-        manualTime      := this.PrettyFormatDuration(Settings.second, Settings.minute, Settings.battles)
-        calculatedTime  := this.PrettyFormatDuration(Settings.second, Settings.minute, calculatedResults.repetitions)
-        infiniteTime    := this.PrettyFormatDuration(Settings.second, Settings.minute, -1)
+        ; Estimated time
+        manualTime      := this.PrettyFormatDuration(this.settings.second, this.settings.minute, this.settings.battles)
+        calculatedTime  := this.PrettyFormatDuration(this.settings.second, this.settings.minute, repetitions)
+        infiniteTime    := this.PrettyFormatDuration(this.settings.second, this.settings.minute, -1)
+
+        ; Estimated campaign io
+        extratext := this.FormatNumber(energySpent) . " energy  -->  " 
+                   . this.FormatNumber(silverEarned) . " silver"
 
         this.values     := { repetitions: repetitions
                            , energy: energySpent
                            , silver: silverEarned
+                           , maxLvl: maxLvl
+                           , levelValue: levelValue
+                           , levelOptions: levelOptions
                            , manualTime: manualTime
                            , calculatedTime: calculatedTime
-                           , infiniteTime: infiniteTime }
+                           , infiniteTime: infiniteTime
+                           , extratext: extratext }
     }
 
     PrettyFormatDuration(seconds, minutes, repetitions){
@@ -100,5 +116,16 @@ class CalculatorModel
     FormatNumber(num){
         ; Add thousands searators
         return RegExReplace(num, "\G(?:-?)\d+?(?=(\d{3})+(?:\D|$))", "$0.")
+    }
+
+    ; TODO: it fails sometimes if used from Options.GenerateNumericOptions
+    GenerateNumericOptions(items){
+        Loop,%items%{
+            List .= A_Index
+            if (A_Index!=items){
+                List .= "|"
+            }
+        }
+        return List
     }
 }

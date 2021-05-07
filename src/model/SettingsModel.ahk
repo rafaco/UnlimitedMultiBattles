@@ -24,18 +24,25 @@ class SettingsModel
         this.InitStoredValues()
     }
 
-    GetValue(key) {
+    Get(key) 
+    {
         return this.values[key]
     }
 
-    Set(key, value){
-        IniWrite, %value%, this.settingsPath, this.settingsSection, %key%
+    Set(key, value)
+    {
+        this.Save(this.settingsPath, this.settingsSection, key, value)
         this.values[key] := value
     }
 
+    Save(settingsPath, settingsSection, key, value) {
+        IniWrite, %value%, %settingsPath%, %settingsSection%, %key%
+        if ErrorLevel
+            MsgBox, Error at IniWrite %key% -> %value%.
+    }
 
-    InitStoredValues(){
-        
+    InitStoredValues()
+    {    
         If (!FileExist(this.settingsPath)){
             this.InitFromDefault(this.settingsPath, this.settingsSection)
             this.CleanOlderVersionFiles()

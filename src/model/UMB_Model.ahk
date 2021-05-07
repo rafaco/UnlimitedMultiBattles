@@ -26,24 +26,24 @@ class UMB_Model
         this.Calculator := new CalculatorModel(this.Settings)
     }
 
-    GetValue(key)
+    Get(key)
     {
         if (key in this.Calculator.values) {
             return this.Calculator.values[key]
         }
-        return this.Settings.GetValue(key)
+        return this.Settings.Get(key)
     }
 
-    Save(key, value)
+    Set(key, value)
     {
-        this.Settings.Save(key, value)
+        this.Settings.Set(key, value)
         if (key == "lang") {
             ;Save to language 
         }
-        Calculator.Update()
+        this.Calculator.Update()
     }
 
-    GetViewModel(viewName)
+    GetViewModel(viewName:="Main")
     {
         if (viewName = "Main")
         {

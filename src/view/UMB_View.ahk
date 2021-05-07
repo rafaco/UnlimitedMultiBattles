@@ -77,12 +77,12 @@ class UMB_View  {
         }
     }
 
-    Update(data) {
-        if (isMainView) {
-            this.mainView.LoadData(data)
+    Update(data, changed) {
+        if (this.isMainView) {
+            this.mainView.LoadData(data, changed)
         }
         else{
-            this.secondaryView.LoadData(data)
+            this.secondaryView.LoadData(data, changed)
         }
     }
 

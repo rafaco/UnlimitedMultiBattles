@@ -37,9 +37,9 @@ class UMB_Controller
 
     OnSettingChanged(key, value) 
     {
-        this.model.Save(key, value)
-        viewModel := this.model.GetViewModel(viewName)
-        this.view.Update(viewModel)
+        this.model.Set(key, value)
+        viewModel := this.model.GetViewModel() ;TODO: viewName?
+        this.view.Update(viewModel, key)
     }
 
     ; TODO...

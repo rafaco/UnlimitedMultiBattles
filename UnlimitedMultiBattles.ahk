@@ -40,14 +40,11 @@
     #Include lib\i18n.ahk
     #Include src\LanguageDetector.ahk
 
-
-    ; Init translations
+    ; Init i18n (TODO: extract)
     language := new LanguageDetector().getLanguage(WinExist(Constants.RaidWinTitle))
     Global i18n := New i18n("i18n", language)
 
-
-    ;; Init LOGIC
-
+    ;; Init SERVICES (TODO: extract)
     If !pToken := Gdip_Startup()
     {
         MsgBox, w, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
@@ -56,190 +53,8 @@
     scrollAssistant := new ScrollAssistant()
 
 
-    ;; Load VIEW
-    SS_CENTERIMAGE := 0x200 ; TODO: extract from view after MVC
-    menu1 := % Translate("HelpHeader")
-    menu2 := % Translate("AboutHeader")
-    Menu, InfoMenu, Add, %menu1%, MenuHandler
-    Menu, InfoMenu, Add, %menu2%, MenuHandler
-    infoLabel := "&Info    "
-    Menu, MainMenuBar, Add, %infoLabel%, :InfoMenu, Right
-    
-    ; Load Main GUI
-    Gui, Main:Default
-    Gui, Main:Menu, MainMenuBar
-
-    ; Section 1: Prepare your team
-    Gui, Main:Font, s10 bold
-    Gui, Main:Add, GroupBox,  w350 h72 Section, % Translate("TeamHeader")
-    Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, xp+10 yp+20 w270, % Translate("InfoTeam")
-    Gui, Main:Add, Button, w50 xp+280 yp-5 Center gGoToGame vTeamButton, Open`nGame
-    Gui, Main:Font, s2
-    Gui, Main:Add, Text, xs,
-
-    ; Section 2: Number of battles
-    Gui, Main:Font, s10 bold
-    Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("BattlesHeader")
-    Gui, Main:Font, s10 norm
-    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h157 vTabSelector gOnTabChanged Choose%selectedTab% AltSubmit, % Options.BattleAmount()
-    Gui, Main:Add, Text, w320 h50 Section Center %SS_CENTERIMAGE%, % Translate("BattlesAmountManual")
-    Gui, Main:Add, Text, w70 xs Section,
-    Gui, Main:Font, s20 
-    Gui, Main:Add, Edit, ys+10 w65 h35 Right gOnBattleChangedByEdit vEditBattles +Limit3 +Number, % Settings.battles
-    Gui, Main:Add, UpDown, ys Range1-999 vUpDownBattles gOnBattleChangedByUpDown, % Settings.battles
-    Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, xp+80 ys+20, % " " . Translate("BattlesAmountTail")
-
-    Gui, Main:Tab, 2
-    Gui, Main:Font, s1
-    Gui, Main:Add, Text, 
-    Gui, Main:Font, s10 normal
-    Gui, Main:Add, DropDownList, Section w80 vRankSelector gOnCalculatorChanged Choose%selectedRank% AltSubmit, % Options.Rank()
-    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, % Translate("BattlesAmountCalculatedRankTail")
-    Gui, Main:Add, DropDownList, ys w40 vLevelSelector gOnCalculatorChanged Choose%selectedLevel% AltSubmit, %initialLevelOptions%
-    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, % Translate("BattlesAmountCalculatedLevelTail")
-    Gui, Main:Add, DropDownList, xs Section w65 vDifficultySelector gOnCalculatorChanged Choose%selectedDifficulty% AltSubmit, % Options.Difficulty()
-    Gui, Main:Add, DropDownList, ys w40 vMapSelector gOnCalculatorChanged Choose%selectedMap% AltSubmit, % Options.Map()
-    Gui, Main:Add, DropDownList, ys w35 vStageSelector gOnCalculatorChanged Choose%selectedStage% AltSubmit, % Options.Stage()
-    Gui, Main:Add, Text, ys h25 %SS_CENTERIMAGE% Center, % Translate("BattlesAmountCalculatedStageTail")
-    Gui, Main:Add, DropDownList, ys w97 vBoostSelector gOnCalculatorChanged Choose%selectedBoost% AltSubmit, % Options.Boost()
-    Gui, Main:Add, Text, xs Section w70,
-    Gui, Main:Font, s20 
-    Gui, Main:Add, Text, w58 right ys vCalculatedRepetitions, % calculatedResults.repetitions
-    Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, w100 ys+7, % " " . Translate("BattlesAmountTail")
-    Gui, Main:Font, "s10 "Constants.COLOR_GRAY" normal"
-    Gui, Main:Add, Text, w330 xs yp+25 Section Center vCalculatedExtra,
-
-    Gui, Main:Tab, 3
-    Gui, Main:Font
-    Gui, Main:Font, s10 norm
-    Gui, Main:Add, Text, w330 h60 Section Center %SS_CENTERIMAGE%, % Translate("BattlesAmountInfinite")
-    Gui, Main:Add, Text, w75 xs Section,
-    Gui, Main:Font, s45 
-    Gui, Main:Add, Text, w50 h35 ys Right %SS_CENTERIMAGE%, % Constants.InfiniteSymbol
-    Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, w100 ys+7, % " " . Translate("BattlesAmountTail")
-    Gui, Main:Tab
-
-    ; Section 3: Duration
-    Gui, Main:Font, s2 bold
-    Gui, Main:Add, Text, x10 Section,
-    Gui, Main:Font, s10 bold
-    Gui, Main:Add, Text, w350 xs Section, % "  " . Translate("TimeHeader")
-    Gui, Main:Font, s10 norm
-    
-    Gui, Main:Add, Tab3, hwndHTAB xs yp+20 w350 h100 vDurationTabSelector gOnDurationTabChanged Choose%selectedDurationTab% AltSubmit, % Options.BattleDuration()
-    Gui, Main:Add, Text, w260 vAutoText, % Translate("InfoAuto")
-    Gui, Main:Add, Button, w50 xp+260 yp Center gTestAuto vAutoButton, % Translate("ButtonTestDetector")
-    Gui, Main:Font, s2
-    
-    Gui, Main:Tab, 2
-    Gui, Main:Add, Text, Section BackgroundTrans w60 Right,
-    Gui, Main:Font, s20 normal
-    Gui, Main:Add, Edit, ys w52 h35 Right gOnTimeChangedByEdit vEditMinute +Limit2 +Number,
-    Gui, Main:Add, UpDown, ys Range00-60 vUpDownMinute gOnTimeChangedByUpDown,
-    Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, ys+7 BackgroundTrans, % Translate("BattlesDurationMinTail")
-    Gui, Main:Font, s20 normal
-    Gui, Main:Add, Edit, ys w52 h35 Right gOnTimeChangedByEdit vEditSecond +Limit2 +Number,
-    Gui, Main:Add, UpDown, ys Range00-59 vUpDownSecond gOnTimeChangedByUpDown,
-    Gui, Main:Font, s14 bold
-    Gui, Main:Add, Text, ys+15 BackgroundTrans, % Translate("BattlesDurationSecTail")
-    Gui, Main:Font, "s10 "Constants.COLOR_GRAY" normal"
-    Gui, Main:Add, Text, h20 w330 xs yp+30 Section Center vCalculatedDuration,
-    Gui, Main:Tab
-    
-    ; Section 4: Start button
-    Gui, Main:Font, s10 bold
-    Gui, Main:Add, Text, xs
-    Gui, Main:Add, Button, Section w100 %SS_CENTERIMAGE% Center Default gStartScroll vStartScroll, % Translate("ButtonScrollStart")
-    Gui, Main:Add, Text, w100 ys Section Right %SS_CENTERIMAGE% ,
-    Gui, Main:Add, Button, ys w100 %SS_CENTERIMAGE% Center Default gStartBattles, % Translate("ButtonMultiBattle")
-
-    ; Load Running GUI
-    Gui, Running:Font, s12 bold
-    Gui, Running:Add, Text, w250 Center vMultiBattleHeader, % Translate("RunningHeader")
-    Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w115 Section, % Translate("RunningCurrentBattleMessage")
-    Gui, Running:Add, Text, ys w120 Right vCurrentBattleStatus,
-    Gui, Running:Add, Progress, xs yp+18 w250 h20 -Smooth vCurrentBattleProgress, 0
-    Gui, Running:Add, Text, w115 xs Section, Translate("RunningMultiBattleMessage")
-    Gui, Running:Add, Text, ys w120 Right vMultiBattleStatus,
-    Gui, Running:Add, Progress, xs yp+18 w250 h20 HwndhPB2 -Smooth vMultiBattleProgress, 0
-    Gui, Running:Add, Text, w117 xs Section vOnFinishMessage, % Translate("RunningTimeLeftMessage")
-    Gui, Running:Add, Text, w117 ys Right vOnFinishMessageValue, -
-    Gui, Running:Font, s3 normal
-    Gui, Running:Add, Text, xs Section,
-    Gui, Running:Font, s10 normal
-    Gui, Running:Font, s10 normal
-    Gui, Running:Add, Text, w70 h23 xs Section Left %SS_CENTERIMAGE%, % Translate("RunningOnFinishMessage")
-    Gui, Running:Add, DropDownList, ys w175 vOnFinishSelector gOnFinishChanged Choose%selectedOnFinish% AltSubmit, % Options.OnFinish()
-    Gui, Running:Add, Checkbox, vOnFinishCheckbox gOnFinishCheckboxChanged, % Translate("RunningOnFinishCheckbox")
-    Gui, Running:Font, s3 normal
-    Gui, Running:Add, Text, xs Section,
-    Gui, Running:Font, s10 bold
-    Gui, Running:Add, Text, xs Section,
-    Gui, Running:Add, Button, ys w200 h30 gShowResultCanceled %SS_CENTERIMAGE% Center Default, % Translate("RunningStopButton")
-
-    ; Load Result GUI 
-    Gui, Result:Font, s12 bold
-    Gui, Result:Add, Text, w250 Center vResultHeader,
-    Gui, Result:Font, s10 normal
-    Gui, Result:Add, Text, w250 yp+20 Center vResultMessage,
-    Gui, Result:Font, s12 normal
-    Gui, Result:Add, Text, w250 Center vResultText,
-    Gui, Result:Font, s10 bold
-    Gui, Result:Add, Text, Section,
-    Gui, Result:Add, Button, ys w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Done
-    Gui, Result:Add, Button, ys w100 h30 gStartBattles %SS_CENTERIMAGE% Center, Replay
-    
-
-    ; Load Help GUI
-    Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, w350 Center Section, Help
-    Gui, Help:Font, s10 normal
-    Gui, Help:Add, Text, w350 xs, % Translate("ScriptDescription")
-    Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, % Translate("TeamHeader")
-    Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoTeam")
-    Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, % Translate("BattlesHeader")
-    Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoBattles")
-    Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, % Translate("TimeHeader")
-    Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoTime")
-    Gui, Help:Font, s11 bold
-    Gui, Help:Add, Text, xs, % Translate("StartHeader")
-    Gui, Help:Font, s10 norm
-    Gui, Help:Add, Text, w350 xs Section, % Translate("InfoStart")
-    Gui, Help:Add, Text, w350 xs Section,
-    Gui, Help:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Back
-
-    ; Load About GUI
-    Gui, About:Font, s10 bold
-    Gui, About:Add, Text, w350 h35 xp yp %SS_CENTERIMAGE% BackgroundTrans Section Center, % Constants.ScriptTitle " " Constants.ScriptVersion
-    Gui, About:Font, s10 norm
-    Gui, About:Add, Text, w350 xs Section, % Translate("ProjectDescription")
-    Gui, About:Add, Button, Section w100 h30 gShowMain %SS_CENTERIMAGE% Center Default, Back
-    Gui, About:Add, Text, w120 ys Section,
-    Gui, About:Add, Button, ys w100 h30 gGoToSite %SS_CENTERIMAGE% Center, Go to GitHub
-    
-    
-    ; Init loaded UIs
-    InitTimeComponents()
-
     Program := new UnlimitedMultiBattles()
     Program.Main()
-    
-    
-    ; Show initial UI (Main)
-    ;Gui, Main:Show, xCenter y100 AutoSize, % Constants.ScriptTitle
-    ;mainGuiShown := true
     
 return ; End of auto-execute section
 
@@ -369,81 +184,6 @@ return
 
 ;; OnChange controls actions
 
-OnTabChanged:
-	GuiControlGet,TabValue,,TabSelector
-    settingsPath := Constants.SettingsFilePath()
-    settingsSection := Constants.SettingsSection
-    IniWrite, %TabValue%, %settingsPath%, %settingsSection%, tab
-    Settings.tab := TabValue
-    
-    ;UpdateDuration()
-return
-
-OnDurationTabChanged:
-	GuiControlGet,TabValue,,DurationTabSelector
-    settingsPath := Constants.SettingsFilePath()
-    settingsSection := Constants.SettingsSection
-    IniWrite, %TabValue%, %settingsPath%, %settingsSection%, durationTab
-    Settings.durationTab := TabValue
-    
-    ;UpdateDuration()
-return
-
-OnBattleChangedByEdit:
-    Gui, Submit, NoHide
-    GuiControlGet,BattlesValue,,EditBattles
-    settingsPath := Constants.SettingsFilePath()
-    settingsSection := Constants.SettingsSection
-    IniWrite, %BattlesValue%, %settingsPath%, %settingsSection%, battles
-    Settings.battles := BattlesValue
-    GuiControl,,UpDownBattles,%BattlesValue%
-    ;FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
-return
-
-OnBattleChangedByUpDown:
-    GuiControlGet,BattlesValue,,UpDownBattles
-    settingsPath := Constants.SettingsFilePath()
-    settingsSection := Constants.SettingsSection
-    IniWrite, %BattlesValue%, %settingsPath%, %settingsSection%, battles
-    Settings.battles := BattlesValue
-    GuiControl,,EditBattles,%BattlesValue%
-    ;FillEstimatedTime(Settings.second, Settings.minute, BattlesValue)
-return  
-
-OnCalculatorChanged:
-    GuiControlGet,DifficultyValue,,DifficultySelector
-    GuiControlGet,MapValue,,MapSelector
-	GuiControlGet,StageValue,,StageSelector
-	GuiControlGet,BoostValue,,BoostSelector
-    GuiControlGet,RankValue,,RankSelector
-    GuiControlGet,LevelValue,,LevelSelector
-    
-    maxLvlValue := (RankValue*10)-1
-    rankedLevelOptions := Options.GenerateNumericOptions(maxLvlValue)
-    GuiControl,,LevelSelector, |%rankedLevelOptions%
-    if (LevelValue > maxLvlValue){
-        LevelValue := 1
-    }
-    GuiControl, ChooseString, LevelSelector, %LevelValue%
-    
-    settingsPath := Constants.SettingsFilePath()
-    settingsSection := Constants.SettingsSection
-    IniWrite, %DifficultyValue%, %settingsPath%, %settingsSection%, difficulty
-    IniWrite, %StageValue%, %settingsPath%, %settingsSection%, stage
-    IniWrite, %MapValue%, %settingsPath%, %settingsSection%, map
-    IniWrite, %BoostValue%, %settingsPath%, %settingsSection%, boost
-    IniWrite, %RankValue%, %settingsPath%, %settingsSection%, rank
-    IniWrite, %LevelValue%, %settingsPath%, %settingsSection%, level
-    Settings.difficulty := DifficultyValue
-    Settings.stage := StageValue
-    Settings.map := MapValue
-    Settings.boost := BoostValue
-    Settings.rank := RankValue
-    Settings.level := LevelValue
-    
-    ;UpdateCalculator()
-    ;UpdateDuration()
-return
 
 OnTimeChangedByUpDown:
     if (!mainGuiShown){
@@ -535,15 +275,6 @@ return
 
 
 ;;; Functions
-
-InitTimeComponents(){
-    global
-    GuiControl, , UpDownMinute, % Settings.minute
-    GuiControl, , EditMinute, % Settings.minute
-    GuiControl, , UpDownSecond, % Settings.second
-    GuiControl, , EditSecond, % Settings.second
-}
-
 
 
 HideAllGuisBut(list, excluded){
