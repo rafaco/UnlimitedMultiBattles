@@ -61,7 +61,7 @@ Class ScrollAssistant {
         this.screenDetector := new ImageDetector()
         this.initView()
 
-        fn := ObjBindMethod(scrollAssistant, "whileStarted")
+        fn := ObjBindMethod(this, "whileStarted")
         SetTimer, %fn%, -0
 
         return
@@ -92,7 +92,7 @@ Class ScrollAssistant {
                 this.show()
             }
         }
-        fn := ObjBindMethod(scrollAssistant, "whileStarted")
+        fn := ObjBindMethod(this, "whileStarted")
         SetTimer, %fn%, -1000
     }
 

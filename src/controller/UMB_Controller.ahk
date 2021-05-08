@@ -13,6 +13,10 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
+#Include src\ImageDetector.ahk
+#Include src\ScrollAssistant.ahk
+#Include src\MultiBattler.ahk
+
 class UMB_Controller
 {
     model := ""
@@ -23,10 +27,11 @@ class UMB_Controller
         this.model := model
         this.view  := view
         this.view.AddListener(this)
-    }
 
-    ShowInitialView() {
-        this.view.ShowGui()
+        ; Init SERVICES (TODO: relocate? model??)
+        thi.pToken := Gdip_Startup()
+        this.scrollAssistant := new ScrollAssistant()
+        this.multiBattler := new MultiBattler()
     }
 
     GoTo(viewName) 
@@ -42,6 +47,17 @@ class UMB_Controller
         this.view.Update(viewModel, key)
     }
 
+    StartScroll()
+    {
+        if (!this.scrollAssistant.isRunning()) {
+            this.scrollAssistant.start()
+            this.view.UpdateScrollButton(true)
+        }
+        else {
+            scrollAssistant.stop()
+            this.view.UpdateScrollButton(false)
+        }
+    }
     ; TODO...
     button1Listener()
     {

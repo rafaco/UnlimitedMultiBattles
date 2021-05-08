@@ -30,24 +30,24 @@ class UMB_View  {
         ;this.helpView := new HelpView()
     }
 
-    Show(viewName, data) {
+    Show(viewName, data:="") {
         Gui,+LastFound
         if (not A_Gui) {
             options := "xCenter y100 AutoSize"
         }
         else{
-            WinGetPos,x,y
+            WinGetPos, X, Y, W, H, % Constants.RaidWinTitle
             if (viewName == "Running" && A_Gui != "Result"){
-                x += 50
-                y += 200
+                X += 50
+                Y += 200
             }
             else if (viewName == "ShowMain"){
                 if (A_Gui="Running" || A_Gui="Result"){
-                    x -= 50
-                    y -= 200
+                    X -= 50
+                    Y -= 200
                 }
             }
-            options := "x" x " y" y
+            options := "x" X " y" Y
         }
         
 
@@ -86,10 +86,9 @@ class UMB_View  {
         }
     }
 
-    ShowGui() {
-        this.mainView := new MainView()
-        this.mainView.AddListener(controller)
-        this.mainView.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
+    UpdateScrollButton(isScrollEnabled)
+    {
+        this.mainView.UpdateScrollButton(isScrollEnabled)
     }
 
     AddListener(controller)

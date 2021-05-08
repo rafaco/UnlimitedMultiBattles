@@ -274,12 +274,11 @@ Class MainView extends CGui {
 
     
     AutoButtonPressed(){
-        GoSub TestAuto
+        this.controller.StartDetectionTest()
     }
 
     StartScrollButtonPressed(){
-        this.controller.GoTo("Result")
-        ;GoSub StartScroll
+        this.controller.StartScroll()
     }
     
     StartBattleButtonPressed(){
@@ -348,6 +347,13 @@ Class MainView extends CGui {
         this.GuiControl("+g", this.upDownMinute, this.UpDownMinuteChanged)
         this.GuiControl("+g", this.editSecond, this.EditSecondChanged)
         this.GuiControl("+g", this.upDownSecond, this.UpDownSecondChanged)
+    }
+
+    UpdateScrollButton(isScrollEnabled)
+    {
+        this.mainVBiew.UpdateScrollButton(isScrollEnabled)
+        buttonText := isScrollEnabled ? Translate("ButtonScrollStop") : Translate("ButtonScrollStart")
+        this.startScrollButton.value := buttonText
     }
 
     FormatTwoDigits(value)

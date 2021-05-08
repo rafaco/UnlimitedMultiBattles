@@ -34,24 +34,12 @@
     ;#Include src\GraphicDetector.ahk
     #Include src\Constants.ahk
     #Include src\Options.ahk
-    #Include src\ImageDetector.ahk
-    #Include src\MultiBattler.ahk
-    #Include src\ScrollAssistant.ahk
     #Include lib\i18n.ahk
     #Include src\LanguageDetector.ahk
 
     ; Init i18n (TODO: extract)
     language := new LanguageDetector().getLanguage(WinExist(Constants.RaidWinTitle))
     Global i18n := New i18n("i18n", language)
-
-    ;; Init SERVICES (TODO: extract)
-    If !pToken := Gdip_Startup()
-    {
-        MsgBox, w, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
-        ExitApp
-    }
-    scrollAssistant := new ScrollAssistant()
-
 
     Program := new UnlimitedMultiBattles()
     Program.Main()
@@ -250,18 +238,6 @@ TestAuto:
     new MultiBattler().testAuto()
 return
 
-StartScroll:
-    if (!scrollAssistant.isRunning()) {
-        scrollAssistant.start()
-        GuiControl, , StartScroll, % Translate("ButtonScrollStop")
-        helpView.Show()
-    }
-    else {
-        scrollAssistant.stop()
-        GuiControl, , StartScroll, % Translate("ButtonScrollStart")
-        helpView.Hide()
-    }
-return
 
 StartBattles:
     new MultiBattler().start()

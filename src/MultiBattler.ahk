@@ -16,19 +16,15 @@
 ;TODO: remove all global keywords
 Class MultiBattler {
 
-    testAuto() {
-        global
-        ; Detect screens playground
-
+    StartDetectionTest() {
         local isGameOpen := this.checkGameOpened()
         if (!isGameOpen){
             return
         }
 
+        ; Using GDIP ImageDetector dont requiere WinActivate!
         ;WinActivate, %Constants.RaidWinTitle%
         ;screenDetector := new GraphicDetector()
-
-        ; GDIP ImageDetector dont requiere WinActivate!
         screenDetector := new ImageDetector()
         screenDetector.detectScreen(true)
     }
