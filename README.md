@@ -16,7 +16,7 @@
 
 **This application allows unlimited auto battles on official 'Raid: Shadow Legends' for Windows. It provide an easy to use graphic user interface with a campaign calculator and it can be used on background while you do other things with your PC.**
 
-You only have to select a "number of battle" and a "battle duration" in our UI, assisted by our campaign calculator. Then, we will make use of standard hotkeys provided by the game to give you that multi-battles. Every "battle duration" we bring to top the game window, press a hotkey on it and restore the window you were in. We do it very quickly and we do it a "number of battles" times for you.
+You only have to select a "number of battle" and a "battle duration" in our UI, assisted by our campaign calculator. Then, we will make use of standard hotkeys provided by the game to give you that multi-battles. Every "battle duration" we bring the game window to top, press a hotkey on it and restore the window you were in before. We do it very quickly and we do it "number of battles" times for you.
 
 <img src="https://github.com/rafaco/UnlimitedMultiBattles/raw/master/images/Screenshots.gif">
 
@@ -39,18 +39,20 @@ You only have to select a "number of battle" and a "battle duration" in our UI, 
 
 # Set up
 
-For a quick start, **download** ```UnlimitedMultiBattles.exe``` from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest):
+For a quick start, just **download** ```UnlimitedMultiBattles.exe``` from our [latest release](https://github.com/rafaco/UnlimitedMultiBattles/releases/latest):
 
 <p align="center">
     <a href="https://github.com/rafaco/UnlimitedMultiBattles/releases/latest/download/UnlimitedMultiBattles.exe" alt="Latest Download">
         <img src="https://img.shields.io/badge/Latest_Download-UnlimitedMultiBattles.exe-brightgreen.svg?style=for-the-badge&logo=github"/></a>
 </p>
 
-Using exe files downloaded from internet is widely discourage and Windows will alert you when runnning it for the first time. To avoid this inconvenience, you can **generate your own exe** from our sources:
+Windows will alert you about the risks of running exe files from an "Unknown source", because I dont pay for an official Microsoft certificate (around 300-400$/year). This doesn't mean that a virus has been found and you are not adding an exception to your antivirus by accepting this dialog. Your antivirus will keep working in background and it will alert you later on in case a virus get found, what should never happen.
+
+To avoid this inconvenience, you can always **generate your own exe** from our sources. An exe file generated on your PC are not considered from "Unknown source" and you will not recive any alert when running it for the first time. This is easier than it sound and you dont need any developer/coding skills to do it:
 
 1. Clone [this repository](https://github.com/rafaco/UnlimitedMultiBattles.git) in a local folder on your PC.
 2. Download and install [AutoHotKey for Windows](https://www.autohotkey.com/) in your PC.
-3. Open Ahk2Exe.exe from the installation folder or from  Start->Programs->AutoHotkey->"Convert .ahk to .exe".
+3. Open Ahk2Exe.exe from the installation folder or from Start->Programs->AutoHotkey->"Convert .ahk to .exe".
 4. Select our script file as source ([UnlimitedMultiBattles.ahk](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/UnlimitedMultiBattles.ahk)), any local folder as destination and our icon as custom icon ([images/icon.ico](https://github.com/rafaco/UnlimitedMultiBattles/blob/master/images/icon.ico)).
 5. Press 'Convert' and your exe will be created in your destination folder.
 
