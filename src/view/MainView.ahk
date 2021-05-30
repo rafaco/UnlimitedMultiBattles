@@ -35,8 +35,8 @@ Class MainView extends CGui {
         menu1       := % Translate("InfoHeader")
         submenu1    := % Translate("HelpHeader")
         submenu2    := % Translate("AboutHeader")
-        Menu, InfoMenu, Add, %submenu1%, MenuHandler
-        Menu, InfoMenu, Add, %submenu2%, MenuHandler
+        Menu, InfoMenu, Add, %submenu1%, OnMenuClicked
+        Menu, InfoMenu, Add, %submenu2%, OnMenuClicked
         infoLabel := "&" . menu1 . "    "
         Menu, MainMenuBar, Add, %infoLabel%, :InfoMenu, Right
 
@@ -203,7 +203,7 @@ Class MainView extends CGui {
 
 
     TeamButtonPressed(){
-        GoSub GoToGame
+        this.controller.OpenGame()
     }
 
     TabSelectorChanged(){
@@ -281,9 +281,8 @@ Class MainView extends CGui {
         this.controller.StartScroll()
     }
     
-    StartBattleButtonPressed(){
-        GoSub StartBattles
-        this.Hide()
+    StartBattlesButtonPressed(){
+        this.controller.StartMultiBattle()
     }
 
 

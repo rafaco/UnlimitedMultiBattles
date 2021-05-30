@@ -18,22 +18,22 @@ Class ScrollAssistant {
 
     ICON_NAMES := ["TOP", " UP", "DWN", "END"]
 
-    testScroll(isTest := false, currentPage := 0) {
-        global
-        ; Detect screens playground
+    ; testScroll(isTest := false, currentPage := 0) {
+    ;     global
+    ;     ; Detect screens playground
 
-        local isGameOpen := this.checkGameOpened()
-        if (!isGameOpen){
-            return
-        }
+    ;     local isGameOpen := this.checkGameOpened()
+    ;     if (!isGameOpen){
+    ;         return
+    ;     }
 
-        ;WinActivate, %Constants.RaidWinTitle%
-        ;screenDetector := new GraphicDetector()
+    ;     ;WinActivate, %Constants.RaidWinTitle%
+    ;     ;screenDetector := new GraphicDetector()
 
-        ; GDIP ImageDetector dont requiere WinActivate!
-        screenDetector := new ImageDetector()
-        return screenDetector.detectScroll(isTest, currentPage)
-    }
+    ;     ; GDIP ImageDetector dont requiere WinActivate!
+    ;     screenDetector := new ImageDetector()
+    ;     return screenDetector.detectScroll(isTest, currentPage)
+    ; }
 
     isRunning() {
         return this.isScrollRunning

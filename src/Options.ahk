@@ -45,9 +45,9 @@ Class Options {
         return this.GenerateRankOptions()
     }
     OnFinish() { 
-        return this.TranslatedOptions("OptionRunningOnFinishGame"
-                                     ,"OptionRunningOnFinishThis"
-                                     ,"OptionRunningOnFinishNothing")
+        return this.TranslatedOptions("OptionBattlingOnFinishGame"
+                                     ,"OptionBattlingOnFinishThis"
+                                     ,"OptionBattlingOnFinishNothing")
     }
 
 

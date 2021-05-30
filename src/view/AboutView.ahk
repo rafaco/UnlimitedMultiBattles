@@ -25,23 +25,22 @@ Class AboutView extends CGui {
         
         this.Font("s10 norm")
         this.Gui("Add", "Text", "w350 xs Section", Translate("ProjectDescription"))
-        this.backButton := this.Gui("Add", "Button", "Section w100 h30 gShowMain " Constants.SS_CENTERIMAGE " Center Default", Translate("ButtonAboutBack"))
+        this.backButton := this.Gui("Add", "Button", "Section w100 h30 " Constants.SS_CENTERIMAGE " Center Default", Translate("ButtonAboutBack"))
         this.GuiControl("+g", this.backButton, this.BackButtonPressed)
 
         this.Gui("Add", "Text", "w120 ys Section")
-        this.githubButton := this.Gui("Add", "Button", "ys w100 h30 gGoToSite " Constants.SS_CENTERIMAGE " Center", Translate("ButtonAboutRepo"))
+        this.githubButton := this.Gui("Add", "Button", "ys w100 h30 " Constants.SS_CENTERIMAGE " Center", Translate("ButtonAboutRepo"))
         this.GuiControl("+g", this.githubButton, this.GithubButtonPressed)
 		
         ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)		
 	}
 
     BackButtonPressed(){
-        GoSub ShowMain
-        this.Hide()
+        this.controller.GoTo("Main")
     }
 
     GithubButtonPressed(){
-        GoSub GoToSite
+        Run % Constants.ScriptSite
     }
 
     AddListener(controller)

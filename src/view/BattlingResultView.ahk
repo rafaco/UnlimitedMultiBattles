@@ -13,13 +13,20 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
-Class ResultView extends CGui {
+Class BattlingResultView extends CGui {
 
 	__New(aParams*){
 
 		global BorderState
 		base.__New(aParams*)
 
+        this.addViewControls()
+		
+        ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
+	}
+
+    addViewControls()
+    {
         this.Font("s12 bold")
         this.ResultHeader := this.Gui("Add", "Text", "w250 Center")
 
@@ -36,25 +43,20 @@ Class ResultView extends CGui {
         this.replayButton := this.Gui("Add", "Button", "ys w100 h30 " Constants.SS_CENTERIMAGE " Center", Translate("ButtonResultReplay"))
         this.GuiControl("+g", this.doneButton, this.DoneButtonPressed)
         this.GuiControl("+g", this.replayButton, this.ReplayButtonPressed)
-		
-        ;this.Show("xCenter y100 AutoSize", Constants.ScriptTitle)
-	}
+    }
 
-    loadData(header, message, text){
-        this.ResultHeader.text := header
-        this.ResultMessage.text := message
-        this.ResultText.text := text
+    loadData(data){
+        this.ResultHeader.value := data.results.header
+        this.ResultMessage.value := data.results.message
+        this.ResultText.value := data.results.detail
     }
 
     DoneButtonPressed(){
         this.controller.GoTo("Main")
-        ;this.Hide()
-        ;GoSub ShowMain
     }
 
     ReplayButtonPressed(){
-        this.Hide()
-        GoSub StartBattles
+        this.controller.StartMultiBattle()
     }
 
     AddListener(controller)

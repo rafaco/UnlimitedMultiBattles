@@ -28,7 +28,7 @@ Class Constants {
     static RaidWinTitle := "Raid: Shadow Legends"
     static RaidFileName := "PlariumPlay.exe"
     static DefaultGameFolder := A_AppData . "\..\Local\Plarium\PlariumPlay"
-    static ViewNames := "Main|Running|Result|Help|About"
+    static ViewNames := "Main|Battling|BattlingResult|Help|About"
     static XpDataFileName := "XpData.csv"
     static CampaignDataFileName := "CampaignData.csv"
 
