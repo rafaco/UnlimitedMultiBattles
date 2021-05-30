@@ -50,23 +50,6 @@ class SettingsModel
         else{
             this.InitFromStorage(this.settingsPath, this.settingsSection)
         }
-
-        ; TODO: VERIFY and REMOVE: 
-        ; Seems not needed, can be access by this.values
-        ; Usefull to get the naming mapping
-        ; selectedTab             := this.values.tab
-        ; selectedBoost           := this.values.boost
-        ; selectedDifficulty      := this.values.difficulty
-        ; selectedMap             := this.values.map
-        ; selectedStage           := this.values.stage
-        ; selectedRank            := this.values.rank
-        ; selectedLevel           := this.values.level
-        ; selectedOnFinish        := this.values.onFinish
-        ; selectedRaidFilePath    := this.values.customGameFolder
-        ; selectedDurationTab     := this.values.durationTab
-        
-        ; TODO: VERIFY and REMOVE: IMPORTANT! not really in settings
-        OnFinishCheckboxValue   := 0
     }
     
     ; Init from default settings (first time)
@@ -103,7 +86,7 @@ class SettingsModel
         If (FileExist(settingsPathOld)){
             FileDelete, % settingsPathOld  
         }
-        settingsPathOld := Constants.SettingsFilePathOld2()         ;used on versions 1.0.2
+        settingsPathOld := Constants.SettingsFilePathOld2()   ;used on versions 1.0.2
         If (FileExist(settingsPathOld)){
             FileDelete, % settingsPathOld  
         }

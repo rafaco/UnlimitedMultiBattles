@@ -159,11 +159,9 @@ Class MainView extends CGui {
         this.Gui("Add", "Text", "Section BackgroundTrans w60 Right")
         this.Font("s20 normal")
 
-        ;gOnTimeChangedByEdit vEditMinute 
         this.editMinute := this.Gui("Add", "Edit", "ys w52 h35 Right +Limit2 +Number")
         this.GuiControl("+g", this.editMinute, this.EditMinuteChanged)
 
-        ;vUpDownMinute gOnTimeChangedByUpDown
         this.upDownMinute := this.Gui("Add", "UpDown", "ys Range00-60")
         this.GuiControl("+g", this.upDownMinute, this.UpDownMinuteChanged)
 
@@ -171,11 +169,9 @@ Class MainView extends CGui {
         this.Gui("Add", "Text", "ys+7 BackgroundTrans", Translate("BattlesDurationMinTail"))
         this.Font("s20 normal")
 
-        ;TODO: gOnTimeChangedByEdit vEditSecond 
         this.editSecond := this.Gui("Add", "Edit", "ys w52 h35 Right +Limit2 +Number")
         this.GuiControl("+g", this.editSecond, this.EditSecondChanged)
 
-        ;vUpDownSecond gOnTimeChangedByUpDown
         this.upDownSecond := this.Gui("Add", "UpDown", "ys Range00-59")
         this.GuiControl("+g", this.upDownSecond, this.UpDownSecondChanged)
         
@@ -190,13 +186,11 @@ Class MainView extends CGui {
         this.Font("s10 bold")
         this.Gui("Add", "Text", "xs")
 
-        ;gStartScroll vStartScroll
         this.startScrollButton := this.Gui("Add", "Button", "Section w100 Center Default " Constants.SS_CENTERIMAGE, Translate("ButtonScrollStart"))
         this.GuiControl("+g", this.startScrollButton, this.StartScrollButtonPressed)
         
         this.Gui("Add", "Text", "w100 ys Section Right "  Constants.SS_CENTERIMAGE)
 
-        ;gStartScroll vStartScroll
         this.startBattlesButton := this.Gui("Add", "Button", "ys w100 Center Default " Constants.SS_CENTERIMAGE, Translate("ButtonMultiBattle"))
         this.GuiControl("+g", this.startBattlesButton, this.StartBattlesButtonPressed)
     }
@@ -292,11 +286,10 @@ Class MainView extends CGui {
 
         ; Ammount selectors
         this.GuiControl("Choose", this.tabSelector,         data.settings.tab)
-        ;this.GuiControl(        , this.editBattles,         data.settings.battles)
-        this.editBattles.value := data.settings.battles
-        this.GuiControl(        , this.upDownBattles,       data.settings.battles)
+        this.editBattles.value      := data.settings.battles
+        this.upDownBattles.value    := data.settings.battles
         this.GuiControl("Choose", this.rankSelector,        data.settings.rank)
-        this.GuiControl(        , this.levelSelector,       data.results.levelOptions)
+        this.levelSelector.value    := data.results.levelOptions
         this.GuiControl("Choose", this.levelSelector,       data.results.levelValue) ;TODO: ChooseString??
         this.GuiControl("Choose", this.difficultySelector,  data.settings.difficulty)
         this.GuiControl("Choose", this.mapSelector,         data.settings.map)
@@ -305,12 +298,10 @@ Class MainView extends CGui {
 
         ; Duration selectors
         this.GuiControl("Choose", this.durationTabSelector,data.settings.durationTab)
-        ;this.GuiControl(        , this.editMinute,         data.settings.minute)
-        ;this.GuiControl(        , this.editSecond,         data.settings.second)
-        this.editMinute.value := data.settings.minute
-        this.editSecond.value := data.settings.second
-        this.GuiControl(        , this.upDownMinute,       data.settings.minute)
-        this.GuiControl(        , this.upDownSecond,       data.settings.second)
+        this.editMinute.value   := data.settings.minute
+        this.editSecond.value   := data.settings.second
+        this.upDownMinute.value := data.settings.minute
+        this.upDownSecond.value := data.settings.second
 
         ; Calculator output
         this.GuiControl(        , this.calculatedRepetitions,data.results.repetitions)
@@ -361,7 +352,6 @@ Class MainView extends CGui {
         value += 0.0
         return value
     }
-
 
     AddListener(controller)
     {

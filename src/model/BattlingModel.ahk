@@ -13,7 +13,6 @@
 ;   See the License for the specific language governing permissions and
 ;   limitations under the License.
 
-;TODO: remove all global keywords
 Class BattlingModel {
 
     __New(model)
@@ -29,12 +28,6 @@ Class BattlingModel {
         screenDetector.detectScreen(true)
     }
 
-    ;TODO: relocate to controller?
-    ShowTrayTip(title, message)
-    {
-        TrayTip, %title%, %message%, 20, 17
-    }
-
     StartMultiBattle(controller)
     {   
         this.controller := controller
@@ -42,7 +35,7 @@ Class BattlingModel {
         this.isRunning := true
         
         this.updateValuesOnStart()
-        this.ShowTrayTip(Constants.ScriptTitle, this.values.notification)
+        this.controller.ShowTrayTip(Constants.ScriptTitle, this.values.notification)
 
         ; For each battle
         loop {
@@ -210,7 +203,7 @@ Class BattlingModel {
             header := Translate("ResultHeaderInterrupted")
             message := Translate("ResultMessageInterrupted")
         }
-        this.ShowTrayTip(Constants.ScriptTitle, message)
+        this.controller.ShowTrayTip(Constants.ScriptTitle, message)
 
         formattedTotal := (battlingData.repetitions=-1) ? "Infinite" : battlingData.repetitions
         formattedBattles := (result = "success") ? battlingData.replayCounter 

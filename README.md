@@ -83,7 +83,7 @@ I believe this is not against the T&C of the game, as it just automatise the mos
 
 # License
 ```
-Copyright 2020 Rafael Acosta Alvarez
+Copyright 2021 Rafael Acosta Alvarez
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

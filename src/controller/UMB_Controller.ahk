@@ -123,6 +123,11 @@ class UMB_Controller
         ExitApp
     }
 
+    ShowTrayTip(title, message)
+    {
+        TrayTip, %title%, %message%, 20, 17
+    }
+
     OnMenuClicked()
     {
         if (A_ThisMenuItem == Translate("HelpHeader")){

@@ -114,11 +114,10 @@ class CalculatorModel
     }
 
     FormatNumber(num){
-        ; Add thousands searators
+        ;TODO: Add thousands searators
         return RegExReplace(num, "\G(?:-?)\d+?(?=(\d{3})+(?:\D|$))", "$0.")
     }
 
-    ; TODO: it fails sometimes if used from Options.GenerateNumericOptions
     GenerateNumericOptions(items){
         Loop,%items%{
             List .= A_Index
