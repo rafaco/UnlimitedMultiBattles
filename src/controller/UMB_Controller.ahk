@@ -123,6 +123,18 @@ class UMB_Controller
         ExitApp
     }
 
+    OnMenuClicked()
+    {
+        if (A_ThisMenuItem == Translate("HelpHeader")){
+            this.GoTo("Help")
+        }
+        else if (A_ThisMenuItem == Translate("AboutHeader")){
+            this.GoTo("About")
+        }else{
+            MsgBox, No action for "%A_ThisMenuItem%" in menu "%A_ThisMenu%".
+        }
+    }
+
     OnGuiClose()
     {
         if (this.view.currentViewName = "Main")

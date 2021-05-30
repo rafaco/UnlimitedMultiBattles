@@ -31,64 +31,24 @@
     #Include lib\Gdip_All.ahk
     #Include lib\GDIpHelper.ahk
     #Include lib\CsvTableFunctions.ahk
+    #Include lib\i18n.ahk
     ;#Include src\GraphicDetector.ahk
     #Include src\Constants.ahk
     #Include src\Options.ahk
-    #Include lib\i18n.ahk
+    #Include src\UMB.ahk
+    #Include src\controller\UMB_Controller.ahk
+    #Include src\model\UMB_Model.ahk
+    #Include src\view\UMB_View.ahk
     #Include src\LanguageDetector.ahk
 
-    ; Init i18n (TODO: move to controller)
-    language := new LanguageDetector().getLanguage(WinExist(Constants.RaidWinTitle))
-    Global i18n := New i18n("i18n", language)
-
-    Program := new UnlimitedMultiBattles()
+    Program := new UMB()
     Program.Start()
     
-return ; End of auto-execute section
+return ; End of Auto-execute section
 
-#Include src\controller\UMB_Controller.ahk
-#Include src\model\UMB_Model.ahk
-#Include src\view\UMB_View.ahk
-
-class UnlimitedMultiBattles
-{
-    Initialize()
-    {
-		this.Model := new UMB_Model()
-		this.View := new UMB_View()
-		this.Controller := new UMB_Controller(this.Model, this.View)
-    }
-	
-	Start()
-	{
-        this.Initialize()
-        this.GoTo("Main")
-	}
-
-    GoTo(viewName){
-        this.Controller.GoTo(viewName)
-    }
-
-    OnGuiClose()
-    {
-        this.Controller.OnGuiClose()
-    }
-
-    Shutdown()
-    {
-        this.Controller.ShutDown()
-    }
-}
-
+; Labels redirection to UMB
 OnMenuClicked:
-    if (A_ThisMenuItem == Translate("HelpHeader")){
-        Program.GoTo("Help")
-    }
-    else if (A_ThisMenuItem == Translate("AboutHeader")){
-        Program.GoTo("About")
-    }else{
-        MsgBox, No action for "%A_ThisMenuItem%" in menu "%A_ThisMenu%".
-    }
+    Program.OnMenuClicked()
     return
 
 GuiClose:
